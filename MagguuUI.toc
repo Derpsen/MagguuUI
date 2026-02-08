@@ -1,0 +1,44 @@
+## Interface: 120000
+## Title: |cff4A8FD9Magguu|r|cffC0C8D4UI|r
+## Notes: Pre-configured UI compilation with one-click profile installation for ElvUI, Plater, BigWigs, Details, and more.
+## Notes-deDE: Vorkonfigurierte UI-Zusammenstellung mit Ein-Klick-Profilinstallation für ElvUI, Plater, BigWigs, Details und mehr.
+## Author: Magguu
+## Version: 1.0.0
+## SavedVariables: MagguuDB
+## OptionalDeps: BigWigs, Details, Plater, BetterCooldownManager
+## RequiredDeps: ElvUI
+## IconTexture: Interface\AddOns\MagguuUI\Media\Textures\LogoAddon
+## AddonCompartmentFunc: MagguuUI_AddonCompartmentFunc
+## X-Website: https://github.com/Magguu/MagguuUI
+## X-License: All Rights Reserved
+## X-Category: UI Compilations
+## X-Curse-Project-ID:
+## X-Wago-ID:
+## X-WoWI-ID:
+## Category-enUS: User Interface
+## Category-deDE: Benutzerinterface
+## Category-esES: Interfaz de usuario
+## Category-esMX: Interfaz de usuario
+## Category-frFR: Interface utilisateur
+## Category-itIT: Interfaccia utente
+## Category-koKR: 사용자 인터페이스
+## Category-ptBR: Interface do usuário
+## Category-ruRU: Интерфейс пользователя
+## Category-zhCN: 用户界面
+## Category-zhTW: 使用者介面
+## Group: MagguuUI
+
+embeds.xml
+
+init.lua
+Core.lua
+Functions.lua
+SharedMedia.lua
+
+Data\!load.xml
+
+Setup\Setup.lua
+Setup\AddOns\!load.xml
+
+Installer.lua
+Options.lua
