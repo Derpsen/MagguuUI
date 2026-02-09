@@ -7,7 +7,6 @@ local function AreAddOnsEnabled()
     local addons = {
         ["BigWigs"] = true,
         ["Details"] = true,
-        ["HidingBar"] = true,
         ["Plater"] = true
     }
 
@@ -81,22 +80,6 @@ MUI.options = {
                     end,
                     type = "execute",
                     func = function() SE:Setup("Details", true) end
-                },
-                hidingbar = {
-                    name = "HidingBar",
-                    desc = "Setup HidingBar",
-                    hidden = function()
-                        if MUI.Retail or not MUI:IsAddOnEnabled("HidingBar") then
-
-                            return true
-                        end
-                    end,
-                    type = "execute",
-                    func = function()
-                        SE:Setup("HidingBar", true)
-
-                        ReloadUI()
-                    end
                 },
                 plater = {
                     name = "Plater",
@@ -180,6 +163,7 @@ MUI.options = {
                 addon_list = {
                     name = "|cffC0C8D4Required Addons:|r\n\n"
                         .. "|cff4A8FD9ElvUI|r |cff666666- Complete UI replacement|r\n"
+                        .. "|cff4A8FD9ElvUI WindTools|r |cff666666- Enhanced skins & QoL features|r\n"
                         .. "|cff4A8FD9BetterCooldownManager|r |cff666666- Cooldown tracking|r\n"
                         .. "|cff4A8FD9BigWigs|r |cff666666- Boss encounter mod|r\n"
                         .. "|cff4A8FD9Details|r |cff666666- Damage & healing meter|r\n"

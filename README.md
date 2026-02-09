@@ -2,14 +2,16 @@
 
 A pre-configured World of Warcraft UI compilation that installs optimized profiles for popular addons with a single click.
 
-## Features
+🌐 **Website:** [ui.magguu.xyz](https://ui.magguu.xyz)
 
-- **One-Click Installation** — Install all addon profiles at once or step by step through the guided installer
-- **Automatic Profile Loading** — New characters automatically receive all configured profiles
-- **WowUp Integration** — Built-in export string to quickly install all required addons via WowUp
-- **Minimap Button & Addon Compartment** — Quick access to installer and settings
+## ✨ Features
 
-## Supported Addons
+- 🚀 **One-Click Installation** — Install all addon profiles at once or step by step through the guided installer
+- 🔄 **Automatic Profile Loading** — New characters automatically receive all configured profiles
+- 📦 **WowUp Integration** — Built-in export string to quickly install all required addons via WowUp
+- 🗺️ **Minimap Button & Addon Compartment** — Quick access to installer and settings
+
+## 🎨 Supported Addons
 
 | Addon | Description |
 |-------|-------------|
@@ -18,17 +20,18 @@ A pre-configured World of Warcraft UI compilation that installs optimized profil
 | **BigWigs** | Lightweight boss mod with alerts, timers, and sounds |
 | **Details!** | Real-time combat meter for damage, healing, and encounters |
 | **BetterCooldownManager** | Enhanced cooldown tracking with flexible bar layouts |
+| **ElvUI WindTools** | Enhanced ElvUI with additional skins, animations, and quality-of-life features |
 | **Blizzard EditMode** | Optimized layout for Blizzard's built-in HUD editor |
 
-## Requirements
+## 📋 Requirements
 
-- **ElvUI** (required) — [Download from tukui.org](https://www.tukui.org/addons.php?id=2)
+- **ElvUI** is required — [Download from tukui.org](https://tukui.org/elvui)
 - All other addons are optional — disabled addons are automatically skipped
 
-## Installation
+## 🔧 Installation
 
-1. Install **ElvUI** from [tukui.org](https://www.tukui.org/addons.php?id=2)
-2. Install **MagguuUI** into your `Interface/AddOns/` folder
+1. Install **ElvUI** from [tukui.org](https://tukui.org/elvui)
+2. Install **MagguuUI** from [CurseForge](https://www.curseforge.com/wow/addons/magguuui)
 3. Log in — the installer opens automatically on first launch
 4. Click **Install All** to apply all profiles at once, or step through individually
 5. Click **Reload** when prompted
@@ -40,7 +43,7 @@ A pre-configured World of Warcraft UI compilation that installs optimized profil
 3. Copy the import string (Ctrl+C)
 4. Open WowUp → Import/Export → Import → paste the string
 
-## Chat Commands
+## 💬 Chat Commands
 
 | Command | Description |
 |---------|-------------|
@@ -50,25 +53,25 @@ A pre-configured World of Warcraft UI compilation that installs optimized profil
 | `/mui version` | Show addon version |
 | `/mui status` | Show installed profile status |
 
-## New Characters
+## 🔄 New Characters
 
 When logging in with a new character, MagguuUI automatically asks if you want to load all existing profiles. Profiles are applied one at a time to prevent conflicts, followed by a Reload prompt.
 
-## FAQ
+## ❓ FAQ
 
-**Q: Do I need all the supported addons?**
-A: No. Only ElvUI is required. All other addons are optional — MagguuUI automatically skips any addon that isn't installed or enabled.
+**Do I need all the supported addons?**
+No. Only ElvUI is required. All other addons are optional — MagguuUI automatically skips any addon that isn't installed or enabled.
 
-**Q: Will this overwrite my existing profiles?**
-A: MagguuUI creates a separate profile named "MagguuUI" for each addon. If a "MagguuUI" profile already exists, you'll be asked to confirm before overwriting.
+**Will this overwrite my existing profiles?**
+MagguuUI creates a separate profile named "MagguuUI" for each addon. If a profile already exists, you'll be asked to confirm before overwriting.
 
-**Q: How do I reset and reinstall?**
-A: Type `/mui install` to reopen the installer at any time.
+**How do I reset and reinstall?**
+Type `/mui install` to reopen the installer at any time.
 
-## Feedback & Support
+## 💡 Feedback & Support
 
-Found a bug or have a suggestion? Please open an issue on GitHub or reach out on Discord.
+Found a bug or have a suggestion? Visit [ui.magguu.xyz](https://ui.magguu.xyz) or open an issue on GitHub.
 
-## License
+## 📄 License
 
 All Rights Reserved © Magguu

@@ -434,7 +434,7 @@ I.installer = {
 
             PluginInstallFrame.Desc1:SetText("|cff999999Enhanced cooldown tracking with flexible bar layouts|r")
             PluginInstallFrame.Desc2:SetText("|cff999999Configurable tracking for spells, items, and trinkets|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Supports spec-based profiles and pixel border skinning|r")
+            PluginInstallFrame.Desc3:SetText("|cff4A8FD9Class-specific layouts:|r |cffC0C8D4ui.magguu.xyz|r")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("BetterCooldownManager", true) end)
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
