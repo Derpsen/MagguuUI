@@ -47,3 +47,5 @@ optional-dependencies:
   - bigwigs
   - details
   - plater-nameplates
+  - bettercooldownmanager
+  - elvui-windtools
