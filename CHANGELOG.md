@@ -2,6 +2,16 @@
 
 All notable changes to MagguuUI will be documented in this file.
 
+## 🔧 v1.0.2 — Update (2026-02-09)
+
+### ✨ Added
+- 🔗 **ElvUI_Anchor** as recommended optional dependency for frame positioning
+
+### 📝 Changed
+- 📄 License changed to **GNU General Public License v3.0 (GPLv3)**
+- 📋 Updated README with full addon list and installation guide
+- 🏷️ Version now uses `@project-version@` tag for automatic versioning
+
 ## 🔧 v1.0.1 — Patch (2026-02-09)
 
 ### ✨ Added

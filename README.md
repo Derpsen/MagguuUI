@@ -1,6 +1,6 @@
 # MagguuUI
 
-A pre-configured World of Warcraft UI compilation that installs optimized profiles for popular addons with a single click.
+A pre-configured World of Warcraft UI compilation that installs optimized profiles for popular addons with a single click. No more hours of tweaking settings — just install, click, and play.
 
 🌐 **Website:** [ui.magguu.xyz](https://ui.magguu.xyz)
 
@@ -16,25 +16,28 @@ A pre-configured World of Warcraft UI compilation that installs optimized profil
 | Addon | Description |
 |-------|-------------|
 | **ElvUI** | Complete UI replacement (action bars, unit frames, nameplates, and more) |
+| **ElvUI_Anchor** | Extended anchor positioning for precise frame placement |
+| **ElvUI WindTools** | Enhanced ElvUI with additional skins, animations, and quality-of-life features |
 | **Plater** | Customizable nameplates with threat coloring and scripting |
 | **BigWigs** | Lightweight boss mod with alerts, timers, and sounds |
 | **Details!** | Real-time combat meter for damage, healing, and encounters |
 | **BetterCooldownManager** | Enhanced cooldown tracking with flexible bar layouts |
-| **ElvUI WindTools** | Enhanced ElvUI with additional skins, animations, and quality-of-life features |
 | **Blizzard EditMode** | Optimized layout for Blizzard's built-in HUD editor |
 
 ## 📋 Requirements
 
 - **ElvUI** is required — [Download from tukui.org](https://tukui.org/elvui)
 - All other addons are optional — disabled addons are automatically skipped
+- **ElvUI_Anchor** is recommended for proper frame positioning — [CurseForge](https://www.curseforge.com/wow/addons/elvui-anchor)
 
 ## 🔧 Installation
 
 1. Install **ElvUI** from [tukui.org](https://tukui.org/elvui)
 2. Install **MagguuUI** from [CurseForge](https://www.curseforge.com/wow/addons/magguuui)
-3. Log in — the installer opens automatically on first launch
-4. Click **Install All** to apply all profiles at once, or step through individually
-5. Click **Reload** when prompted
+3. *(Recommended)* Install **ElvUI_Anchor** from [CurseForge](https://www.curseforge.com/wow/addons/elvui-anchor)
+4. Log in — the installer opens automatically on first launch
+5. Click **Install All** to apply all profiles at once, or step through individually
+6. Click **Reload** when prompted
 
 ### Installing Required Addons via WowUp
 
@@ -60,7 +63,7 @@ When logging in with a new character, MagguuUI automatically asks if you want to
 ## ❓ FAQ
 
 **Do I need all the supported addons?**
-No. Only ElvUI is required. All other addons are optional — MagguuUI automatically skips any addon that isn't installed or enabled.
+No. Only ElvUI is required. All other addons including ElvUI_Anchor are optional — MagguuUI automatically skips any addon that isn't installed or enabled.
 
 **Will this overwrite my existing profiles?**
 MagguuUI creates a separate profile named "MagguuUI" for each addon. If a profile already exists, you'll be asked to confirm before overwriting.
@@ -70,8 +73,8 @@ Type `/mui install` to reopen the installer at any time.
 
 ## 💡 Feedback & Support
 
-Found a bug or have a suggestion? Visit [ui.magguu.xyz](https://ui.magguu.xyz) or open an issue on GitHub.
+Found a bug or have a suggestion? Visit [ui.magguu.xyz](https://ui.magguu.xyz) or open an issue on [GitHub](https://github.com/Derpsen/MagguuUI/issues).
 
 ## 📄 License
 
-All Rights Reserved © Magguu
+This project is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html). See the [LICENSE](LICENSE) file for details.

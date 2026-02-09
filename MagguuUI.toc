@@ -3,14 +3,14 @@
 ## Notes: Pre-configured UI compilation with one-click profile installation for ElvUI, Plater, BigWigs, Details, and more.
 ## Notes-deDE: Vorkonfigurierte UI-Zusammenstellung mit Ein-Klick-Profilinstallation für ElvUI, Plater, BigWigs, Details und mehr.
 ## Author: Magguu
-## Version: 1.0.1
+## Version: @project-version@
 ## SavedVariables: MagguuDB
-## OptionalDeps: BigWigs, Details, Plater, BetterCooldownManager, ElvUI_WindTools
 ## RequiredDeps: ElvUI
+## OptionalDeps: ElvUI_Anchor, BigWigs, Details, Plater, BetterCooldownManager, ElvUI_WindTools
 ## IconTexture: Interface\AddOns\MagguuUI\Media\Textures\LogoAddon
 ## AddonCompartmentFunc: MagguuUI_AddonCompartmentFunc
 ## X-Website: https://ui.magguu.xyz
-## X-License: All Rights Reserved
+## X-License: GNU General Public License v3.0
 ## X-Category: UI Compilations
 ## X-Curse-Project-ID: 1457810
 ## X-Wago-ID:
