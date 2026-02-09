@@ -31,7 +31,16 @@ Compatible with **WoW Retail 12.0+** (The War Within / Midnight).
 
 - **ElvUI** is required — [Download from tukui.org](https://tukui.org/elvui)
 - All other addons are optional — disabled addons are automatically skipped
-- **ElvUI_Anchor** is recommended for proper frame positioning — [CurseForge](https://www.curseforge.com/wow/addons/elvui-anchor)
+
+### 📦 Recommended Addons
+
+These addons are optional but recommended for the full MagguuUI experience:
+
+- **ElvUI_Anchor** — Extended frame positioning — [CurseForge](https://www.curseforge.com/wow/addons/elvui-anchor)
+- **ElvUI WindTools** — Enhanced skins, animations, and QoL — [CurseForge](https://www.curseforge.com/wow/addons/elvui-windtools)
+- **Details!** — Damage and healing meter — [CurseForge](https://www.curseforge.com/wow/addons/details)
+- **Plater** — Customizable nameplates — [CurseForge](https://www.curseforge.com/wow/addons/plater-nameplates)
+- **HandyNotes** — Map notes and pins — [CurseForge](https://www.curseforge.com/wow/addons/handynotes)
 
 ## 🔧 Installation
 
