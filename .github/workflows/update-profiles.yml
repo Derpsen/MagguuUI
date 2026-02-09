@@ -38,4 +38,3 @@ jobs:
           git add Data/
           git commit -m "Update profiles from website [auto]"
           git push
-        
