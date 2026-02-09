@@ -2,6 +2,8 @@
 
 A pre-configured World of Warcraft UI compilation that installs optimized profiles for popular addons with a single click. No more hours of tweaking settings — just install, click, and play.
 
+Compatible with **WoW Retail 12.0+** (The War Within / Midnight).
+
 🌐 **Website:** [ui.magguu.xyz](https://ui.magguu.xyz)
 
 ## ✨ Features
@@ -10,6 +12,7 @@ A pre-configured World of Warcraft UI compilation that installs optimized profil
 - 🔄 **Automatic Profile Loading** — New characters automatically receive all configured profiles
 - 📦 **WowUp Integration** — Built-in export string to quickly install all required addons via WowUp
 - 🗺️ **Minimap Button & Addon Compartment** — Quick access to installer and settings
+- 📋 **Copy Feedback** — Popups confirm successful copy and auto-close
 
 ## 🎨 Supported Addons
 
@@ -43,8 +46,15 @@ A pre-configured World of Warcraft UI compilation that installs optimized profil
 
 1. Open the MagguuUI installer in-game
 2. Click **WowUp String** on the Welcome page
-3. Copy the import string (Ctrl+C)
-4. Open WowUp → Import/Export → Import → paste the string
+3. The string is automatically selected — press **Ctrl+C** to copy
+4. The popup confirms "Copied!" and closes automatically
+5. Open WowUp → Import/Export → Import → paste the string
+
+## ⚙️ Settings
+
+- **Show Minimap Button** — Toggle the minimap button on or off
+- **Version** — Displays the current MagguuUI version
+- **Website** — Copy the website URL to your clipboard with one click
 
 ## 💬 Chat Commands
 

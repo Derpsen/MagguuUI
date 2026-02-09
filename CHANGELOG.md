@@ -2,17 +2,28 @@
 
 All notable changes to MagguuUI will be documented in this file.
 
-## 🔧 v1.0.2 — Update (2026-02-09)
+## 🔧 v12.0.2 — Update (2026-02-09)
 
 ### ✨ Added
 - 🔗 **ElvUI_Anchor** as recommended optional dependency for frame positioning
+- 📋 **Version info** displayed in Settings panel
+- 🌐 **Website link** with copy-to-clipboard popup in Settings
+- 🖥️ Custom styled popups for URL and WowUp string (dark theme, blue accent)
+- 📋 **Copy feedback** — popups show "Copied!" and auto-close after pressing Ctrl+C
+
+### 🛠️ Fixed
+- ❌ Removed broken Accept button from WowUp settings page
+- 📋 WowUp string in Settings now opens the styled popup (no more empty input field)
+- 🌐 Website URL popup works reliably (replaced broken StaticPopup with custom frame)
 
 ### 📝 Changed
 - 📄 License changed to **GNU General Public License v3.0 (GPLv3)**
-- 📋 Updated README with full addon list and installation guide
-- 🏷️ Version now uses `@project-version@` tag for automatic versioning
+- 🔢 Version scheme changed to **12.0.x** to reflect WoW Retail compatibility
+- 📦 WowUp popup: removed Copy button, Close button centered, click-to-select
+- 🏷️ Version now uses `@project-version@` for automatic versioning via packager
+- 📋 Updated README, CurseForge description, and all metadata
 
-## 🔧 v1.0.1 — Patch (2026-02-09)
+## 🔧 v12.0.1 — Patch (2026-02-09)
 
 ### ✨ Added
 - 🔧 **ElvUI WindTools** as optional dependency
@@ -27,7 +38,7 @@ All notable changes to MagguuUI will be documented in this file.
 - 📋 Changelog and README redesigned with emojis
 - 📄 Updated addon list to include WindTools
 
-## 🎉 v1.0.0 — Initial Release (2026-02-08)
+## 🎉 v12.0.0 — Initial Release (2026-02-08)
 
 ### ✨ Features
 - 🚀 One-click **Install All** to apply every profile at once

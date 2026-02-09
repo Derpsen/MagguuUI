@@ -117,7 +117,7 @@ local function GetOrCreateWowUpPopup()
     -- Description
     local desc = popup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     desc:SetPoint("TOP", title, "BOTTOM", 0, -8)
-    desc:SetText("|cff999999Copy this string and paste it into|r |cff4A8FD9WowUp|r |cff999999> Import/Export > Import|r")
+    desc:SetText("|cff999999Click the text below to select all, then press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r")
 
     -- ScrollFrame + EditBox
     local scrollFrame = CreateFrame("ScrollFrame", nil, popup, "UIPanelScrollFrameTemplate")
@@ -160,24 +160,31 @@ local function GetOrCreateWowUpPopup()
         end
     end)
 
+    -- Detect Ctrl+C → show feedback → auto-close
+    editBox:SetScript("OnKeyDown", function(self, key)
+        if key == "C" and IsControlKeyDown() then
+            desc:SetText("|cff00ff88Copied!|r")
+            C_Timer.After(0.6, function()
+                popup:Hide()
+                desc:SetText("|cff999999Click the text below to select all, then press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r")
+            end)
+        end
+    end)
+
     scrollFrame:SetScrollChild(editBox)
     popup.editBox = editBox
 
-    -- Copy button (selects all + Ctrl+C hint)
-    local copyBtn = CreateFrame("Button", nil, popup, "UIPanelButtonTemplate")
-    copyBtn:SetSize(140, 26)
-    copyBtn:SetPoint("BOTTOMRIGHT", popup, "BOTTOMRIGHT", -12, 12)
-    copyBtn:SetText("|cff4A8FD9Copy|r |cff999999(Ctrl+C)|r")
-    copyBtn:SetScript("OnClick", function()
+    -- Click anywhere on the editbox background to select all
+    sfBg:EnableMouse(true)
+    sfBg:SetScript("OnMouseDown", function()
         editBox:SetFocus()
         editBox:HighlightText()
     end)
-    popup.copyBtn = copyBtn
 
-    -- Close button
+    -- Close button (centered)
     local closeBtn = CreateFrame("Button", nil, popup, "UIPanelButtonTemplate")
-    closeBtn:SetSize(80, 26)
-    closeBtn:SetPoint("BOTTOMLEFT", popup, "BOTTOMLEFT", 12, 12)
+    closeBtn:SetSize(100, 26)
+    closeBtn:SetPoint("BOTTOM", popup, "BOTTOM", 0, 12)
     closeBtn:SetText("|cffC0C8D4Close|r")
     closeBtn:SetScript("OnClick", function() popup:Hide() end)
 
@@ -190,7 +197,7 @@ local function GetOrCreateWowUpPopup()
     return popup
 end
 
-local function ShowWowUpPopup()
+function I:ShowWowUpPopup()
     local popup = GetOrCreateWowUpPopup()
     local str = D.WowUpString or "No WowUp string configured"
 
@@ -204,6 +211,9 @@ local function ShowWowUpPopup()
         popup.editBox:HighlightText()
     end)
 end
+
+-- Keep local reference for internal use
+local ShowWowUpPopup = function() I:ShowWowUpPopup() end
 
 -- ============================================================
 -- Custom Step Button Styling
