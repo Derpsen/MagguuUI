@@ -9,6 +9,7 @@ ignore:
   - .github
   - .gitignore
   - screenshots
+  - pkgmeta.yaml
 
 manual-changelog:
   filename: CHANGELOG.md
