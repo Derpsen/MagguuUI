@@ -90,8 +90,8 @@ ADDON_MAP = {
         "style": "table",
         "profiles": {
             "profile": ["profile", "Profile", "Default", "MagguuUI"],
-            "private": ["private", "Private"],
-            "global":  ["global", "Global"],
+            "private": ["private", "Private", "Private (Character Settings)"],
+            "global":  ["global", "Global", "Global (Account Settings)"],
             "aurafilters": ["aurafilters", "AuraFilters", "Aura Filters"],
         },
         "extras": {
