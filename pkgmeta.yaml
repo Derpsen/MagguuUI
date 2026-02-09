@@ -35,9 +35,10 @@ externals:
     url: https://repos.wowace.com/wow/libsharedmedia-3-0/trunk/LibSharedMedia-3.0
 
 optional-dependencies:
-  - elvui-anchor
+  - bettercooldownmanager
   - bigwigs
   - details
-  - plater-nameplates
-  - bettercooldownmanager
+  - elvui-anchor
   - elvui-windtools
+  - handynotes
+  - plater-nameplates
