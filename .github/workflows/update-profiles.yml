@@ -1,0 +1,41 @@
+name: Update Profiles from Website
+
+on:
+  repository_dispatch:
+    types: [update-profiles]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch and update profiles
+        env:
+          API_URL: ${{ secrets.WEBSITE_API_URL }}
+        run: python .github/scripts/sync-profiles.py
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "MagguuUI Bot"
+          git config user.email "bot@magguuui.local"
+          git add Data/
+          git commit -m "Update profiles from website [auto]"
+          git push
+        
