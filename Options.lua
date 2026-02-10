@@ -390,6 +390,10 @@ MUI.options = {
                     type = "description",
                     fontSize = "medium"
                 }
+                    order = 9,
+                    type = "description",
+                    fontSize = "medium"
+                }
             }
         }
     }
