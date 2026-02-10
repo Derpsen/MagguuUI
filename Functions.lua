@@ -102,6 +102,10 @@ function chatCommands.version()
     MUI:Print(format("Version: |cff4A8FD9%s|r", MUI.version or "unknown"))
 end
 
+function chatCommands.changelog()
+    MUI:ShowChangelog()
+end
+
 function chatCommands.status()
     MUI:Print("|cff4A8FD9Addon Status:|r")
 
@@ -133,6 +137,7 @@ function MUI:HandleChatCommand(input)
         print(format("  |cff4A8FD9/mui|r |cffC0C8D4minimap|r    |cff999999- Toggle minimap button|r"))
         print(format("  |cff4A8FD9/mui|r |cffC0C8D4version|r    |cff999999- Show addon version|r"))
         print(format("  |cff4A8FD9/mui|r |cffC0C8D4status|r     |cff999999- Show installed profiles|r"))
+        print(format("  |cff4A8FD9/mui|r |cffC0C8D4changelog|r  |cff999999- Show changelog|r"))
 
         return
     end

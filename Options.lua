@@ -1,7 +1,26 @@
 local MUI = unpack(MagguuUI)
 local SE = MUI:GetModule("Setup")
+local D = MUI:GetModule("Data")
 
 local InCombatLockdown = InCombatLockdown
+
+-- ============================================================
+-- Helper: Build addon list string from D.WowUpRequiredList / OptionalList
+-- ============================================================
+local function BuildAddonListString(listTable, headerColor, headerText)
+    local header = format("|cff%s%s:|r\n\n", headerColor, headerText)
+
+    if not listTable or #listTable == 0 then
+        return header .. "|cff666666No addon data available. Run /reload after updating.|r"
+    end
+
+    local lines = {}
+    for _, name in ipairs(listTable) do
+        tinsert(lines, format("|cff4A8FD9%s|r", name))
+    end
+
+    return header .. table.concat(lines, "\n")
+end
 
 -- ============================================================
 -- URL Copy Popup (same style as WowUp popup)
@@ -279,6 +298,20 @@ MUI.options = {
                     func = function()
                         ShowURLPopup()
                     end
+                },
+                spacer_changelog = {
+                    name = " ",
+                    order = 16,
+                    type = "description"
+                },
+                show_changelog = {
+                    name = "Show Changelog",
+                    desc = "Show what changed in recent updates",
+                    order = 17,
+                    type = "execute",
+                    func = function()
+                        MUI:ShowChangelog()
+                    end
                 }
             }
         },
@@ -295,13 +328,13 @@ MUI.options = {
                 info = {
                     name = "|cff999999MagguuUI uses several addons. "
                         .. "You can install them using|r |cff4A8FD9WowUp|r|cff999999's import feature.|r\n\n"
+                        .. "|cffFF6666Required|r |cff999999— Core addons needed for MagguuUI to work properly|r\n"
+                        .. "|cff999999Optional|r |cff999999— Extra addons for the best experience|r\n\n"
                         .. "|cffC0C8D4How to use:|r\n"
-                        .. "|cff9999991.|r |cff999999Click one of the buttons below to open the import string|r\n"
+                        .. "|cff9999991.|r |cff999999Click|r |cffFF6666Required|r |cff999999or|r |cff999999Optional below|r\n"
                         .. "|cff9999992.|r |cff999999The string is selected automatically — press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r\n"
-                        .. "|cff9999993.|r |cff999999Open|r |cff4A8FD9WowUp|r |cff999999on your computer|r\n"
-                        .. "|cff9999994.|r |cff999999Click the|r |cffC0C8D4More|r |cff999999button > Import/Export Addons|r\n"
-                        .. "|cff9999995.|r |cff999999Switch to the|r |cffC0C8D4Import|r |cff999999tab and paste the string|r\n"
-                        .. "|cff9999996.|r |cff999999Click|r |cff4A8FD9Install|r |cff999999to install all addons|r",
+                        .. "|cff9999993.|r |cff999999Open|r |cff4A8FD9WowUp|r |cff999999> More > Import/Export Addons|r\n"
+                        .. "|cff9999994.|r |cff999999Switch to|r |cffC0C8D4Import|r|cff999999, paste the string, click|r |cff4A8FD9Install|r",
                     order = 2,
                     type = "description",
                     fontSize = "medium"
@@ -312,7 +345,7 @@ MUI.options = {
                     type = "description"
                 },
                 import_required = {
-                    name = "Copy Required Addons",
+                    name = "|cffFF6666Copy Required Addons|r",
                     desc = "Opens a popup with the WowUp import string for required addons",
                     order = 4,
                     type = "execute",
@@ -341,8 +374,7 @@ MUI.options = {
                     type = "description"
                 },
                 required_list = {
-                    name = "|cffC0C8D4Required Addons:|r\n\n"
-                        .. "|cff4A8FD9ElvUI|r |cff666666- Complete UI replacement|r",
+                    name = BuildAddonListString(D.WowUpRequiredList, "FF6666", "Required Addons"),
                     order = 7,
                     type = "description",
                     fontSize = "medium"
@@ -353,14 +385,11 @@ MUI.options = {
                     type = "description"
                 },
                 optional_list = {
-                    name = "|cffC0C8D4Optional Addons:|r\n\n"
-                        .. "|cff4A8FD9ElvUI_Anchor|r |cff666666- Extended frame positioning|r\n"
-                        .. "|cff4A8FD9ElvUI WindTools|r |cff666666- Enhanced skins & QoL features|r\n"
-                        .. "|cff4A8FD9BetterCooldownManager|r |cff666666- Cooldown tracking|r\n"
-                        .. "|cff4A8FD9BigWigs|r |cff666666- Boss encounter mod|r\n"
-                        .. "|cff4A8FD9Details|r |cff666666- Damage & healing meter|r\n"
-                        .. "|cff4A8FD9HandyNotes|r |cff666666- Map notes & pins|r\n"
-                        .. "|cff4A8FD9Plater|r |cff666666- Nameplate addon|r",
+                    name = BuildAddonListString(D.WowUpOptionalList, "999999", "Optional Addons"),
+                    order = 9,
+                    type = "description",
+                    fontSize = "medium"
+                }
                     order = 9,
                     type = "description",
                     fontSize = "medium"

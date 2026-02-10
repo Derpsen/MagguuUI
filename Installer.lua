@@ -416,32 +416,32 @@ I.installer = {
             if not MUI.db.global.profiles then
                 PluginInstallFrame.Desc1:SetText("|cff999999Click|r |cff4A8FD9Install All|r |cff999999to set up all profiles at once|r")
                 PluginInstallFrame.Desc2:SetText("|cff999999Or click|r |cffC0C8D4Continue|r |cff999999to install addons individually|r")
-                PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Copy a|r |cff4A8FD9WowUp|r |cff999999string below|r")
+                PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Copy a|r |cff4A8FD9WowUp|r |cff999999import string:|r")
                 PluginInstallFrame.Option1:Show()
                 PluginInstallFrame.Option1:SetScript("OnClick", function() InstallAllProfiles() end)
                 PluginInstallFrame.Option1:SetText("|cff4A8FD9Install All|r")
                 PluginInstallFrame.Option2:Show()
                 PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpRequired() end)
-                PluginInstallFrame.Option2:SetText("|cff4A8FD9Required|r")
+                PluginInstallFrame.Option2:SetText("|cffFF6666Required|r")
                 PluginInstallFrame.Option3:Show()
                 PluginInstallFrame.Option3:SetScript("OnClick", function() ShowWowUpOptional() end)
-                PluginInstallFrame.Option3:SetText("|cff4A8FD9Optional|r")
+                PluginInstallFrame.Option3:SetText("|cff999999Optional|r")
 
                 return
             end
 
             PluginInstallFrame.Desc1:SetText("|cff999999Click|r |cff4A8FD9Load Profiles|r |cff999999to apply your profiles to this character|r")
             PluginInstallFrame.Desc2:SetText("|cff999999Or click|r |cffC0C8D4Continue|r |cff999999to reinstall individual addons|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Copy a|r |cff4A8FD9WowUp|r |cff999999string below|r")
+            PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Copy a|r |cff4A8FD9WowUp|r |cff999999import string:|r")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() MUI:LoadProfiles() end)
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Load Profiles|r")
             PluginInstallFrame.Option2:Show()
             PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpRequired() end)
-            PluginInstallFrame.Option2:SetText("|cff4A8FD9Required|r")
+            PluginInstallFrame.Option2:SetText("|cffFF6666Required|r")
             PluginInstallFrame.Option3:Show()
             PluginInstallFrame.Option3:SetScript("OnClick", function() ShowWowUpOptional() end)
-            PluginInstallFrame.Option3:SetText("|cff4A8FD9Optional|r")
+            PluginInstallFrame.Option3:SetText("|cff999999Optional|r")
         end,
         [2] = function()
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4ElvUI|r")

@@ -5,8 +5,8 @@
 ## Author: Magguu
 ## Version: @project-version@
 ## SavedVariables: MagguuDB
+## OptionalDeps: BigWigs, Details, Plater, BetterCooldownManager, ElvUI_WindTools, ElvUI_Anchor
 ## RequiredDeps: ElvUI
-## OptionalDeps: ElvUI_Anchor, BigWigs, Details, Plater, BetterCooldownManager, ElvUI_WindTools
 ## IconTexture: Interface\AddOns\MagguuUI\Media\Textures\LogoAddon
 ## AddonCompartmentFunc: MagguuUI_AddonCompartmentFunc
 ## X-Website: https://ui.magguu.xyz
@@ -42,3 +42,4 @@ Setup\AddOns\!load.xml
 
 Installer.lua
 Options.lua
+Changelog.lua
