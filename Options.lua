@@ -293,10 +293,10 @@ MUI.options = {
                     type = "header"
                 },
                 info = {
-                    name = "|cff999999MagguuUI requires several addons to work properly. "
-                        .. "You can install all of them at once using|r |cff4A8FD9WowUp|r|cff999999's import feature.|r\n\n"
+                    name = "|cff999999MagguuUI uses several addons. "
+                        .. "You can install them using|r |cff4A8FD9WowUp|r|cff999999's import feature.|r\n\n"
                         .. "|cffC0C8D4How to use:|r\n"
-                        .. "|cff9999991.|r |cff999999Click|r |cffC0C8D4Copy WowUp String|r |cff999999below to open the import string|r\n"
+                        .. "|cff9999991.|r |cff999999Click one of the buttons below to open the import string|r\n"
                         .. "|cff9999992.|r |cff999999The string is selected automatically — press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r\n"
                         .. "|cff9999993.|r |cff999999Open|r |cff4A8FD9WowUp|r |cff999999on your computer|r\n"
                         .. "|cff9999994.|r |cff999999Click the|r |cffC0C8D4More|r |cff999999button > Import/Export Addons|r\n"
@@ -311,33 +311,57 @@ MUI.options = {
                     order = 3,
                     type = "description"
                 },
-                import_string = {
-                    name = "Copy WowUp String",
-                    desc = "Opens a popup with the WowUp import string",
+                import_required = {
+                    name = "Copy Required Addons",
+                    desc = "Opens a popup with the WowUp import string for required addons",
                     order = 4,
                     type = "execute",
                     func = function()
                         local I = MUI:GetModule("Installer")
-                        if I and I.ShowWowUpPopup then
-                            I:ShowWowUpPopup()
+                        if I and I.ShowWowUpRequired then
+                            I:ShowWowUpRequired()
+                        end
+                    end
+                },
+                import_optional = {
+                    name = "Copy Optional Addons",
+                    desc = "Opens a popup with the WowUp import string for optional addons",
+                    order = 5,
+                    type = "execute",
+                    func = function()
+                        local I = MUI:GetModule("Installer")
+                        if I and I.ShowWowUpOptional then
+                            I:ShowWowUpOptional()
                         end
                     end
                 },
                 spacer2 = {
                     name = " ",
-                    order = 5,
+                    order = 6,
                     type = "description"
                 },
-                addon_list = {
+                required_list = {
                     name = "|cffC0C8D4Required Addons:|r\n\n"
-                        .. "|cff4A8FD9ElvUI|r |cff666666- Complete UI replacement|r\n"
+                        .. "|cff4A8FD9ElvUI|r |cff666666- Complete UI replacement|r",
+                    order = 7,
+                    type = "description",
+                    fontSize = "medium"
+                },
+                spacer3 = {
+                    name = " ",
+                    order = 8,
+                    type = "description"
+                },
+                optional_list = {
+                    name = "|cffC0C8D4Optional Addons:|r\n\n"
                         .. "|cff4A8FD9ElvUI_Anchor|r |cff666666- Extended frame positioning|r\n"
                         .. "|cff4A8FD9ElvUI WindTools|r |cff666666- Enhanced skins & QoL features|r\n"
                         .. "|cff4A8FD9BetterCooldownManager|r |cff666666- Cooldown tracking|r\n"
                         .. "|cff4A8FD9BigWigs|r |cff666666- Boss encounter mod|r\n"
                         .. "|cff4A8FD9Details|r |cff666666- Damage & healing meter|r\n"
+                        .. "|cff4A8FD9HandyNotes|r |cff666666- Map notes & pins|r\n"
                         .. "|cff4A8FD9Plater|r |cff666666- Nameplate addon|r",
-                    order = 6,
+                    order = 9,
                     type = "description",
                     fontSize = "medium"
                 }

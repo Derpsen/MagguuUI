@@ -78,7 +78,7 @@ local function InstallAllProfiles()
 end
 
 -- ============================================================
--- WowUp Copy Popup
+-- WowUp Copy Popup (reusable for Required + Optional)
 -- ============================================================
 local function GetOrCreateWowUpPopup()
     if MUI.WowUpPopup then return MUI.WowUpPopup end
@@ -109,15 +109,16 @@ local function GetOrCreateWowUpPopup()
     accent:SetPoint("TOPRIGHT", popup, "TOPRIGHT", 0, 0)
     accent:SetColorTexture(BLUE[1], BLUE[2], BLUE[3], 1)
 
-    -- Title
+    -- Title (dynamic)
     local title = popup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     title:SetPoint("TOP", popup, "TOP", 0, -16)
-    title:SetText("|cff4A8FD9WowUp|r |cffC0C8D4Addon Import String|r")
+    popup.title = title
 
     -- Description
     local desc = popup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     desc:SetPoint("TOP", title, "BOTTOM", 0, -8)
     desc:SetText("|cff999999Click the text below to select all, then press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r")
+    popup.desc = desc
 
     -- ScrollFrame + EditBox
     local scrollFrame = CreateFrame("ScrollFrame", nil, popup, "UIPanelScrollFrameTemplate")
@@ -197,12 +198,14 @@ local function GetOrCreateWowUpPopup()
     return popup
 end
 
-function I:ShowWowUpPopup()
+-- Generic function: show popup with a title and string
+local function ShowWowUpString(popupTitle, str)
     local popup = GetOrCreateWowUpPopup()
-    local str = D.WowUpString or "No WowUp string configured"
+    local text = str or "No WowUp string configured"
 
-    popup.editBox._muiText = str
-    popup.editBox:SetText(str)
+    popup.title:SetText(popupTitle)
+    popup.editBox._muiText = text
+    popup.editBox:SetText(text)
     popup:Show()
     popup:Raise()
 
@@ -212,8 +215,25 @@ function I:ShowWowUpPopup()
     end)
 end
 
--- Keep local reference for internal use
-local ShowWowUpPopup = function() I:ShowWowUpPopup() end
+-- Required addons string
+function I:ShowWowUpRequired()
+    ShowWowUpString(
+        "|cff4A8FD9WowUp|r |cffC0C8D4Required Addons|r",
+        D.WowUpRequired or D.WowUpString or "No required addons string configured"
+    )
+end
+
+-- Optional/recommended addons string
+function I:ShowWowUpOptional()
+    ShowWowUpString(
+        "|cff4A8FD9WowUp|r |cffC0C8D4Optional Addons|r",
+        D.WowUpOptional or "No optional addons string configured"
+    )
+end
+
+-- Local references for internal use
+local ShowWowUpRequired = function() I:ShowWowUpRequired() end
+local ShowWowUpOptional = function() I:ShowWowUpOptional() end
 
 -- ============================================================
 -- Custom Step Button Styling
@@ -396,26 +416,32 @@ I.installer = {
             if not MUI.db.global.profiles then
                 PluginInstallFrame.Desc1:SetText("|cff999999Click|r |cff4A8FD9Install All|r |cff999999to set up all profiles at once|r")
                 PluginInstallFrame.Desc2:SetText("|cff999999Or click|r |cffC0C8D4Continue|r |cff999999to install addons individually|r")
-                PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Click|r |cff4A8FD9WowUp String|r |cff999999to get the full addon list|r")
+                PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Copy a|r |cff4A8FD9WowUp|r |cff999999string below|r")
                 PluginInstallFrame.Option1:Show()
                 PluginInstallFrame.Option1:SetScript("OnClick", function() InstallAllProfiles() end)
                 PluginInstallFrame.Option1:SetText("|cff4A8FD9Install All|r")
                 PluginInstallFrame.Option2:Show()
-                PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpPopup() end)
-                PluginInstallFrame.Option2:SetText("|cff4A8FD9WowUp String|r")
+                PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpRequired() end)
+                PluginInstallFrame.Option2:SetText("|cff4A8FD9Required|r")
+                PluginInstallFrame.Option3:Show()
+                PluginInstallFrame.Option3:SetScript("OnClick", function() ShowWowUpOptional() end)
+                PluginInstallFrame.Option3:SetText("|cff4A8FD9Optional|r")
 
                 return
             end
 
             PluginInstallFrame.Desc1:SetText("|cff999999Click|r |cff4A8FD9Load Profiles|r |cff999999to apply your profiles to this character|r")
             PluginInstallFrame.Desc2:SetText("|cff999999Or click|r |cffC0C8D4Continue|r |cff999999to reinstall individual addons|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Click|r |cff4A8FD9WowUp String|r |cff999999to get the full addon list|r")
+            PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Copy a|r |cff4A8FD9WowUp|r |cff999999string below|r")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() MUI:LoadProfiles() end)
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Load Profiles|r")
             PluginInstallFrame.Option2:Show()
-            PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpPopup() end)
-            PluginInstallFrame.Option2:SetText("|cff4A8FD9WowUp String|r")
+            PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpRequired() end)
+            PluginInstallFrame.Option2:SetText("|cff4A8FD9Required|r")
+            PluginInstallFrame.Option3:Show()
+            PluginInstallFrame.Option3:SetScript("OnClick", function() ShowWowUpOptional() end)
+            PluginInstallFrame.Option3:SetText("|cff4A8FD9Optional|r")
         end,
         [2] = function()
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4ElvUI|r")
