@@ -238,37 +238,44 @@ def generate_table_lua(var_name, profile_map, addon_data, extras=None):
 
 
 def generate_wowup_lua(wowup_data):
-    """Generate the WowUp.lua file from WoWUp API data."""
-    wowup_string = None
+    """Generate the WowUp.lua file with required and optional strings."""
+    required_string = None
+    optional_string = None
 
-    if isinstance(wowup_data, str):
-        wowup_string = wowup_data
-    elif isinstance(wowup_data, dict):
-        # Try common keys first
-        for key in ["WowUp", "WoWUp", "Default", "MagguuUI", "ElvUI"]:
+    if isinstance(wowup_data, dict):
+        # Look for required string (try various key formats from admin panel)
+        for key in ["WowUP required", "WowUp required", "required", "Required",
+                     "WowUp", "WoWUp", "Default", "MagguuUI", "ElvUI"]:
             if key in wowup_data:
                 val = wowup_data[key]
                 if isinstance(val, str) and val.strip():
-                    wowup_string = val.strip()
-                    break
-        # Fallback: take first value
-        if not wowup_string:
-            for val in wowup_data.values():
-                if isinstance(val, str) and val.strip():
-                    wowup_string = val.strip()
+                    required_string = val.strip()
                     break
 
-    if not wowup_string:
-        print("  WARNING: No WoWUp string found in API response")
+        # Look for optional string
+        for key in ["WowUP optional", "WowUp optional", "optional", "Optional"]:
+            if key in wowup_data:
+                val = wowup_data[key]
+                if isinstance(val, str) and val.strip():
+                    optional_string = val.strip()
+                    break
+
+    elif isinstance(wowup_data, str):
+        required_string = wowup_data
+
+    if not required_string:
+        print("  WARNING: No WoWUp required string found in API response")
         return None
 
     lines = [
         LUA_HEADER,
         "",
-        "-- WowUp Import String",
-        "-- Export your addon list from WowUp and paste it here",
-        "-- Users can copy this string and import it into WowUp to install all required addons",
-        f'D.WowUpString = "{escape_lua_string(wowup_string)}"',
+        "-- WowUp Import Strings",
+        "-- Required/Recommended addons",
+        f'D.WowUpRequired = "{escape_lua_string(required_string)}"',
+        "",
+        "-- Optional addons",
+        f'D.WowUpOptional = "{escape_lua_string(optional_string or "")}"',
         "",
     ]
     return "\n".join(lines)
