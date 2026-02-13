@@ -1,39 +1,28 @@
 #!/usr/bin/env python3
 """
-sync-profiles.py
-Fetches addon profile data from the MagguuUI website API v2.0
+sync-profiles.py — MagguuUI Profile Sync (Nuxt v2 API)
+
+Fetches addon profile data and WowUp strings from the MagguuUI Nuxt website
 and updates the Data/*.lua files in the repository.
 
-API v2.0 Response formats:
+API endpoints (Nuxt v2):
+  GET {API_URL}/api/v1/profiles
+    → { "success": true, "data": { "ElvUI": [ { "profile": "...", "string": "..." }, ... ], ... } }
 
-  /api/?action=profiles →
-  {
-    "success": true,
-    "hash": "...",
-    "addons": {
-      "ElvUI": {
-        "Default": { "id": "...", "string": "encoded_string", "updated": "..." }
-      }
-    }
-  }
-
-  /api/?action=wowup →
-  {
-    "success": true,
-    "hash": "...",
-    "strings": {
-      "ElvUI": { "id": "...", "string": "encoded_string", "updated": "..." }
-    }
-  }
+  GET {API_URL}/api/v1/wowup
+    → { "success": true, "data": { "Required": { "string": "..." }, "Optional": { "string": "..." } } }
 
 Environment:
-  API_URL  – Base URL of the API (e.g. https://ui.magguu.xyz/api)
+  API_URL  – Base URL of the website (e.g. https://ui.magguu.xyz)
 """
 
+import base64
 import json
 import os
 import sys
 import requests
+
+# ─── Config ──────────────────────────────────────────
 
 API_URL = os.environ.get("API_URL", "").rstrip("/")
 if not API_URL:
@@ -45,9 +34,17 @@ DATA_DIR = os.path.normpath(DATA_DIR)
 
 LUA_HEADER = 'local MUI = unpack(MagguuUI)\nlocal D = MUI:GetModule("Data")\n'
 
-# ──────────────────────────────────────────────
-# Mapping: API addon name → lua variable + file
-# ──────────────────────────────────────────────
+# ─── Addon Mapping ───────────────────────────────────
+# Defines how each addon from the API maps to Lua files.
+#
+# "var"       – D.xxx variable name (lowercase!)
+# "file"      – Target filename in Data/
+# "style"     – "simple" → D.var = "str"   |   "table" → D.var = { key = "str", ... }
+# "profiles"  – For "simple": list of profile names to try (first match wins)
+#               For "table": dict mapping lua_key → list of API profile names to try
+# "has_1080p" – Whether to include a D.var1080p placeholder line
+# "extras"    – Additional static key=value pairs for table style
+
 ADDON_MAP = {
     "Plater": {
         "var": "plater",
@@ -90,8 +87,8 @@ ADDON_MAP = {
         "style": "table",
         "profiles": {
             "profile": ["profile", "Profile", "Default", "MagguuUI"],
-            "private": ["private", "Private", "Private (Character Settings)"],
-            "global":  ["global", "Global", "Global (Account Settings)"],
+            "private": ["private", "Private"],
+            "global":  ["global", "Global"],
             "aurafilters": ["aurafilters", "AuraFilters", "Aura Filters"],
         },
         "extras": {
@@ -101,65 +98,26 @@ ADDON_MAP = {
 }
 
 
-def fetch_json(endpoint):
-    """Fetch JSON from the API. Returns parsed dict or None on error."""
-    url = f"{API_URL}/{endpoint}" if not endpoint.startswith("http") else endpoint
+# ─── Helpers ─────────────────────────────────────────
+
+def fetch_json(endpoint: str):
+    """Fetch JSON from the Nuxt API. Returns the 'data' field or None."""
+    url = f"{API_URL}{endpoint}"
     print(f"  Fetching: {url}")
     try:
         resp = requests.get(url, timeout=30)
         resp.raise_for_status()
-        return resp.json()
+        result = resp.json()
+        # Nuxt API wraps everything in { success, data, meta }
+        if isinstance(result, dict) and result.get("success") and "data" in result:
+            return result["data"]
+        return result
     except Exception as e:
-        print(f"  ERROR fetching {url}: {e}")
+        print(f"  ERROR: {e}")
         return None
 
 
-def unwrap_api_response(data, content_key):
-    """
-    Unwrap the MagguuUI API v2.0 response format.
-    
-    API returns: { "success": true, "addons": { ... } }
-    We need:     { "AddonName": { "ProfileName": "string", ... } }
-    
-    Each profile entry is either a plain string or an object with a 'string' key.
-    """
-    if not isinstance(data, dict):
-        return {}
-    
-    # Unwrap from top-level key (e.g. "addons" or "strings")
-    inner = data.get(content_key, data)
-    
-    # If it's the raw API response with success/hash/etc, try common keys
-    if "success" in data and content_key in data:
-        inner = data[content_key]
-    
-    if not isinstance(inner, dict):
-        return {}
-    
-    # Flatten: extract "string" from nested objects
-    result = {}
-    for key, val in inner.items():
-        if isinstance(val, str):
-            # Already a plain string
-            result[key] = val
-        elif isinstance(val, dict):
-            if "string" in val:
-                # API v2.0 format: { "id": "...", "string": "...", "updated": "..." }
-                result[key] = val["string"]
-            else:
-                # Nested dict (addon with multiple profiles)
-                profiles = {}
-                for pkey, pval in val.items():
-                    if isinstance(pval, str):
-                        profiles[pkey] = pval
-                    elif isinstance(pval, dict) and "string" in pval:
-                        profiles[pkey] = pval["string"]
-                result[key] = profiles
-    
-    return result
-
-
-def escape_lua_string(s):
+def escape_lua_string(s: str) -> str:
     """Escape a string for use inside Lua double quotes."""
     if not s:
         return ""
@@ -170,32 +128,61 @@ def escape_lua_string(s):
     return s
 
 
-def find_profile_string(addon_data, profile_keys):
+def find_profile_string(profiles_list: list, keys_to_try: list):
     """
-    Given an addon's data dict, try each key in profile_keys
-    and return the first non-empty string found.
-    """
-    if isinstance(addon_data, str):
-        return addon_data
+    Given a list of profile objects from the Nuxt API, find the first matching
+    profile by name. Returns the string value or None.
 
-    if not isinstance(addon_data, dict):
+    profiles_list: [{ "profile": "Default", "string": "..." }, ...]
+    keys_to_try: ["Default", "MagguuUI"]
+    """
+    if not profiles_list:
         return None
 
-    for key in profile_keys:
-        val = addon_data.get(key)
-        if val and isinstance(val, str) and val.strip():
-            return val.strip()
+    # Build lookup: profile_name → string
+    lookup = {}
+    for p in profiles_list:
+        name = p.get("profile", "")
+        string = p.get("string", "")
+        if name and string:
+            lookup[name] = string
 
-    # Fallback: if there's only one profile, use it
-    string_values = [v for v in addon_data.values() if isinstance(v, str) and v.strip()]
-    if len(string_values) == 1:
-        return string_values[0].strip()
+    # Try each key
+    for key in keys_to_try:
+        if key in lookup:
+            return lookup[key]
+
+    # Case-insensitive fallback
+    lower_lookup = {k.lower(): v for k, v in lookup.items()}
+    for key in keys_to_try:
+        if key.lower() in lower_lookup:
+            return lower_lookup[key.lower()]
+
+    # Last resort: first non-empty string
+    for p in profiles_list:
+        s = p.get("string", "").strip()
+        if s:
+            return s
 
     return None
 
 
-def generate_simple_lua(var_name, profile_string, has_1080p=False):
-    """Generate a simple D.var = 'string' Lua file content."""
+def write_if_changed(filepath: str, content: str) -> bool:
+    """Write file only if content differs. Returns True if file was updated."""
+    if os.path.exists(filepath):
+        with open(filepath, "r", encoding="utf-8") as f:
+            if f.read() == content:
+                return False
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    with open(filepath, "w", encoding="utf-8", newline="\n") as f:
+        f.write(content)
+    return True
+
+
+# ─── Lua Generators ──────────────────────────────────
+
+def generate_simple_lua(var_name: str, profile_string: str, has_1080p: bool = False) -> str:
+    """Generate a simple D.var = "string" Lua file."""
     lines = [LUA_HEADER, ""]
     escaped = escape_lua_string(profile_string)
     lines.append(f'D.{var_name} = "{escaped}"')
@@ -205,16 +192,36 @@ def generate_simple_lua(var_name, profile_string, has_1080p=False):
     return "\n".join(lines)
 
 
-def generate_table_lua(var_name, profile_map, addon_data, extras=None):
+def generate_table_lua(var_name: str, profile_map: dict, profiles_list: list, extras: dict = None) -> str:
     """
     Generate a table-style Lua file (used for ElvUI).
-    D.elvui = { profile = "...", private = "...", ... }
+    D.elvui = { profile = "...", private = "...", global = "...", aurafilters = "..." }
     """
     lines = [LUA_HEADER, ""]
     lines.append(f"D.{var_name} = {{")
 
+    # Build lookup from profiles list
+    lookup = {}
+    for p in profiles_list:
+        name = p.get("profile", "")
+        string = p.get("string", "")
+        if name:
+            lookup[name] = string
+
     for lua_key, api_keys in profile_map.items():
-        value = find_profile_string(addon_data, api_keys)
+        value = None
+        for key in api_keys:
+            if key in lookup and lookup[key]:
+                value = lookup[key]
+                break
+        # Case-insensitive fallback
+        if not value:
+            lower_lookup = {k.lower(): v for k, v in lookup.items()}
+            for key in api_keys:
+                if key.lower() in lower_lookup and lower_lookup[key.lower()]:
+                    value = lower_lookup[key.lower()]
+                    break
+
         if value:
             escaped = escape_lua_string(value)
             lines.append(f'    {lua_key} = "{escaped}",')
@@ -237,30 +244,31 @@ def generate_table_lua(var_name, profile_map, addon_data, extras=None):
     return "\n".join(lines)
 
 
-def extract_addon_names(wowup_string):
-    """
-    Extract addon names from a WowUp base64-encoded JSON string.
-    Returns sorted list of addon names, excluding 'MagguuUI' itself.
-    """
-    import base64
+# ─── WowUp ──────────────────────────────────────────
+
+def extract_addon_names(wowup_string: str) -> list:
+    """Extract addon names from a WowUp base64-encoded JSON string."""
     if not wowup_string:
         return []
     try:
         data = json.loads(base64.b64decode(wowup_string))
         addons = data.get("addons", [])
+        if isinstance(data, list):
+            addons = data
         names = []
         for addon in addons:
-            name = addon.get("name", "").strip()
+            name = addon.get("name") or addon.get("addonName") or addon.get("Name") or ""
+            name = name.strip()
             if name and name.lower() != "magguuui":
                 names.append(name)
         return sorted(names, key=str.lower)
     except Exception as e:
-        print(f"    WARNING: Could not extract addon names from WowUp string: {e}")
+        print(f"    WARNING: Could not extract addon names: {e}")
         return []
 
 
-def generate_addon_list_lua(var_name, addon_names):
-    """Generate a Lua table of addon names: D.var = { "Name1", "Name2", ... }"""
+def generate_addon_list_lua(var_name: str, addon_names: list) -> str:
+    """Generate: D.var = { "Name1", "Name2", ... }"""
     if not addon_names:
         return f"D.{var_name} = {{}}"
     lines = [f"D.{var_name} = {{"]
@@ -271,37 +279,33 @@ def generate_addon_list_lua(var_name, addon_names):
     return "\n".join(lines)
 
 
-def generate_wowup_lua(wowup_data):
-    """Generate the WowUp.lua file with required and optional strings."""
+def generate_wowup_lua(wowup_data: dict):
+    """Generate WowUp.lua with Required/Optional strings and addon name lists."""
     required_string = None
     optional_string = None
 
-    if isinstance(wowup_data, dict):
-        # Look for required string (try various key formats from admin panel)
-        for key in ["WowUP required", "WowUp required", "required", "Required",
-                     "WowUp", "WoWUp", "Default", "MagguuUI", "ElvUI"]:
-            if key in wowup_data:
-                val = wowup_data[key]
-                if isinstance(val, str) and val.strip():
-                    required_string = val.strip()
-                    break
+    # Try to find Required and Optional strings
+    for key in ["Required", "required", "WowUp required", "WowUP required",
+                 "WowUp", "Default", "MagguuUI"]:
+        entry = wowup_data.get(key)
+        if entry:
+            s = entry.get("string", "") if isinstance(entry, dict) else str(entry)
+            if s.strip():
+                required_string = s.strip()
+                break
 
-        # Look for optional string
-        for key in ["WowUP optional", "WowUp optional", "optional", "Optional"]:
-            if key in wowup_data:
-                val = wowup_data[key]
-                if isinstance(val, str) and val.strip():
-                    optional_string = val.strip()
-                    break
-
-    elif isinstance(wowup_data, str):
-        required_string = wowup_data
+    for key in ["Optional", "optional", "WowUp optional", "WowUP optional"]:
+        entry = wowup_data.get(key)
+        if entry:
+            s = entry.get("string", "") if isinstance(entry, dict) else str(entry)
+            if s.strip():
+                optional_string = s.strip()
+                break
 
     if not required_string:
-        print("  WARNING: No WoWUp required string found in API response")
+        print("  WARNING: No WowUp Required string found")
         return None
 
-    # Extract addon names from base64 JSON
     required_names = extract_addon_names(required_string)
     optional_names = extract_addon_names(optional_string) if optional_string else []
 
@@ -338,24 +342,14 @@ def generate_wowup_lua(wowup_data):
     return "\n".join(lines)
 
 
-def write_if_changed(filepath, content):
-    """Write file only if content actually changed. Returns True if written."""
-    if os.path.exists(filepath):
-        with open(filepath, "r", encoding="utf-8") as f:
-            existing = f.read()
-        if existing == content:
-            return False
-
-    with open(filepath, "w", encoding="utf-8") as f:
-        f.write(content)
-    return True
-
+# ─── Main ────────────────────────────────────────────
 
 def main():
-    print(f"MagguuUI Profile Sync (API v2.0)")
+    print("=" * 50)
+    print("MagguuUI Profile Sync (Nuxt v2 API)")
     print(f"API: {API_URL}")
-    print(f"Data dir: {DATA_DIR}")
-    print()
+    print(f"Data Dir: {DATA_DIR}")
+    print("=" * 50)
 
     if not os.path.isdir(DATA_DIR):
         print(f"ERROR: Data directory not found: {DATA_DIR}")
@@ -364,37 +358,35 @@ def main():
     updated = []
     errors = []
 
-    # ── 1. Fetch addon profiles ──────────────
-    print("[1/2] Fetching addon profiles...")
-    raw_profiles = fetch_json("?action=profiles")
+    # ── 1. Fetch Addon Profiles ──────────────────
+    print("\n[1/2] Fetching addon profiles...")
+    profiles_data = fetch_json("/api/v1/profiles")
 
-    if raw_profiles:
-        # Unwrap API v2.0 format: { success, hash, addons: { ... } }
-        profiles = unwrap_api_response(raw_profiles, "addons")
-        
-        if not profiles:
-            print("  WARNING: API returned empty profiles after unwrapping")
-            print(f"  Raw keys: {list(raw_profiles.keys()) if isinstance(raw_profiles, dict) else 'N/A'}")
-        
+    if profiles_data and isinstance(profiles_data, dict):
         for api_name, config in ADDON_MAP.items():
-            addon_data = profiles.get(api_name)
-            if not addon_data:
-                # Try case-insensitive lookup
-                for k, v in profiles.items():
+            addon_profiles = profiles_data.get(api_name)
+
+            # Try case-insensitive lookup
+            if not addon_profiles:
+                for k, v in profiles_data.items():
                     if k.lower() == api_name.lower():
-                        addon_data = v
+                        addon_profiles = v
                         break
 
-            if not addon_data:
-                print(f"  SKIP: {api_name} not found in API response")
+            # Handle "Details!" vs "Details"
+            if not addon_profiles and api_name == "Details":
+                addon_profiles = profiles_data.get("Details!")
+
+            if not addon_profiles:
+                print(f"  SKIP: {api_name} not found in API")
                 continue
 
             filepath = os.path.join(DATA_DIR, config["file"])
 
             if config["style"] == "simple":
-                profile_string = find_profile_string(addon_data, config["profiles"])
+                profile_string = find_profile_string(addon_profiles, config["profiles"])
                 if not profile_string:
-                    print(f"  SKIP: {api_name} - no profile string found")
+                    print(f"  SKIP: {api_name} — no profile string found")
                     errors.append(api_name)
                     continue
                 content = generate_simple_lua(
@@ -402,11 +394,12 @@ def main():
                     profile_string,
                     config.get("has_1080p", False),
                 )
+
             elif config["style"] == "table":
                 content = generate_table_lua(
                     config["var"],
                     config["profiles"],
-                    addon_data,
+                    addon_profiles,
                     config.get("extras"),
                 )
             else:
@@ -417,19 +410,20 @@ def main():
                 updated.append(config["file"])
             else:
                 print(f"  OK (unchanged): {config['file']}")
-    else:
+
+    elif profiles_data is None:
         print("  ERROR: Could not fetch profiles")
         errors.append("profiles-endpoint")
+    else:
+        print("  WARNING: Unexpected data format")
+        errors.append("profiles-format")
 
-    # ── 2. Fetch WoWUp data ──────────────────
-    print("\n[2/2] Fetching WoWUp data...")
-    raw_wowup = fetch_json("?action=wowup")
+    # ── 2. Fetch WowUp Strings ───────────────────
+    print("\n[2/2] Fetching WowUp strings...")
+    wowup_data = fetch_json("/api/v1/wowup")
 
-    if raw_wowup:
-        # Unwrap API v2.0 format: { success, hash, strings: { ... } }
-        wowup = unwrap_api_response(raw_wowup, "strings")
-        
-        content = generate_wowup_lua(wowup)
+    if wowup_data and isinstance(wowup_data, dict):
+        content = generate_wowup_lua(wowup_data)
         if content:
             filepath = os.path.join(DATA_DIR, "WowUp.lua")
             if write_if_changed(filepath, content):
@@ -439,12 +433,12 @@ def main():
                 print(f"  OK (unchanged): WowUp.lua")
         else:
             errors.append("WowUp")
-    else:
-        print("  ERROR: Could not fetch WoWUp data")
+    elif wowup_data is None:
+        print("  ERROR: Could not fetch WowUp data")
         errors.append("wowup-endpoint")
 
-    # ── Summary ──────────────────────────────
-    print(f"\n{'='*40}")
+    # ── Summary ──────────────────────────────────
+    print(f"\n{'=' * 50}")
     print(f"Updated: {len(updated)} file(s)")
     if updated:
         for f in updated:
@@ -453,7 +447,12 @@ def main():
         print(f"Errors/Warnings: {len(errors)}")
         for e in errors:
             print(f"  ✗ {e}")
+    else:
+        print("No errors.")
     print()
+
+    if errors and not updated:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
