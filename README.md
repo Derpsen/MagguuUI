@@ -54,11 +54,12 @@ These addons are optional but recommended for the full MagguuUI experience:
 
 ### Installing Required Addons via WowUp
 
-1. Open the MagguuUI installer in-game
-2. Click **WowUp String** on the Welcome page
-3. The string is automatically selected — press **Ctrl+C** to copy
-4. The popup confirms "Copied!" and closes automatically
-5. Open WowUp → Import/Export → Import → paste the string
+1. Open MagguuUI settings in-game (`/mui settings`)
+2. Go to **Settings** → **WowUp Import**
+3. Click **Copy Required Addons** or **Copy Optional Addons**
+4. The string is automatically selected — press **Ctrl+C** to copy
+5. The popup confirms "Copied!" and closes automatically
+6. Open WowUp → Import/Export → Import → paste the string
 
 ## ⚙️ Settings
 
@@ -68,11 +69,7 @@ Access settings through the minimap button or Addon Compartment:
 - **Right-click** — Open ElvUI settings (MagguuUI section)
 - **Middle-click** — Toggle the Changelog popup
 
-In ElvUI Options → MagguuUI, settings are organized in a tree layout with sub-tabs:
-
-- **Installer** — Quick access to the guided installer
-- **Settings** — General options and WowUp import strings
-- **Information** — About, Changelog, and System info
+In the settings panel (`/mui settings`) you can configure general options, import WowUp strings, and view system info.
 
 ## 💬 Chat Commands
 
