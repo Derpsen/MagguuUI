@@ -15,6 +15,7 @@ MUI.Changelog[120005] = {
     RELEASE_DATE = "2026/02/15",
     IMPROVEMENT = {
         "Installer detects version updates and requires [Install All] before [Load Profiles]",
+        "Changelog [Got it!] opens installer automatically on version update",
         "Version strings with v-prefix handled correctly everywhere",
         "Updated addon profiles (ElvUI, Plater, Details, BCM, EditMode)",
     },
@@ -268,7 +269,14 @@ local function GetOrCreateChangelogPopup()
     closeBtn:SetSize(120, 26)
     closeBtn:SetPoint("BOTTOM", popup, "BOTTOM", 0, 14)
     closeBtn:SetText("Got it!")
-    closeBtn:SetScript("OnClick", function() popup:Hide() end)
+    closeBtn:SetScript("OnClick", function()
+        popup:Hide()
+        -- If this was an automatic update popup, open the installer
+        if popup.isUpdatePopup then
+            popup.isUpdatePopup = false
+            MUI:ToggleInstaller()
+        end
+    end)
 
     -- ESC to close
     tinsert(UISpecialFrames, "MagguuUIChangelogPopup")
@@ -279,10 +287,11 @@ local function GetOrCreateChangelogPopup()
     return popup
 end
 
-local function ShowChangelog(fromVersion)
+local function ShowChangelog(fromVersion, isAutoUpdate)
     local popup = GetOrCreateChangelogPopup()
     local version = MUI.version or "Unknown"
 
+    popup.isUpdatePopup = isAutoUpdate or false
     popup.title:SetText(format("|cff4A8FD9MagguuUI|r |cffC0C8D4v%s|r", StripVersionPrefix(version)))
 
     local fromCode = VersionStringToCode(fromVersion)
@@ -320,7 +329,7 @@ frame:SetScript("OnEvent", function(self, event, isInitialLogin, isReloadingUi)
             -- User upgraded from a version before this feature existed
             -- Check if they had the addon installed before (profiles or version exist)
             if MUI.db.global.profiles or MUI.db.global.version then
-                ShowChangelog(MUI.db.global.version)
+                ShowChangelog(MUI.db.global.version, true)
                 MUI.db.global.lastSeenVersion = currentVersion
             else
                 -- Truly first install, don't show popup
@@ -331,7 +340,7 @@ frame:SetScript("OnEvent", function(self, event, isInitialLogin, isReloadingUi)
 
         -- Show changelog if version changed
         if StripVersionPrefix(lastSeen) ~= StripVersionPrefix(currentVersion) then
-            ShowChangelog(lastSeen)
+            ShowChangelog(lastSeen, true)
             MUI.db.global.lastSeenVersion = currentVersion
         end
     end)

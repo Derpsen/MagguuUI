@@ -7,6 +7,7 @@ All notable changes to MagguuUI will be documented in this file.
 ### 📝 Changed
 
 - 🔄 Installer detects version updates and requires Install All before Load Profiles
+- 📝 Changelog [Got it!] opens installer automatically on version update
 - 🔢 Version strings with v-prefix handled correctly everywhere
 - 🔄 Updated addon profiles (ElvUI, Plater, Details, BCM, EditMode)
 
