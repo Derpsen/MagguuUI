@@ -2,6 +2,19 @@
 
 All notable changes to MagguuUI will be documented in this file.
 
+## 🔧 v12.0.5 — Bugfix & Profile Update (2026-02-15)
+
+### 📝 Changed
+
+- 🔄 Installer detects version updates and requires Install All before Load Profiles
+- 🔢 Version strings with v-prefix handled correctly everywhere
+- 🔄 Updated addon profiles (ElvUI, Plater, Details, BCM, EditMode)
+
+### 🛠️ Fixed
+
+- 🐛 Changelog popup showed "vv12.0.4" instead of "v12.0.4"
+- 🐛 Changelog popup did not appear when upgrading from older versions
+
 ## 🔧 v12.0.4 — Settings & Popup Overhaul (2026-02-14)
 
 ### ✨ Added

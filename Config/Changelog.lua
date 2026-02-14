@@ -11,6 +11,19 @@ local tinsert = tinsert
 -- ============================================================
 MUI.Changelog = {}
 
+MUI.Changelog[120005] = {
+    RELEASE_DATE = "2026/02/15",
+    IMPROVEMENT = {
+        "Installer detects version updates and requires [Install All] before [Load Profiles]",
+        "Version strings with v-prefix handled correctly everywhere",
+        "Updated addon profiles (ElvUI, Plater, Details, BCM, EditMode)",
+    },
+    BUGFIX = {
+        "Changelog popup showed [vv12.0.4] instead of [v12.0.4]",
+        "Changelog popup did not appear when upgrading from older versions",
+    },
+}
+
 MUI.Changelog[120004] = {
     RELEASE_DATE = "2026/02/14",
     NEW = {
