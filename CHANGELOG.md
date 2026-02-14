@@ -11,19 +11,26 @@ All notable changes to MagguuUI will be documented in this file.
 - 🖱️ **Minimap right-click** opens ElvUI settings directly to MagguuUI section
 - 🔗 **URL copy popup** for Website and CurseForge links
 - 📦 **WowUp strings** split into Required and Optional
-- 📝 **Changelog popup** on version update
+- 📝 **Changelog popup** on version update with version select in ElvUI settings
+- 📋 **Changelog tab** in ElvUI settings with categorized entries, version dropdown, and "I got it!" button
 
 ### 📝 Changed
 
 - 🎨 All popups now match Installer design (ElvUI Transparent template)
 - 🗂️ Settings restructured into tree navigation with sub-tabs
-- 📐 Scroll frames use relative anchoring (no more text cutoff)
+- 📐 Scroll frames use fully relative anchoring (no hardcoded pixel offsets)
 - 📦 Installer buttons: Required (red) / Optional (gray)
+- 🔗 Unified URL copy popup across all settings (ElvUI and standalone share the same popup)
+- ⚙️ Standalone Blizzard settings hidden when ElvUI is active (ElvUI handles everything)
+- 🧹 Removed dead code and unused variables across all files
+- 📁 Config files restructured into Config/ folder (Options, Changelog, ElvUI_MagguuUI)
 
 ### 🛠️ Fixed
 
 - 🔗 URL copy buttons in Settings now work reliably
 - 🖱️ ElvUI config navigation via right-click
+- 🐛 Fixed changelog data format (no more tinsert errors)
+- 🐛 Fixed version comparison for changelog read status (number vs string)
 
 ## 🔧 v12.0.3 — Patch (2026-02-09)
 

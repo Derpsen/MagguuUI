@@ -6,10 +6,8 @@ local InCombatLockdown = InCombatLockdown
 
 -- Use centralized colors
 local C = MUI.Colors
-local BLUE = C.BLUE
 local POPUP_BG = C.POPUP_BG
 local POPUP_BORDER = C.POPUP_BORDER
-local EDITBOX_BG = C.EDITBOX_BG
 
 -- ============================================================
 -- Helper: Build addon list string from D.WowUpRequiredList / OptionalList
@@ -46,54 +44,47 @@ local function GetOrCreateURLPopup()
     popup:SetScript("OnDragStart", popup.StartMoving)
     popup:SetScript("OnDragStop", popup.StopMovingOrSizing)
 
-    popup:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8X8",
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = 1,
-    })
-    popup:SetBackdropColor(POPUP_BG[1], POPUP_BG[2], POPUP_BG[3], 0.98)
-    popup:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
+    -- ElvUI Transparent template (matches Installer)
+    if popup.SetTemplate then
+        popup:SetTemplate("Transparent")
+    else
+        popup:SetBackdrop({
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            edgeSize = 1,
+        })
+        popup:SetBackdropColor(POPUP_BG[1], POPUP_BG[2], POPUP_BG[3], 0.95)
+        popup:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
+    end
 
-    -- Accent line top
-    local accent = popup:CreateTexture(nil, "OVERLAY")
-    accent:SetHeight(2)
-    accent:SetPoint("TOPLEFT", popup, "TOPLEFT", 0, 0)
-    accent:SetPoint("TOPRIGHT", popup, "TOPRIGHT", 0, 0)
-    accent:SetColorTexture(BLUE[1], BLUE[2], BLUE[3], 1)
+    -- Header: MagguuUI
+    local header = popup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+    header:SetPoint("TOP", popup, "TOP", 0, -14)
+    header:SetText(MUI.title)
 
-    -- Title
-    local title = popup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-    title:SetPoint("TOP", popup, "TOP", 0, -16)
-    title:SetText("|cff4A8FD9MagguuUI|r |cffC0C8D4Website|r")
+    -- Title (below header)
+    local title = popup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    title:SetPoint("TOP", header, "BOTTOM", 0, -10)
+    popup.title = title
 
     -- Description
     local desc = popup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    desc:SetPoint("TOP", title, "BOTTOM", 0, -6)
-    desc:SetText("|cff999999Press|r |cffC0C8D4Ctrl+C|r |cff999999to copy the URL|r")
-
-    -- EditBox background
-    local ebBg = CreateFrame("Frame", nil, popup, "BackdropTemplate")
-    ebBg:SetHeight(26)
-    ebBg:SetPoint("TOPLEFT", popup, "TOPLEFT", 14, -60)
-    ebBg:SetPoint("TOPRIGHT", popup, "TOPRIGHT", -14, -60)
-    ebBg:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8X8",
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = 1,
-    })
-    ebBg:SetBackdropColor(EDITBOX_BG[1], EDITBOX_BG[2], EDITBOX_BG[3], 1)
-    ebBg:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
+    desc:SetPoint("TOP", title, "BOTTOM", 0, -4)
+    desc:SetText("|cff999999Press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r")
+    popup.desc = desc
 
     -- EditBox
-    local editBox = CreateFrame("EditBox", nil, ebBg)
-    editBox:SetAllPoints()
+    local editBox = CreateFrame("EditBox", nil, popup, "InputBoxTemplate")
+    editBox:SetSize(340, 20)
+    editBox:SetPoint("TOP", desc, "BOTTOM", 0, -8)
     editBox:SetAutoFocus(false)
     editBox:SetFontObject(ChatFontNormal)
-    editBox:SetTextInsets(8, 8, 0, 0)
 
-    editBox:SetScript("OnEscapePressed", function() popup:Hide() end)
+    editBox:SetScript("OnEscapePressed", function(self)
+        self:ClearFocus()
+        popup:Hide()
+    end)
     editBox:SetScript("OnEditFocusGained", function(self) self:HighlightText() end)
-    editBox:SetScript("OnMouseUp", function(self) self:HighlightText() end)
 
     -- Read-only
     editBox:SetScript("OnChar", function(self)
@@ -111,20 +102,20 @@ local function GetOrCreateURLPopup()
     editBox:SetScript("OnKeyDown", function(self, key)
         if key == "C" and IsControlKeyDown() then
             desc:SetText("|cff00ff88Copied!|r")
-            C_Timer.After(0.6, function()
+            C_Timer.After(0.5, function()
                 popup:Hide()
-                desc:SetText("|cff999999Press|r |cffC0C8D4Ctrl+C|r |cff999999to copy the URL|r")
+                desc:SetText("|cff999999Press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r")
             end)
         end
     end)
 
     popup.editBox = editBox
 
-    -- Close button (centered)
+    -- Close button (UIPanelButtonTemplate — ElvUI auto-skins)
     local closeBtn = CreateFrame("Button", nil, popup, "UIPanelButtonTemplate")
-    closeBtn:SetSize(100, 26)
+    closeBtn:SetSize(80, 22)
     closeBtn:SetPoint("BOTTOM", popup, "BOTTOM", 0, 10)
-    closeBtn:SetText("|cffC0C8D4Close|r")
+    closeBtn:SetText("Close")
     closeBtn:SetScript("OnClick", function() popup:Hide() end)
 
     -- ESC to close
@@ -136,10 +127,10 @@ local function GetOrCreateURLPopup()
     return popup
 end
 
-local function ShowURLPopup()
+local function ShowURLPopup(label, url)
     local popup = GetOrCreateURLPopup()
-    local url = "https://ui.magguu.xyz"
 
+    popup.title:SetText(label or "|cff4A8FD9Website|r")
     popup.editBox._muiText = url
     popup.editBox:SetText(url)
     popup:Show()
@@ -149,6 +140,11 @@ local function ShowURLPopup()
         popup.editBox:SetFocus()
         popup.editBox:HighlightText()
     end)
+end
+
+-- Expose globally so ElvUI_MagguuUI.lua can reuse the same popup
+function MUI:ShowURLPopup(label, url)
+    ShowURLPopup(label, url)
 end
 
 MUI.options = {
@@ -273,7 +269,7 @@ MUI.options = {
                     order = 15,
                     type = "execute",
                     func = function()
-                        ShowURLPopup()
+                        ShowURLPopup("|cff4A8FD9Website|r", "https://ui.magguu.xyz")
                     end
                 },
                 spacer_changelog = {

@@ -6,6 +6,7 @@ local E, L, V, P, G = unpack(ElvUI)
 local EP = E.Libs.EP -- ElvUI Plugin Library
 
 local format = format
+local gsub = string.gsub
 local ipairs = ipairs
 local pairs = pairs
 local tostring = tostring
@@ -13,127 +14,43 @@ local tonumber = tonumber
 local tinsert = tinsert
 
 -- ============================================================
--- URL Copy Popup (TOOLTIP strata so it appears above ElvUI config)
+-- Build Changelog Sub-Tab (with version select dropdown)
 -- ============================================================
-local function GetOrCreateURLPopup()
-    if MUI.URLPopup then return MUI.URLPopup end
+local CHANGELOG_CATEGORIES = {
+    { key = "NEW",         label = "New",         color = "00ff88" },
+    { key = "IMPROVEMENT", label = "Improvement",  color = "FFFF00" },
+    { key = "BUGFIX",      label = "Bug Fixes",    color = "FF6666" },
+}
 
-    local popup = CreateFrame("Frame", "MagguuUIURLPopup", UIParent, "BackdropTemplate")
-    popup:SetSize(360, 100)
-    popup:SetPoint("CENTER", 0, 100)
-    popup:SetFrameStrata("TOOLTIP")
-    popup:SetFrameLevel(600)
-    popup:SetMovable(true)
-    popup:EnableMouse(true)
-    popup:RegisterForDrag("LeftButton")
-    popup:SetScript("OnDragStart", popup.StartMoving)
-    popup:SetScript("OnDragStop", popup.StopMovingOrSizing)
-
-    if popup.SetTemplate then
-        popup:SetTemplate("Transparent")
-    else
-        local C = MUI.Colors
-        popup:SetBackdrop({
-            bgFile = "Interface\\Buttons\\WHITE8X8",
-            edgeFile = "Interface\\Buttons\\WHITE8X8",
-            edgeSize = 1,
-        })
-        popup:SetBackdropColor(C.POPUP_BG[1], C.POPUP_BG[2], C.POPUP_BG[3], 0.95)
-        popup:SetBackdropBorderColor(C.POPUP_BORDER[1], C.POPUP_BORDER[2], C.POPUP_BORDER[3], 1)
-    end
-
-    -- Title
-    local title = popup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    title:SetPoint("TOP", popup, "TOP", 0, -10)
-    popup.title = title
-
-    -- EditBox
-    local editBox = CreateFrame("EditBox", nil, popup, "InputBoxTemplate")
-    editBox:SetSize(320, 20)
-    editBox:SetPoint("TOP", title, "BOTTOM", 0, -8)
-    editBox:SetAutoFocus(false)
-    editBox:SetFontObject(ChatFontNormal)
-
-    editBox:SetScript("OnEscapePressed", function(self)
-        self:ClearFocus()
-        popup:Hide()
+local function renderChangeLogLine(line)
+    -- Highlight [bracketed] text in blue
+    line = gsub(line, "%[([^%]]+)%]", function(text)
+        return "|cff4A8FD9[" .. text .. "]|r"
     end)
-    editBox:SetScript("OnEditFocusGained", function(self)
-        self:HighlightText()
-    end)
-
-    -- Read-only
-    editBox:SetScript("OnChar", function(self)
-        self:SetText(self._muiURL or "")
-        self:HighlightText()
-    end)
-    editBox:SetScript("OnTextChanged", function(self, userInput)
-        if userInput then
-            self:SetText(self._muiURL or "")
-            self:HighlightText()
-        end
-    end)
-
-    -- Ctrl+C feedback
-    editBox:SetScript("OnKeyDown", function(self, key)
-        if key == "C" and IsControlKeyDown() then
-            title:SetText("|cff00ff88Copied!|r")
-            C_Timer.After(0.5, function()
-                popup:Hide()
-            end)
-        end
-    end)
-
-    popup.editBox = editBox
-
-    -- Close button
-    local closeBtn = CreateFrame("Button", nil, popup, "UIPanelButtonTemplate")
-    closeBtn:SetSize(80, 22)
-    closeBtn:SetPoint("BOTTOM", popup, "BOTTOM", 0, 8)
-    closeBtn:SetText("Close")
-    closeBtn:SetScript("OnClick", function() popup:Hide() end)
-
-    tinsert(UISpecialFrames, "MagguuUIURLPopup")
-    popup:Hide()
-    MUI.URLPopup = popup
-
-    return popup
+    return line
 end
 
-local function ShowURL(label, url)
-    local popup = GetOrCreateURLPopup()
-    popup.title:SetText(label)
-    popup.editBox._muiURL = url
-    popup.editBox:SetText(url)
-    popup:Show()
-    popup:Raise()
-    C_Timer.After(0.05, function()
-        popup.editBox:SetFocus()
-        popup.editBox:HighlightText()
-    end)
-end
-
--- ============================================================
--- Build Changelog Sub-Tab (WindTools-Style with version select)
--- ============================================================
 local function BuildChangelogOptions()
-    local H = MUI.ChangelogHelpers
-    if not H then return {} end
+    if not MUI.Changelog then return {} end
 
     local changelogArgs = {}
-    local versions = H.GetSortedVersions()
 
-    for _, versionCode in ipairs(versions) do
-        local data = MUI.Changelog[versionCode]
-        local versionStr = H.VersionCodeToString(versionCode)
+    for version, data in pairs(MUI.Changelog) do
+        local versionString = format("%d.%d.%d",
+            math.floor(version / 10000),
+            math.floor((version % 10000) / 100),
+            version % 100
+        )
+        local changelogVer = version
+        local dateString = data.RELEASE_DATE or ""
 
         local page = {}
 
-        -- Date
+        -- Date line
         page.date = {
             order = 1,
             type = "description",
-            name = "|cff666666" .. (data.RELEASE_DATE or "") .. " Released|r",
+            name = "|cffbbbbbb" .. dateString .. " Released|r",
             fontSize = "small",
         }
 
@@ -141,29 +58,29 @@ local function BuildChangelogOptions()
         page.version = {
             order = 2,
             type = "description",
-            name = "|cff999999Version|r |cff4A8FD9" .. versionStr .. "|r",
+            name = "|cff999999Version|r |cff4A8FD9" .. versionString .. "|r",
             fontSize = "large",
         }
 
         -- Build categorized entries
         local entryOrder = 3
-        for _, cat in ipairs(H.CATEGORIES) do
+        for _, cat in ipairs(CHANGELOG_CATEGORIES) do
             local entries = data[cat.key]
             if entries and #entries > 0 then
-                page["header_" .. cat.key] = {
+                page[cat.key .. "Header"] = {
                     order = entryOrder,
                     type = "header",
                     name = "|cff" .. cat.color .. cat.label .. "|r",
                 }
                 entryOrder = entryOrder + 1
 
-                page["entries_" .. cat.key] = {
+                page[cat.key .. "Entries"] = {
                     order = entryOrder,
                     type = "description",
                     name = function()
                         local text = ""
-                        for i, line in ipairs(entries) do
-                            text = text .. format("%02d. %s\n", i, H.RenderLine(line))
+                        for index, line in ipairs(entries) do
+                            text = text .. format("%02d", index) .. ". " .. renderChangeLogLine(line) .. "\n"
                         end
                         return text .. "\n"
                     end,
@@ -174,48 +91,47 @@ local function BuildChangelogOptions()
         end
 
         -- "Got it!" confirmation (hidden once read)
-        page.spacer_confirm1 = {
+        local function isChangelogRead()
+            local dbVer = MUI.db and MUI.db.global and MUI.db.global.changelogRead
+            if not dbVer then return false end
+            -- Handle legacy string values from older versions
+            dbVer = tonumber(dbVer) or 0
+            return dbVer >= changelogVer
+        end
+
+        page.beforeConfirm1 = {
             order = 90,
             type = "description",
             name = " ",
             width = "full",
-            hidden = function()
-                local dbVer = MUI.db and MUI.db.global and MUI.db.global.changelogRead
-                return dbVer and dbVer >= versionStr
-            end,
+            hidden = isChangelogRead,
         }
 
-        page.spacer_confirm2 = {
+        page.beforeConfirm2 = {
             order = 91,
             type = "description",
             name = " ",
             width = "full",
-            hidden = function()
-                local dbVer = MUI.db and MUI.db.global and MUI.db.global.changelogRead
-                return dbVer and dbVer >= versionStr
-            end,
+            hidden = isChangelogRead,
         }
 
         page.confirm = {
             order = 92,
             type = "execute",
-            name = "|cff00ff88Got it!|r",
+            name = "|cff00ff88I got it!|r",
             desc = "Mark as read — the changelog popup won't show for this version on next login.",
             width = "full",
-            hidden = function()
-                local dbVer = MUI.db and MUI.db.global and MUI.db.global.changelogRead
-                return dbVer and dbVer >= versionStr
-            end,
+            hidden = isChangelogRead,
             func = function()
                 if MUI.db and MUI.db.global then
-                    MUI.db.global.changelogRead = versionStr
+                    MUI.db.global.changelogRead = changelogVer
                 end
             end,
         }
 
-        changelogArgs[tostring(versionCode)] = {
-            order = 1000000 - versionCode,
-            name = versionStr,
+        changelogArgs[tostring(version)] = {
+            order = 1000000 - version,
+            name = versionString,
             type = "group",
             args = page,
         }
@@ -225,7 +141,7 @@ local function BuildChangelogOptions()
 end
 
 -- ============================================================
--- Add MagguuUI to ElvUI Options Menu (WindTools-Style Tree)
+-- Add MagguuUI to ElvUI Options Menu
 -- ============================================================
 local function InsertMagguuUIOptions()
     if not E.Options or not E.Options.args then return end
@@ -525,7 +441,7 @@ local function InsertMagguuUIOptions()
             -- ========================================
             -- 3. Information (Tree Entry with Sub-Tabs)
             --    Tabs: About, Changelog, System
-            --    (like WindTools: Help, Credits, Changelog)
+            --    Tabs: About, Changelog, System
             -- ========================================
             information = {
                 order = 3,
@@ -566,7 +482,7 @@ local function InsertMagguuUIOptions()
                                 name = "Website  |cff4A8FD9ui.magguu.xyz|r",
                                 desc = "Copy the MagguuUI website URL",
                                 func = function()
-                                    ShowURL(
+                                    MUI:ShowURLPopup(
                                         "|cff4A8FD9Website|r",
                                         "https://ui.magguu.xyz"
                                     )
@@ -579,7 +495,7 @@ local function InsertMagguuUIOptions()
                                 name = "CurseForge",
                                 desc = "Copy the CurseForge project URL",
                                 func = function()
-                                    ShowURL(
+                                    MUI:ShowURLPopup(
                                         "|cff4A8FD9CurseForge|r",
                                         "https://www.curseforge.com/wow/addons/magguuui"
                                     )
@@ -605,13 +521,13 @@ local function InsertMagguuUIOptions()
                         },
                     },
 
-                    -- Tab: Changelog (with version dropdown)
+                    -- Tab: Changelog (with version dropdown — built lazily)
                     changelog = {
                         order = 2,
                         type = "group",
                         childGroups = "select",
                         name = "Changelog",
-                        args = BuildChangelogOptions(),
+                        args = {},
                     },
 
                     -- Tab: System
@@ -717,11 +633,12 @@ end
 local function InitializePlugin()
     InsertMagguuUIOptions()
 
-    -- Show changelog popup if needed (after a short delay)
-    if MUI.ShowChangelogIfNeeded then
-        C_Timer.After(3, function()
-            MUI:ShowChangelogIfNeeded()
-        end)
+    -- Fill changelog args now that Changelog.lua is loaded
+    local clArgs = E.Options.args.magguuui
+        and E.Options.args.magguuui.args.information
+        and E.Options.args.magguuui.args.information.args.changelog
+    if clArgs then
+        clArgs.args = BuildChangelogOptions()
     end
 end
 

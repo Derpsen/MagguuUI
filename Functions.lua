@@ -60,6 +60,12 @@ function MUI:ToggleInstaller()
 end
 
 function MUI:ToggleSettings()
+    if self:IsAddOnEnabled("ElvUI") then
+        local E = unpack(ElvUI)
+        E:ToggleOptions("magguuui")
+        return
+    end
+
     if self:CloseSettings() then
         return
     end
@@ -191,6 +197,8 @@ function MUI:CreateMinimapButton()
             MUI:ToggleInstaller()
         elseif button == "RightButton" then
             MUI:ToggleSettings()
+        elseif button == "MiddleButton" then
+            MUI:ShowChangelog()
         end
     end)
 
@@ -199,6 +207,7 @@ function MUI:CreateMinimapButton()
         GameTooltip:AddLine(MUI.title)
         GameTooltip:AddLine("|cff4A8FD9Left-Click:|r Toggle Installer", 1, 1, 1)
         GameTooltip:AddLine("|cffC0C8D4Right-Click:|r Toggle Settings", 1, 1, 1)
+        GameTooltip:AddLine("|cff999999Middle-Click:|r Toggle Changelog", 1, 1, 1)
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine("|cff666666/mui for commands|r", 0.5, 0.5, 0.5)
         GameTooltip:Show()
@@ -209,7 +218,7 @@ function MUI:CreateMinimapButton()
     end)
 
     btn:RegisterForDrag("LeftButton")
-    btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    btn:RegisterForClicks("LeftButtonUp", "RightButtonUp", "MiddleButtonUp")
 
     btn:SetScript("OnDragStart", function(self)
         self:SetScript("OnUpdate", function(self)

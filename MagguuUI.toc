@@ -43,3 +43,4 @@ Installer.lua
 
 Config\Options.lua
 Config\Changelog.lua
+Config\ElvUI_MagguuUI.lua

@@ -13,7 +13,6 @@ local ACTIVE_BG = C.ACTIVE_BG
 local DIM = C.DIM
 local POPUP_BG = C.POPUP_BG
 local POPUP_BORDER = C.POPUP_BORDER
-local EDITBOX_BG = C.EDITBOX_BG
 
 -- ============================================================
 -- Install All Profiles (fresh install, sequential)
@@ -41,48 +40,57 @@ local function GetOrCreateWowUpPopup()
     popup:SetScript("OnDragStart", popup.StartMoving)
     popup:SetScript("OnDragStop", popup.StopMovingOrSizing)
 
-    popup:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8X8",
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = 1,
-    })
-    popup:SetBackdropColor(POPUP_BG[1], POPUP_BG[2], POPUP_BG[3], 0.98)
-    popup:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
+    -- ElvUI Transparent template (matches Installer)
+    if popup.SetTemplate then
+        popup:SetTemplate("Transparent")
+    else
+        popup:SetBackdrop({
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            edgeSize = 1,
+        })
+        popup:SetBackdropColor(POPUP_BG[1], POPUP_BG[2], POPUP_BG[3], 0.95)
+        popup:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
+    end
 
-    -- Accent line top
-    local accent = popup:CreateTexture(nil, "OVERLAY")
-    accent:SetHeight(2)
-    accent:SetPoint("TOPLEFT", popup, "TOPLEFT", 0, 0)
-    accent:SetPoint("TOPRIGHT", popup, "TOPRIGHT", 0, 0)
-    accent:SetColorTexture(BLUE[1], BLUE[2], BLUE[3], 1)
+    -- Header: MagguuUI
+    local header = popup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+    header:SetPoint("TOP", popup, "TOP", 0, -14)
+    header:SetText(MUI.title)
 
-    -- Title (dynamic)
-    local title = popup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-    title:SetPoint("TOP", popup, "TOP", 0, -16)
+    -- Title (dynamic, below header)
+    local title = popup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    title:SetPoint("TOP", header, "BOTTOM", 0, -10)
     popup.title = title
 
     -- Description
     local desc = popup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    desc:SetPoint("TOP", title, "BOTTOM", 0, -8)
+    desc:SetPoint("TOP", title, "BOTTOM", 0, -4)
+    desc:SetPoint("LEFT", popup, "LEFT", 14, 0)
+    desc:SetPoint("RIGHT", popup, "RIGHT", -14, 0)
     desc:SetText("|cff999999Click the text below to select all, then press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r")
     popup.desc = desc
 
-    -- ScrollFrame + EditBox
+    -- ScrollFrame + EditBox (relative anchoring to desc)
     local scrollFrame = CreateFrame("ScrollFrame", nil, popup, "UIPanelScrollFrameTemplate")
-    scrollFrame:SetPoint("TOPLEFT", popup, "TOPLEFT", 14, -64)
+    scrollFrame:SetPoint("TOPLEFT", desc, "BOTTOMLEFT", 0, -20)
     scrollFrame:SetPoint("BOTTOMRIGHT", popup, "BOTTOMRIGHT", -32, 50)
 
-    -- Scrollframe backdrop
+    -- Scroll background (transparent)
     local sfBg = CreateFrame("Frame", nil, popup, "BackdropTemplate")
     sfBg:SetPoint("TOPLEFT", scrollFrame, "TOPLEFT", -4, 4)
     sfBg:SetPoint("BOTTOMRIGHT", scrollFrame, "BOTTOMRIGHT", 20, -4)
-    sfBg:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8X8",
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = 1,
-    })
-    sfBg:SetBackdropColor(EDITBOX_BG[1], EDITBOX_BG[2], EDITBOX_BG[3], 1)
-    sfBg:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
+    if sfBg.SetTemplate then
+        sfBg:SetTemplate("Transparent")
+    else
+        sfBg:SetBackdrop({
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            edgeSize = 1,
+        })
+        sfBg:SetBackdropColor(0.02, 0.02, 0.02, 0.6)
+        sfBg:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
+    end
     sfBg:SetFrameLevel(popup:GetFrameLevel() + 1)
     scrollFrame:SetFrameLevel(sfBg:GetFrameLevel() + 1)
 
@@ -122,18 +130,11 @@ local function GetOrCreateWowUpPopup()
     scrollFrame:SetScrollChild(editBox)
     popup.editBox = editBox
 
-    -- Click anywhere on the editbox background to select all
-    sfBg:EnableMouse(true)
-    sfBg:SetScript("OnMouseDown", function()
-        editBox:SetFocus()
-        editBox:HighlightText()
-    end)
-
-    -- Close button (centered)
+    -- Close button (UIPanelButtonTemplate — ElvUI auto-skins)
     local closeBtn = CreateFrame("Button", nil, popup, "UIPanelButtonTemplate")
-    closeBtn:SetSize(100, 26)
-    closeBtn:SetPoint("BOTTOM", popup, "BOTTOM", 0, 12)
-    closeBtn:SetText("|cffC0C8D4Close|r")
+    closeBtn:SetSize(80, 22)
+    closeBtn:SetPoint("BOTTOM", popup, "BOTTOM", 0, 14)
+    closeBtn:SetText("Close")
     closeBtn:SetScript("OnClick", function() popup:Hide() end)
 
     -- ESC to close

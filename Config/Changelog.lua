@@ -1,105 +1,159 @@
 local MUI = unpack(MagguuUI)
 
+local format = format
+local ipairs = ipairs
+local pairs = pairs
+local tinsert = tinsert
+
 -- ============================================================
--- Changelog Data (newest first)
+-- Changelog Data (keyed by version code)
+-- Version code = major * 10000 + minor * 100 + patch
 -- ============================================================
-local CHANGELOG = {
-    {
-        version = "12.0.4",
-        date = "2026-02-14",
-        title = "Settings & Popup Overhaul",
-        entries = {
-            "|cff00ff88New:|r Tree layout with sub-tabs in ElvUI settings",
-            "|cff00ff88New:|r Minimap middle-click toggles Changelog popup",
-            "|cff00ff88New:|r Right-click opens ElvUI settings directly to MagguuUI section",
-            "|cff00ff88New:|r URL copy popup for Website and CurseForge links",
-            "|cff00ff88New:|r WowUp strings split into |cffFF6666Required|r and |cff999999Optional|r",
-            "|cff00ff88New:|r Changelog popup on version update",
-            "|cffFFFF00Changed:|r All popups now match Installer design (ElvUI Transparent template)",
-            "|cffFFFF00Changed:|r Settings restructured: Installer / Settings / Information with sub-tabs",
-            "|cffFFFF00Changed:|r Scroll frames use relative anchoring (no more text cutoff)",
-            "|cffFFFF00Changed:|r Installer buttons: |cffFF6666Required|r (red) / |cff999999Optional|r (gray)",
-            "|cffFF6666Fixed:|r URL copy buttons in Settings now work reliably",
-            "|cffFF6666Fixed:|r ElvUI config navigation via right-click",
-        }
+MUI.Changelog = {}
+
+MUI.Changelog[120004] = {
+    RELEASE_DATE = "2026/02/14",
+    NEW = {
+        "Tree layout with sub-tabs in ElvUI settings",
+        "Minimap middle-click toggles Changelog popup",
+        "Right-click opens ElvUI settings directly to MagguuUI section",
+        "URL copy popup for Website and CurseForge links",
+        "WowUp strings split into [Required] and [Optional]",
+        "Changelog popup on version update",
+        "Changelog tab in ElvUI settings with version dropdown and [I got it!] button",
     },
-    {
-        version = "12.0.3",
-        date = "2026-02-09",
-        title = "EditMode Update",
-        entries = {
-            "|cffFFFF00Changed:|r Updated Blizzard EditMode profile string",
-        }
+    IMPROVEMENT = {
+        "All popups now match Installer design (ElvUI Transparent template)",
+        "Settings restructured: Installer / Settings / Information with sub-tabs",
+        "Scroll frames use fully relative anchoring (no hardcoded pixel offsets)",
+        "Installer buttons: [Required] (red) / [Optional] (gray)",
+        "Unified URL copy popup across all settings (shared between ElvUI and standalone)",
+        "Standalone Blizzard settings hidden when ElvUI is active",
+        "Config files restructured into Config/ folder",
     },
-    {
-        version = "12.0.2",
-        date = "2026-02-09",
-        title = "Settings Overhaul",
-        entries = {
-            "|cff00ff88New:|r ElvUI_Anchor as recommended dependency",
-            "|cff00ff88New:|r Version info in Settings",
-            "|cff00ff88New:|r Website link with copy popup",
-            "|cff00ff88New:|r Copy feedback — popups show |cff00ff88Copied!|r and auto-close",
-            "|cffFF6666Fixed:|r Removed broken Accept button from WowUp settings",
-            "|cffFF6666Fixed:|r Website URL popup now works reliably",
-            "|cffFFFF00Changed:|r License to GPLv3",
-            "|cffFFFF00Changed:|r Version scheme to 12.0.x",
-        }
-    },
-    {
-        version = "12.0.1",
-        date = "2026-02-09",
-        title = "Patch",
-        entries = {
-            "|cff00ff88New:|r ElvUI WindTools as optional dependency",
-            "|cff00ff88New:|r Website link for class-specific BCM layouts",
-            "|cffFF6666Fixed:|r ElvUI download link corrected",
-        }
-    },
-    {
-        version = "12.0.0",
-        date = "2026-02-08",
-        title = "Initial Release",
-        entries = {
-            "|cff00ff88New:|r One-click Install All",
-            "|cff00ff88New:|r Guided step-by-step installer",
-            "|cff00ff88New:|r Automatic profile loading for new characters",
-            "|cff00ff88New:|r WowUp import string",
-            "|cff00ff88New:|r Minimap button & Addon Compartment",
-            "|cff00ff88New:|r Chat commands: /mui install, settings, minimap, version, status",
-        }
+    BUGFIX = {
+        "URL copy buttons in Settings now work reliably",
+        "ElvUI config navigation via right-click",
+        "Fixed changelog data format errors",
+        "Fixed version comparison for changelog read status",
     },
 }
 
+MUI.Changelog[120003] = {
+    RELEASE_DATE = "2026/02/09",
+    IMPROVEMENT = {
+        "Updated Blizzard EditMode profile string",
+    },
+}
+
+MUI.Changelog[120002] = {
+    RELEASE_DATE = "2026/02/09",
+    NEW = {
+        "ElvUI_Anchor as recommended dependency",
+        "Version info in Settings",
+        "Website link with copy popup",
+        "Copy feedback — popups show [Copied!] and auto-close",
+    },
+    IMPROVEMENT = {
+        "License to GPLv3",
+        "Version scheme to 12.0.x",
+    },
+    BUGFIX = {
+        "Removed broken Accept button from WowUp settings",
+        "Website URL popup now works reliably",
+    },
+}
+
+MUI.Changelog[120001] = {
+    RELEASE_DATE = "2026/02/09",
+    NEW = {
+        "ElvUI WindTools as optional dependency",
+        "Website link for class-specific BCM layouts",
+    },
+    BUGFIX = {
+        "ElvUI download link corrected",
+    },
+}
+
+MUI.Changelog[120000] = {
+    RELEASE_DATE = "2026/02/08",
+    NEW = {
+        "One-click Install All",
+        "Guided step-by-step installer",
+        "Automatic profile loading for new characters",
+        "WowUp import string",
+        "Minimap button & Addon Compartment",
+        "Chat commands: /mui install, settings, minimap, version, status",
+    },
+}
+
+-- ============================================================
 -- Use centralized colors
+-- ============================================================
 local C = MUI.Colors
-local BLUE = C.BLUE
 local POPUP_BG = C.POPUP_BG
 local POPUP_BORDER = C.POPUP_BORDER
 local CONTENT_BG = C.CONTENT_BG
 
 -- ============================================================
--- Build changelog text for display
+-- Build changelog text for popup display
 -- ============================================================
-local function BuildChangelogText(fromVersion)
+local function VersionCodeToString(code)
+    local major = math.floor(code / 10000)
+    local minor = math.floor((code % 10000) / 100)
+    local patch = code % 100
+    return format("%d.%d.%d", major, minor, patch)
+end
+
+local CATEGORY_LABELS = {
+    { key = "NEW",         label = "New",     color = "00ff88" },
+    { key = "IMPROVEMENT", label = "Changed",  color = "FFFF00" },
+    { key = "BUGFIX",      label = "Fixed",    color = "FF6666" },
+}
+
+local function BuildChangelogText(fromVersionCode)
     local lines = {}
 
-    for _, entry in ipairs(CHANGELOG) do
+    -- Sort versions newest first
+    local versions = {}
+    for code in pairs(MUI.Changelog) do
+        tinsert(versions, code)
+    end
+    table.sort(versions, function(a, b) return a > b end)
+
+    for _, code in ipairs(versions) do
+        local data = MUI.Changelog[code]
+        local vStr = VersionCodeToString(code)
+
         -- Show the latest version always, or all versions newer than lastSeen
-        if not fromVersion or entry.version > fromVersion or entry.version == CHANGELOG[1].version then
-            tinsert(lines, format("|cff4A8FD9v%s|r |cff666666— %s|r |cffC0C8D4%s|r", entry.version, entry.date, entry.title))
+        if not fromVersionCode or code >= fromVersionCode or code == versions[1] then
+            tinsert(lines, format("|cff4A8FD9v%s|r  |cff666666— %s|r", vStr, data.RELEASE_DATE or ""))
             tinsert(lines, "")
 
-            for _, text in ipairs(entry.entries) do
-                tinsert(lines, "  • " .. text)
+            for _, cat in ipairs(CATEGORY_LABELS) do
+                local entries = data[cat.key]
+                if entries and #entries > 0 then
+                    tinsert(lines, format("  |cff%s%s:|r", cat.color, cat.label))
+                    for i, entry in ipairs(entries) do
+                        tinsert(lines, format("    %02d. %s", i, entry))
+                    end
+                    tinsert(lines, "")
+                end
             end
 
-            tinsert(lines, "")
             tinsert(lines, "")
         end
     end
 
     return table.concat(lines, "\n")
+end
+
+-- Helper: convert version string "12.0.4" to code 120004
+local function VersionStringToCode(str)
+    if not str then return 0 end
+    local major, minor, patch = str:match("^(%d+)%.(%d+)%.(%d+)$")
+    if not major then return 0 end
+    return tonumber(major) * 10000 + tonumber(minor) * 100 + tonumber(patch)
 end
 
 -- ============================================================
@@ -109,9 +163,9 @@ local function GetOrCreateChangelogPopup()
     if MUI.ChangelogPopup then return MUI.ChangelogPopup end
 
     local popup = CreateFrame("Frame", "MagguuUIChangelogPopup", UIParent, "BackdropTemplate")
-    popup:SetSize(500, 420)
+    popup:SetSize(520, 440)
     popup:SetPoint("CENTER")
-    popup:SetFrameStrata("FULLSCREEN_DIALOG")
+    popup:SetFrameStrata("TOOLTIP")
     popup:SetFrameLevel(500)
     popup:SetMovable(true)
     popup:EnableMouse(true)
@@ -119,53 +173,63 @@ local function GetOrCreateChangelogPopup()
     popup:SetScript("OnDragStart", popup.StartMoving)
     popup:SetScript("OnDragStop", popup.StopMovingOrSizing)
 
-    popup:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8X8",
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = 1,
-    })
-    popup:SetBackdropColor(POPUP_BG[1], POPUP_BG[2], POPUP_BG[3], 0.98)
-    popup:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
+    -- ElvUI Transparent template (matches Installer)
+    if popup.SetTemplate then
+        popup:SetTemplate("Transparent")
+    else
+        popup:SetBackdrop({
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            edgeSize = 1,
+        })
+        popup:SetBackdropColor(POPUP_BG[1], POPUP_BG[2], POPUP_BG[3], 0.95)
+        popup:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
+    end
 
-    -- Accent line top
-    local accent = popup:CreateTexture(nil, "OVERLAY")
-    accent:SetHeight(2)
-    accent:SetPoint("TOPLEFT", popup, "TOPLEFT", 0, 0)
-    accent:SetPoint("TOPRIGHT", popup, "TOPRIGHT", 0, 0)
-    accent:SetColorTexture(BLUE[1], BLUE[2], BLUE[3], 1)
+    -- Logo
+    local logo = popup:CreateTexture(nil, "ARTWORK")
+    logo:SetSize(200, 100)
+    logo:SetPoint("TOP", popup, "TOP", 0, -10)
+    logo:SetTexture("Interface\\AddOns\\MagguuUI\\Media\\Textures\\LogoTop.tga")
 
-    -- Title
+    -- Title (below logo)
     local title = popup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-    title:SetPoint("TOP", popup, "TOP", 0, -16)
+    title:SetPoint("TOP", logo, "BOTTOM", 0, -6)
     popup.title = title
 
     -- Subtitle
     local subtitle = popup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     subtitle:SetPoint("TOP", title, "BOTTOM", 0, -4)
+    subtitle:SetPoint("LEFT", popup, "LEFT", 14, 0)
+    subtitle:SetPoint("RIGHT", popup, "RIGHT", -14, 0)
     subtitle:SetText("|cff999999What's new in this update|r")
 
-    -- ScrollFrame
+    -- ScrollFrame (fully relative — anchored below subtitle with one line gap)
     local scrollFrame = CreateFrame("ScrollFrame", nil, popup, "UIPanelScrollFrameTemplate")
-    scrollFrame:SetPoint("TOPLEFT", popup, "TOPLEFT", 14, -58)
+    scrollFrame:SetPoint("TOPLEFT", subtitle, "BOTTOMLEFT", 0, -20)
     scrollFrame:SetPoint("BOTTOMRIGHT", popup, "BOTTOMRIGHT", -32, 50)
 
-    -- Scrollframe backdrop
+    -- Scroll background (transparent)
     local sfBg = CreateFrame("Frame", nil, popup, "BackdropTemplate")
     sfBg:SetPoint("TOPLEFT", scrollFrame, "TOPLEFT", -4, 4)
     sfBg:SetPoint("BOTTOMRIGHT", scrollFrame, "BOTTOMRIGHT", 20, -4)
-    sfBg:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8X8",
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = 1,
-    })
-    sfBg:SetBackdropColor(CONTENT_BG[1], CONTENT_BG[2], CONTENT_BG[3], 1)
-    sfBg:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
+    if sfBg.SetTemplate then
+        sfBg:SetTemplate("Transparent")
+    else
+        sfBg:SetBackdrop({
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            edgeSize = 1,
+        })
+        sfBg:SetBackdropColor(CONTENT_BG[1], CONTENT_BG[2], CONTENT_BG[3], 0.6)
+        sfBg:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
+    end
     sfBg:SetFrameLevel(popup:GetFrameLevel() + 1)
     scrollFrame:SetFrameLevel(sfBg:GetFrameLevel() + 1)
 
     -- Content text
     local content = CreateFrame("Frame", nil, scrollFrame)
-    content:SetWidth(scrollFrame:GetWidth() - 10)
+    content:SetWidth(440)
     content:SetHeight(1)
 
     local text = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -179,11 +243,11 @@ local function GetOrCreateChangelogPopup()
     popup.content = content
     popup.text = text
 
-    -- Close button
+    -- Close button (UIPanelButtonTemplate — ElvUI auto-skins)
     local closeBtn = CreateFrame("Button", nil, popup, "UIPanelButtonTemplate")
     closeBtn:SetSize(120, 26)
-    closeBtn:SetPoint("BOTTOM", popup, "BOTTOM", 0, 12)
-    closeBtn:SetText("|cffC0C8D4Got it!|r")
+    closeBtn:SetPoint("BOTTOM", popup, "BOTTOM", 0, 14)
+    closeBtn:SetText("Got it!")
     closeBtn:SetScript("OnClick", function() popup:Hide() end)
 
     -- ESC to close
@@ -201,7 +265,8 @@ local function ShowChangelog(fromVersion)
 
     popup.title:SetText(format("|cff4A8FD9MagguuUI|r |cffC0C8D4v%s|r", version))
 
-    local changelogText = BuildChangelogText(fromVersion)
+    local fromCode = VersionStringToCode(fromVersion)
+    local changelogText = BuildChangelogText(fromCode > 0 and fromCode or nil)
     popup.text:SetText(changelogText)
 
     -- Resize content frame to fit text
@@ -234,7 +299,6 @@ frame:SetScript("OnEvent", function(self, event, isInitialLogin, isReloadingUi)
         -- Don't show on first ever install (installer handles that)
         if not lastSeen then
             MUI.db.global.lastSeenVersion = currentVersion
-
             return
         end
 
@@ -250,5 +314,9 @@ end)
 -- Manual access via chat command or settings
 -- ============================================================
 function MUI:ShowChangelog()
+    if MUI.ChangelogPopup and MUI.ChangelogPopup:IsShown() then
+        MUI.ChangelogPopup:Hide()
+        return
+    end
     ShowChangelog(nil)
 end

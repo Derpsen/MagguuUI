@@ -20,6 +20,8 @@ do
     function MUI:AddonCompartmentFunc(_, _, _, _, mouseButton)
         if mouseButton == "LeftButton" then
             MUI:ToggleInstaller()
+        elseif mouseButton == "MiddleButton" then
+            MUI:ShowChangelog()
         else
             MUI:ToggleSettings()
         end
@@ -49,7 +51,11 @@ function MUI:OnInitialize()
     end
 
     self:RegisterChatCommand("mui", "HandleChatCommand")
-    _G.LibStub("AceConfig-3.0"):RegisterOptionsTable("MagguuUI", self.options)
 
-    self.category = select(2, _G.LibStub("AceConfigDialog-3.0"):AddToBlizOptions("MagguuUI"))
+    -- Only register standalone Blizzard settings when ElvUI is NOT active
+    -- (ElvUI_MagguuUI.lua handles all settings inside ElvUI's config)
+    if not self:IsAddOnEnabled("ElvUI") then
+        _G.LibStub("AceConfig-3.0"):RegisterOptionsTable("MagguuUI", self.options)
+        self.category = select(2, _G.LibStub("AceConfigDialog-3.0"):AddToBlizOptions("MagguuUI"))
+    end
 end
