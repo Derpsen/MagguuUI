@@ -2,3 +2,4 @@ push.bat
 push.ps1
 CODE_REVIEW.md
 SharedMedia.lua
+unlock-git.bat

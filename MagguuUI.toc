@@ -42,5 +42,4 @@ Setup\AddOns\!load.xml
 Installer.lua
 
 Config\Options.lua
-Config\ElvUIIntegration.lua
 Config\Changelog.lua
