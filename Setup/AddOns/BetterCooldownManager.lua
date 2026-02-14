@@ -13,9 +13,6 @@ function SE.BetterCooldownManager(addon, import, resolution)
 
         SE.CompleteSetup(addon)
 
-        MUI.db.char.loaded = true
-        MUI.db.global.version = MUI.version
-
         return
     end
 

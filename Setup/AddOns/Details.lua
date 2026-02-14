@@ -20,9 +20,6 @@ function SE.Details(addon, import, resolution)
         end
 
         SE.CompleteSetup(addon)
-
-        MUI.db.char.loaded = true
-        MUI.db.global.version = MUI.version
     else
         if not Details:GetProfile("MagguuUI") then
             SE.RemoveFromDatabase(addon)

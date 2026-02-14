@@ -3,78 +3,25 @@ local I = MUI:GetModule("Installer")
 local SE = MUI:GetModule("Setup")
 local D = MUI:GetModule("Data")
 
--- Color constants
-local BLUE = {0.27, 0.54, 0.83}
-local SILVER = {0.76, 0.80, 0.85}
-local DARK_BG = {0.08, 0.11, 0.16}
-local HOVER_BG = {0.14, 0.19, 0.28}
-local ACTIVE_BG = {0.18, 0.24, 0.35}
-local DIM = {0.45, 0.45, 0.50}
-
--- Installer-matched black (ElvUI installer uses near-black)
-local POPUP_BG = {0.05, 0.05, 0.05}
-local POPUP_BORDER = {0.12, 0.12, 0.12}
-local EDITBOX_BG = {0.02, 0.02, 0.02}
+-- Use centralized colors
+local C = MUI.Colors
+local BLUE = C.BLUE
+local SILVER = C.SILVER
+local DARK_BG = C.DARK_BG
+local HOVER_BG = C.HOVER_BG
+local ACTIVE_BG = C.ACTIVE_BG
+local DIM = C.DIM
+local POPUP_BG = C.POPUP_BG
+local POPUP_BORDER = C.POPUP_BORDER
+local EDITBOX_BG = C.EDITBOX_BG
 
 -- ============================================================
 -- Install All Profiles (fresh install, sequential)
 -- ============================================================
+local INSTALL_ORDER = {"ElvUI", "BetterCooldownManager", "Blizzard_EditMode", "Details", "Plater"}
+
 local function InstallAllProfiles()
-    local SE = MUI:GetModule("Setup")
-
-    -- BigWigs must be last (its popup requires user interaction)
-    local addonOrder = {"ElvUI", "BetterCooldownManager", "Blizzard_EditMode", "Details", "Plater"}
-    local queue = {}
-    local hasBigWigs = false
-
-    for _, addon in ipairs(addonOrder) do
-        if MUI:IsAddOnEnabled(addon) then
-            tinsert(queue, addon)
-        end
-    end
-
-    if MUI:IsAddOnEnabled("BigWigs") then
-        hasBigWigs = true
-    end
-
-    if #queue == 0 and not hasBigWigs then
-        MUI:Print("|cff999999No supported addons are enabled.|r")
-
-        return
-    end
-
-    local index = 0
-    local total = #queue
-
-    local function InstallNext()
-        index = index + 1
-
-        if index > total then
-            -- All non-BigWigs addons done
-            if hasBigWigs then
-                MUI:Print(format("|cff999999Installing profile|r |cff4A8FD9BigWigs|r |cff999999(%d/%d)...|r", total + 1, total + 1))
-                MUI._bigWigsReloadPending = true
-
-                SE:Setup("BigWigs", true)
-                -- Reload popup will be shown by BigWigs callback
-            else
-                MUI:Print(format("|cff00ff88All %d profiles installed.|r", total))
-
-                StaticPopup_Show("MAGGUUI_RELOAD")
-            end
-
-            return
-        end
-
-        local addon = queue[index]
-        local displayTotal = hasBigWigs and (total + 1) or total
-        MUI:Print(format("|cff999999Installing profile|r |cff4A8FD9%s|r |cff999999(%d/%d)...|r", addon, index, displayTotal))
-        SE:Setup(addon, true)
-
-        C_Timer.After(0.3, InstallNext)
-    end
-
-    InstallNext()
+    MUI:ProcessProfileQueue(true, INSTALL_ORDER)
 end
 
 -- ============================================================

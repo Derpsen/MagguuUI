@@ -4,6 +4,13 @@ local D = MUI:GetModule("Data")
 
 local InCombatLockdown = InCombatLockdown
 
+-- Use centralized colors
+local C = MUI.Colors
+local BLUE = C.BLUE
+local POPUP_BG = C.POPUP_BG
+local POPUP_BORDER = C.POPUP_BORDER
+local EDITBOX_BG = C.EDITBOX_BG
+
 -- ============================================================
 -- Helper: Build addon list string from D.WowUpRequiredList / OptionalList
 -- ============================================================
@@ -25,12 +32,6 @@ end
 -- ============================================================
 -- URL Copy Popup (same style as WowUp popup)
 -- ============================================================
-local BLUE = {0.27, 0.54, 0.83}
-local SILVER = {0.76, 0.80, 0.85}
-local POPUP_BG = {0.05, 0.05, 0.05}
-local POPUP_BORDER = {0.12, 0.12, 0.12}
-local EDITBOX_BG = {0.02, 0.02, 0.02}
-
 local function GetOrCreateURLPopup()
     if MUI.URLPopup then return MUI.URLPopup end
 
@@ -150,21 +151,6 @@ local function ShowURLPopup()
     end)
 end
 
-local function AreAddOnsEnabled()
-    local addons = {
-        ["BigWigs"] = true,
-        ["Details"] = true,
-        ["Plater"] = true
-    }
-
-    for k in pairs(addons) do
-        if MUI:IsAddOnEnabled(k) then
-
-            return true
-        end
-    end
-end
-
 MUI.options = {
     name = "MagguuUI",
     type = "group",
@@ -173,10 +159,11 @@ MUI.options = {
             name = "Profiles",
             order = 1,
             hidden = function()
-                if MUI:IsAddOnEnabled("ElvUI") or (not MUI.Retail and not AreAddOnsEnabled()) or InCombatLockdown() then
-
+                if MUI:IsAddOnEnabled("ElvUI") or InCombatLockdown() then
                     return true
                 end
+
+                return false
             end,
             type = "group",
             args = {
@@ -184,8 +171,7 @@ MUI.options = {
                     name = "BetterCooldownManager",
                     desc = "Setup BetterCooldownManager",
                     hidden = function()
-                        if not MUI.Retail or not MUI:IsAddOnEnabled("BetterCooldownManager") then
-
+                        if not MUI:IsAddOnEnabled("BetterCooldownManager") then
                             return true
                         end
                     end,
@@ -197,7 +183,6 @@ MUI.options = {
                     desc = "Setup BigWigs",
                     hidden = function()
                         if not MUI:IsAddOnEnabled("BigWigs") then
-
                             return true
                         end
                     end,
@@ -207,12 +192,6 @@ MUI.options = {
                 blizzard_editmode = {
                     name = "Blizzard_EditMode",
                     desc = "Setup Blizzard_EditMode",
-                    hidden = function()
-                        if not MUI.Retail then
-
-                            return true
-                        end
-                    end,
                     type = "execute",
                     func = function() SE:Setup("Blizzard_EditMode", true) end
                 },
@@ -221,7 +200,6 @@ MUI.options = {
                     desc = "Setup Details",
                     hidden = function()
                         if not MUI:IsAddOnEnabled("Details") then
-
                             return true
                         end
                     end,
@@ -233,7 +211,6 @@ MUI.options = {
                     desc = "Setup Plater",
                     hidden = function()
                         if not MUI:IsAddOnEnabled("Plater") then
-
                             return true
                         end
                     end,
@@ -272,7 +249,7 @@ MUI.options = {
                 },
                 version_info = {
                     name = function()
-                        local version = MUI.version or GetAddOnMetadata("MagguuUI", "Version") or "Unknown"
+                        local version = MUI.version or C_AddOns.GetAddOnMetadata("MagguuUI", "Version") or "Unknown"
                         return "|cff999999Version:|r |cff4A8FD9" .. version .. "|r"
                     end,
                     order = 12,

@@ -5,11 +5,15 @@ enable-nolib-creation: no
 ignore:
   - README.md
   - CHANGELOG.md
+  - CODE_REVIEW.md
   - LICENSE
   - .github
   - .gitignore
   - screenshots
   - pkgmeta.yaml
+  - push.bat
+  - push.ps1
+  - SharedMedia.lua
 
 manual-changelog:
   filename: CHANGELOG.md

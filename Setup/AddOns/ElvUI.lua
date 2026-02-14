@@ -73,9 +73,6 @@ local function ImportElvUI(addon)
     E.data.global.general.mapAlphaWhenMoving = 0.4
     E.data.global.general.UIScale = elvdata.uiscale or elvdata[2] or 0.6
     E.data.global.general.WorldMapCoordinates.position = "BOTTOM"
-
-    MUI.db.char.loaded = true
-    MUI.db.global.version = MUI.version
 end
 
 function SE.ElvUI(addon, import)

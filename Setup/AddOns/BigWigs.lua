@@ -20,9 +20,6 @@ local function ImportBigWigs(addon, resolution)
 
         SE.CompleteSetup(addon)
 
-        MUI.db.char.loaded = true
-        MUI.db.global.version = MUI.version
-
         -- If a batch install was waiting for BigWigs to finish
         if MUI._bigWigsReloadPending then
             MUI._bigWigsReloadPending = nil

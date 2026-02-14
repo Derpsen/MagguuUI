@@ -24,9 +24,6 @@ local function ImportPlater(addon, resolution)
 
     SE.CompleteSetup(addon)
     Plater.ImportAndSwitchProfile("MagguuUI", data, false, false, true, true)
-
-    MUI.db.char.loaded = true
-    MUI.db.global.version = MUI.version
 end
 
 function SE.Plater(addon, import, resolution)

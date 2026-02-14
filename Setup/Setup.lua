@@ -86,28 +86,23 @@ function SE.CompleteSetup(addon)
     end
 
     MUI.db.global.profiles[addon] = true
+    MUI.db.char.loaded = true
+    MUI.db.global.version = MUI.version
 end
 
-function SE.IsProfileExisting(table)
-    local db = LibStub("AceDB-3.0"):New(table)
-    local profiles = db:GetProfiles()
+function SE.IsProfileExisting(svTable)
+    if not svTable or not svTable.profiles then return false end
 
-    for i = 1, #profiles do
-        if profiles[i] == "MagguuUI" then
-
-            return true
-        end
-    end
+    return svTable.profiles["MagguuUI"] ~= nil
 end
 
 function SE.RemoveFromDatabase(addon)
+    if not MUI.db.global.profiles then return end
+
     MUI.db.global.profiles[addon] = nil
 
-    if MUI.db.global.profiles and #MUI.db.global.profiles == 0 then
-        for k in pairs(MUI.db.char) do
-            k = nil
-        end
-
+    if not next(MUI.db.global.profiles) then
+        wipe(MUI.db.char)
         MUI.db.global.profiles = nil
     end
 end

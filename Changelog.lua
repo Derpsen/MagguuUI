@@ -64,13 +64,12 @@ local CHANGELOG = {
     },
 }
 
--- ============================================================
--- Color constants (matching other popups)
--- ============================================================
-local BLUE = {0.27, 0.54, 0.83}
-local POPUP_BG = {0.05, 0.05, 0.05}
-local POPUP_BORDER = {0.12, 0.12, 0.12}
-local CONTENT_BG = {0.02, 0.02, 0.02}
+-- Use centralized colors
+local C = MUI.Colors
+local BLUE = C.BLUE
+local POPUP_BG = C.POPUP_BG
+local POPUP_BORDER = C.POPUP_BORDER
+local CONTENT_BG = C.CONTENT_BG
 
 -- ============================================================
 -- Build changelog text for display

@@ -1,5 +1,8 @@
 local MUI = unpack(MagguuUI)
 
+local format = format
+local rad, deg, cos, sin, atan2 = math.rad, math.deg, math.cos, math.sin, math.atan2
+
 local chatCommands = {}
 
 function MUI.SetFrameStrata(frame, strata)
@@ -132,12 +135,12 @@ function MUI:HandleChatCommand(input)
 
     if not command then
         self:Print("|cff999999Available commands:|r")
-        print(format("  |cff4A8FD9/mui|r |cffC0C8D4install|r    |cff999999- Toggle the installer|r"))
-        print(format("  |cff4A8FD9/mui|r |cffC0C8D4settings|r   |cff999999- Toggle settings panel|r"))
-        print(format("  |cff4A8FD9/mui|r |cffC0C8D4minimap|r    |cff999999- Toggle minimap button|r"))
-        print(format("  |cff4A8FD9/mui|r |cffC0C8D4version|r    |cff999999- Show addon version|r"))
-        print(format("  |cff4A8FD9/mui|r |cffC0C8D4status|r     |cff999999- Show installed profiles|r"))
-        print(format("  |cff4A8FD9/mui|r |cffC0C8D4changelog|r  |cff999999- Show changelog|r"))
+        print("  |cff4A8FD9/mui|r |cffC0C8D4install|r    |cff999999- Toggle the installer|r")
+        print("  |cff4A8FD9/mui|r |cffC0C8D4settings|r   |cff999999- Toggle settings panel|r")
+        print("  |cff4A8FD9/mui|r |cffC0C8D4minimap|r    |cff999999- Toggle minimap button|r")
+        print("  |cff4A8FD9/mui|r |cffC0C8D4version|r    |cff999999- Show addon version|r")
+        print("  |cff4A8FD9/mui|r |cffC0C8D4status|r     |cff999999- Show installed profiles|r")
+        print("  |cff4A8FD9/mui|r |cffC0C8D4changelog|r  |cff999999- Show changelog|r")
 
         return
     end
@@ -146,66 +149,13 @@ function MUI:HandleChatCommand(input)
 end
 
 function MUI:LoadProfiles()
-    local SE = MUI:GetModule("Setup")
-
     if not self.db.global.profiles then
         self:Print("|cff999999No profiles to load.|r")
 
         return
     end
 
-    -- Separate BigWigs from other addons (BigWigs must be last)
-    local queue = {}
-    local hasBigWigs = false
-
-    for addon in pairs(self.db.global.profiles) do
-        if self:IsAddOnEnabled(addon) then
-            if addon == "BigWigs" then
-                hasBigWigs = true
-            else
-                tinsert(queue, addon)
-            end
-        end
-    end
-
-    if #queue == 0 and not hasBigWigs then
-        self:Print("|cff999999No enabled addons to load profiles for.|r")
-
-        return
-    end
-
-    local index = 0
-    local total = #queue
-
-    local function LoadNext()
-        index = index + 1
-
-        if index > total then
-            self.db.char.loaded = true
-
-            if hasBigWigs then
-                self:Print(format("|cff999999Loading profile|r |cff4A8FD9BigWigs|r |cff999999(%d/%d)...|r", total + 1, total + 1))
-                MUI._bigWigsReloadPending = true
-
-                SE:Setup("BigWigs", true)
-            else
-                self:Print(format("|cff00ff88All %d profiles loaded.|r", total))
-
-                StaticPopup_Show("MAGGUUI_RELOAD")
-            end
-
-            return
-        end
-
-        local addon = queue[index]
-        local displayTotal = hasBigWigs and (total + 1) or total
-        self:Print(format("|cff999999Loading profile|r |cff4A8FD9%s|r |cff999999(%d/%d)...|r", addon, index, displayTotal))
-        SE:Setup(addon)
-
-        C_Timer.After(0.3, LoadNext)
-    end
-
-    LoadNext()
+    self:ProcessProfileQueue(false)
 end
 
 -- ============================================================
@@ -262,24 +212,20 @@ function MUI:CreateMinimapButton()
     btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 
     btn:SetScript("OnDragStart", function(self)
-        self.isDragging = true
+        self:SetScript("OnUpdate", function(self)
+            local mx, my = Minimap:GetCenter()
+            local cx, cy = GetCursorPosition()
+            local scale = Minimap:GetEffectiveScale()
+            cx, cy = cx / scale, cy / scale
+
+            local newAngle = deg(atan2(cy - my, cx - mx))
+            MUI.db.global.minimapAngle = newAngle
+            MUI:UpdateMinimapPosition(self, newAngle)
+        end)
     end)
 
     btn:SetScript("OnDragStop", function(self)
-        self.isDragging = false
-    end)
-
-    btn:SetScript("OnUpdate", function(self)
-        if not self.isDragging then return end
-
-        local mx, my = Minimap:GetCenter()
-        local cx, cy = GetCursorPosition()
-        local scale = Minimap:GetEffectiveScale()
-        cx, cy = cx / scale, cy / scale
-
-        local deg = math.deg(math.atan2(cy - my, cx - mx))
-        MUI.db.global.minimapAngle = deg
-        MUI:UpdateMinimapPosition(self, deg)
+        self:SetScript("OnUpdate", nil)
     end)
 
     self.MinimapBtn = btn
@@ -290,10 +236,10 @@ function MUI:CreateMinimapButton()
 end
 
 function MUI:UpdateMinimapPosition(btn, angle)
-    local rad = math.rad(angle)
+    local r = rad(angle)
     local radius = 80
-    local x = math.cos(rad) * radius
-    local y = math.sin(rad) * radius
+    local x = cos(r) * radius
+    local y = sin(r) * radius
 
     btn:ClearAllPoints()
     btn:SetPoint("CENTER", Minimap, "CENTER", x, y)

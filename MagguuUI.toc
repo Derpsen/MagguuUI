@@ -33,7 +33,6 @@ embeds.xml
 init.lua
 Core.lua
 Functions.lua
-SharedMedia.lua
 
 Data\!load.xml
 

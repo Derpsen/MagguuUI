@@ -36,9 +36,6 @@ local function ImportBlizzard_EditMode(addon, resolution)
     C_EditMode.SaveLayouts(layouts)
 
     SE.CompleteSetup(addon)
-
-    MUI.db.char.loaded = true
-    MUI.db.global.version = MUI.version
 end
 
 function SE.Blizzard_EditMode(addon, import, resolution)
