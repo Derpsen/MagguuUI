@@ -2,6 +2,29 @@
 
 All notable changes to MagguuUI will be documented in this file.
 
+## 🔧 v12.0.4 — Settings & Popup Overhaul (2026-02-14)
+
+### ✨ Added
+
+- 🌳 **Tree layout with sub-tabs** in ElvUI settings (Installer / Settings / Information)
+- 🖱️ **Minimap middle-click** toggles Changelog popup
+- 🖱️ **Minimap right-click** opens ElvUI settings directly to MagguuUI section
+- 🔗 **URL copy popup** for Website and CurseForge links
+- 📦 **WowUp strings** split into Required and Optional
+- 📝 **Changelog popup** on version update
+
+### 📝 Changed
+
+- 🎨 All popups now match Installer design (ElvUI Transparent template)
+- 🗂️ Settings restructured into tree navigation with sub-tabs
+- 📐 Scroll frames use relative anchoring (no more text cutoff)
+- 📦 Installer buttons: Required (red) / Optional (gray)
+
+### 🛠️ Fixed
+
+- 🔗 URL copy buttons in Settings now work reliably
+- 🖱️ ElvUI config navigation via right-click
+
 ## 🔧 v12.0.3 — Patch (2026-02-09)
 
 ### 📝 Changed
