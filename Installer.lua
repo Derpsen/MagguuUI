@@ -194,6 +194,18 @@ local function StyleStepButtons()
         local btn = frame["StepButton" .. i]
         if not btn then break end
 
+        -- Make step buttons bigger
+        btn:SetHeight(32)
+        if btn:GetWidth() < 200 then
+            btn:SetWidth(200)
+        end
+
+        -- Increase font size
+        local fs = btn:GetFontString()
+        if fs then
+            fs:SetFont(fs:GetFont(), 13, "OUTLINE")
+        end
+
         local bg = btn:CreateTexture(nil, "BACKGROUND")
         bg:SetAllPoints()
         bg:SetColorTexture(DARK_BG[1], DARK_BG[2], DARK_BG[3], 0.6)
@@ -287,6 +299,57 @@ local function EnlargeInstaller()
 
     if frame.tutorialImage then
         frame.tutorialImage:SetSize(256, 128)
+    end
+
+    -- Increase font sizes for title and descriptions
+    if frame.Title then
+        local titleFont, _, titleFlags = frame.Title:GetFont()
+        if titleFont then
+            frame.Title:SetFont(titleFont, 16, "OUTLINE")
+        end
+    end
+
+    if frame.SubTitle then
+        local subFont, _, subFlags = frame.SubTitle:GetFont()
+        if subFont then
+            frame.SubTitle:SetFont(subFont, 13, "OUTLINE")
+        end
+    end
+
+    -- Increase description text sizes
+    if frame.Desc1 then
+        local desc1Font, _, desc1Flags = frame.Desc1:GetFont()
+        if desc1Font then
+            frame.Desc1:SetFont(desc1Font, 12, "OUTLINE")
+        end
+    end
+
+    if frame.Desc2 then
+        local desc2Font, _, desc2Flags = frame.Desc2:GetFont()
+        if desc2Font then
+            frame.Desc2:SetFont(desc2Font, 12, "OUTLINE")
+        end
+    end
+
+    if frame.Desc3 then
+        local desc3Font, _, desc3Flags = frame.Desc3:GetFont()
+        if desc3Font then
+            frame.Desc3:SetFont(desc3Font, 12, "OUTLINE")
+        end
+    end
+
+    -- Increase option button font sizes
+    for i = 1, 4 do
+        local optBtn = frame["Option" .. i]
+        if optBtn then
+            local fs = optBtn:GetFontString()
+            if fs then
+                local optFont, _, optFlags = fs:GetFont()
+                if optFont then
+                    fs:SetFont(optFont, 12, "OUTLINE")
+                end
+            end
+        end
     end
 
     frame.MagguuEnlarged = true
