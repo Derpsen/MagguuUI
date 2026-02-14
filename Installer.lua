@@ -424,7 +424,18 @@ I.installer = {
         [1] = function()
             PluginInstallFrame.SubTitle:SetFormattedText("|cffccccccWelcome to|r %s", MUI.title)
 
-            if not MUI.db.global.profiles then
+            -- Check if profiles need (re-)installation:
+            -- No profiles at all, OR version changed since last install
+            local needsInstall = not MUI.db.global.profiles
+            if not needsInstall and MUI.db.global.version then
+                local savedVer = tostring(MUI.db.global.version):gsub("^v", "")
+                local currentVer = tostring(MUI.version or ""):gsub("^v", "")
+                if savedVer ~= currentVer then
+                    needsInstall = true
+                end
+            end
+
+            if needsInstall then
                 PluginInstallFrame.Desc1:SetText("|cff999999Click|r |cff4A8FD9Install All|r |cff999999to set up all profiles at once|r")
                 PluginInstallFrame.Desc2:SetText("|cff999999Or click|r |cffC0C8D4Continue|r |cff999999to install addons individually|r")
                 PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Copy a|r |cff4A8FD9WowUp|r |cff999999import string:|r")

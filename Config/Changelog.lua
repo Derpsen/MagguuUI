@@ -87,6 +87,12 @@ MUI.Changelog[120000] = {
     },
 }
 
+-- Strip leading "v" from version strings (CurseForge tags include it)
+local function StripVersionPrefix(str)
+    if not str then return str end
+    return str:gsub("^v", "")
+end
+
 -- ============================================================
 -- Use centralized colors
 -- ============================================================
@@ -148,10 +154,11 @@ local function BuildChangelogText(fromVersionCode)
     return table.concat(lines, "\n")
 end
 
--- Helper: convert version string "12.0.4" to code 120004
+-- Helper: convert version string "12.0.4" or "v12.0.4" to code 120004
 local function VersionStringToCode(str)
     if not str then return 0 end
-    local major, minor, patch = str:match("^(%d+)%.(%d+)%.(%d+)$")
+    local clean = StripVersionPrefix(tostring(str))
+    local major, minor, patch = clean:match("^(%d+)%.(%d+)%.(%d+)$")
     if not major then return 0 end
     return tonumber(major) * 10000 + tonumber(minor) * 100 + tonumber(patch)
 end
@@ -263,7 +270,7 @@ local function ShowChangelog(fromVersion)
     local popup = GetOrCreateChangelogPopup()
     local version = MUI.version or "Unknown"
 
-    popup.title:SetText(format("|cff4A8FD9MagguuUI|r |cffC0C8D4v%s|r", version))
+    popup.title:SetText(format("|cff4A8FD9MagguuUI|r |cffC0C8D4v%s|r", StripVersionPrefix(version)))
 
     local fromCode = VersionStringToCode(fromVersion)
     local changelogText = BuildChangelogText(fromCode > 0 and fromCode or nil)
@@ -296,14 +303,21 @@ frame:SetScript("OnEvent", function(self, event, isInitialLogin, isReloadingUi)
 
         if not currentVersion then return end
 
-        -- Don't show on first ever install (installer handles that)
         if not lastSeen then
-            MUI.db.global.lastSeenVersion = currentVersion
+            -- User upgraded from a version before this feature existed
+            -- Check if they had the addon installed before (profiles or version exist)
+            if MUI.db.global.profiles or MUI.db.global.version then
+                ShowChangelog(MUI.db.global.version)
+                MUI.db.global.lastSeenVersion = currentVersion
+            else
+                -- Truly first install, don't show popup
+                MUI.db.global.lastSeenVersion = currentVersion
+            end
             return
         end
 
         -- Show changelog if version changed
-        if lastSeen ~= currentVersion then
+        if StripVersionPrefix(lastSeen) ~= StripVersionPrefix(currentVersion) then
             ShowChangelog(lastSeen)
             MUI.db.global.lastSeenVersion = currentVersion
         end
