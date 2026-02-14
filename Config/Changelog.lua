@@ -11,6 +11,13 @@ local tinsert = tinsert
 -- ============================================================
 MUI.Changelog = {}
 
+MUI.Changelog[120006] = {
+    RELEASE_DATE = "2026/02/15",
+    IMPROVEMENT = {
+        "Changelog [Got it!] opens installer automatically on version update",
+    },
+}
+
 MUI.Changelog[120005] = {
     RELEASE_DATE = "2026/02/15",
     IMPROVEMENT = {

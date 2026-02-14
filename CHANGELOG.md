@@ -2,6 +2,12 @@
 
 All notable changes to MagguuUI will be documented in this file.
 
+## 🔧 v12.0.6 — Update Flow (2026-02-15)
+
+### 📝 Changed
+
+- 📝 Changelog [Got it!] opens installer automatically on version update
+
 ## 🔧 v12.0.5 — Bugfix & Profile Update (2026-02-15)
 
 ### 📝 Changed
