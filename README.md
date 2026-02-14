@@ -13,6 +13,7 @@ Compatible with **WoW Retail 12.0+** (The War Within / Midnight).
 - 📦 **WowUp Integration** — Built-in export string to quickly install all required addons via WowUp
 - 🗺️ **Minimap Button & Addon Compartment** — Quick access to installer and settings
 - 📋 **Copy Feedback** — Popups confirm successful copy and auto-close
+- 📝 **Changelog Popup** — See what's new after every update, or open anytime via middle-click or `/mui changelog`
 
 ## 🎨 Supported Addons
 
@@ -61,9 +62,17 @@ These addons are optional but recommended for the full MagguuUI experience:
 
 ## ⚙️ Settings
 
-- **Show Minimap Button** — Toggle the minimap button on or off
-- **Version** — Displays the current MagguuUI version
-- **Website** — Copy the website URL to your clipboard with one click
+Access settings through the minimap button or Addon Compartment:
+
+- **Left-click** — Open the Installer
+- **Right-click** — Open ElvUI settings (MagguuUI section)
+- **Middle-click** — Toggle the Changelog popup
+
+In ElvUI Options → MagguuUI, settings are organized in a tree layout with sub-tabs:
+
+- **Installer** — Quick access to the guided installer
+- **Settings** — General options and WowUp import strings
+- **Information** — About, Changelog, and System info
 
 ## 💬 Chat Commands
 
@@ -73,6 +82,7 @@ These addons are optional but recommended for the full MagguuUI experience:
 | `/mui settings` | Toggle settings panel |
 | `/mui minimap` | Toggle minimap button |
 | `/mui version` | Show addon version |
+| `/mui changelog` | Show the changelog popup |
 | `/mui status` | Show installed profile status |
 
 ## 🔄 New Characters

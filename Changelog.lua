@@ -6,14 +6,21 @@ local MUI = unpack(MagguuUI)
 local CHANGELOG = {
     {
         version = "12.0.4",
-        date = "2026-02-10",
-        title = "WowUp Split & Changelog",
+        date = "2026-02-14",
+        title = "Settings & Popup Overhaul",
         entries = {
+            "|cff00ff88New:|r Tree layout with sub-tabs in ElvUI settings",
+            "|cff00ff88New:|r Minimap middle-click toggles Changelog popup",
+            "|cff00ff88New:|r Right-click opens ElvUI settings directly to MagguuUI section",
+            "|cff00ff88New:|r URL copy popup for Website and CurseForge links",
             "|cff00ff88New:|r WowUp strings split into |cffFF6666Required|r and |cff999999Optional|r",
             "|cff00ff88New:|r Changelog popup on version update",
-            "|cff00ff88New:|r Updated addon lists in Settings",
-            "|cffFFFF00Changed:|r WowUp description explains Required vs Optional",
+            "|cffFFFF00Changed:|r All popups now match Installer design (ElvUI Transparent template)",
+            "|cffFFFF00Changed:|r Settings restructured: Installer / Settings / Information with sub-tabs",
+            "|cffFFFF00Changed:|r Scroll frames use relative anchoring (no more text cutoff)",
             "|cffFFFF00Changed:|r Installer buttons: |cffFF6666Required|r (red) / |cff999999Optional|r (gray)",
+            "|cffFF6666Fixed:|r URL copy buttons in Settings now work reliably",
+            "|cffFF6666Fixed:|r ElvUI config navigation via right-click",
         }
     },
     {
