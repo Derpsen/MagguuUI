@@ -15,7 +15,6 @@ MUI.Changelog[120005] = {
     RELEASE_DATE = "2026/02/15",
     IMPROVEMENT = {
         "Installer detects version updates and requires [Install All] before [Load Profiles]",
-        "Changelog [Got it!] opens installer automatically on version update",
         "Version strings with v-prefix handled correctly everywhere",
         "Updated addon profiles (ElvUI, Plater, Details, BCM, EditMode)",
     },
