@@ -3,3 +3,6 @@ push.ps1
 unlock-git.bat
 CODE_REVIEW.md
 SharedMedia.lua
+"push.bat" 
+"push.ps1" 
+"deploy.bat" 
