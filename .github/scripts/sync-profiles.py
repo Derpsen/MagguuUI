@@ -2,15 +2,25 @@
 """
 sync-profiles.py — MagguuUI Profile Sync (Nuxt v2 API)
 
-Fetches addon profile data and WowUp strings from the MagguuUI Nuxt website
-and updates the Data/*.lua files in the repository.
+Fetches addon profile data, WowUp strings, and class layouts from the
+MagguuUI website and updates the Data/ Lua files in the repository.
 
 API endpoints (Nuxt v2):
-  GET {API_URL}/api/v1/profiles
-    → { "success": true, "data": { "ElvUI": [ { "profile": "...", "string": "..." }, ... ], ... } }
+  GET {API_URL}/api/v1/profiles          → Addon profiles grouped by addon name
+  GET {API_URL}/api/v1/wowup             → WowUp import strings (Required/Optional)
+  GET {API_URL}/api/v1/layouts/grouped    → Character layouts grouped by class name
 
-  GET {API_URL}/api/v1/wowup
-    → { "success": true, "data": { "Required": { "string": "..." }, "Optional": { "string": "..." } } }
+Directory structure:
+  Data/
+  ├── AddOns/          ← Addon profiles + WowUp strings
+  │   ├── ElvUI.lua
+  │   ├── Plater.lua
+  │   ├── WowUp.lua
+  │   └── ...
+  └── Classes/         ← Class cooldown/layout strings
+      ├── Warrior.lua
+      ├── Mage.lua
+      └── ...
 
 Environment:
   API_URL  – Base URL of the website (e.g. https://ui.magguu.xyz)
@@ -29,16 +39,16 @@ if not API_URL:
     print("ERROR: API_URL secret not set")
     sys.exit(1)
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "Data")
-DATA_DIR = os.path.normpath(DATA_DIR)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.normpath(os.path.join(SCRIPT_DIR, "..", ".."))
+ADDONS_DIR = os.path.join(REPO_ROOT, "Data", "AddOns")
+CLASSES_DIR = os.path.join(REPO_ROOT, "Data", "Classes")
 
 LUA_HEADER = 'local MUI = unpack(MagguuUI)\nlocal D = MUI:GetModule("Data")\n'
 
 # ─── Addon Mapping ───────────────────────────────────
-# Defines how each addon from the API maps to Lua files.
-#
 # "var"       – D.xxx variable name (lowercase!)
-# "file"      – Target filename in Data/
+# "file"      – Target filename in Data/AddOns/
 # "style"     – "simple" → D.var = "str"   |   "table" → D.var = { key = "str", ... }
 # "profiles"  – For "simple": list of profile names to try (first match wins)
 #               For "table": dict mapping lua_key → list of API profile names to try
@@ -97,6 +107,28 @@ ADDON_MAP = {
     },
 }
 
+# ─── Class Name Mapping ─────────────────────────────
+# Key = class name from API  →  (lua_filename, D.variable)
+# Variable is always lowercase: ClassLayouts.lua reads D[strlower(class)]
+
+CLASS_MAP = {
+    "Death Knight":  ("DeathKnight",  "deathknight"),
+    "DeathKnight":   ("DeathKnight",  "deathknight"),
+    "Demon Hunter":  ("DemonHunter",  "demonhunter"),
+    "DemonHunter":   ("DemonHunter",  "demonhunter"),
+    "Druid":         ("Druid",        "druid"),
+    "Evoker":        ("Evoker",       "evoker"),
+    "Hunter":        ("Hunter",       "hunter"),
+    "Mage":          ("Mage",         "mage"),
+    "Monk":          ("Monk",         "monk"),
+    "Paladin":       ("Paladin",      "paladin"),
+    "Priest":        ("Priest",       "priest"),
+    "Rogue":         ("Rogue",        "rogue"),
+    "Shaman":        ("Shaman",       "shaman"),
+    "Warlock":       ("Warlock",      "warlock"),
+    "Warrior":       ("Warrior",      "warrior"),
+}
+
 
 # ─── Helpers ─────────────────────────────────────────
 
@@ -108,7 +140,6 @@ def fetch_json(endpoint: str):
         resp = requests.get(url, timeout=30)
         resp.raise_for_status()
         result = resp.json()
-        # Nuxt API wraps everything in { success, data, meta }
         if isinstance(result, dict) and result.get("success") and "data" in result:
             return result["data"]
         return result
@@ -129,17 +160,10 @@ def escape_lua_string(s: str) -> str:
 
 
 def find_profile_string(profiles_list: list, keys_to_try: list):
-    """
-    Given a list of profile objects from the Nuxt API, find the first matching
-    profile by name. Returns the string value or None.
-
-    profiles_list: [{ "profile": "Default", "string": "..." }, ...]
-    keys_to_try: ["Default", "MagguuUI"]
-    """
+    """Find the first matching profile string by name from the API list."""
     if not profiles_list:
         return None
 
-    # Build lookup: profile_name → string
     lookup = {}
     for p in profiles_list:
         name = p.get("profile", "")
@@ -147,18 +171,15 @@ def find_profile_string(profiles_list: list, keys_to_try: list):
         if name and string:
             lookup[name] = string
 
-    # Try each key
     for key in keys_to_try:
         if key in lookup:
             return lookup[key]
 
-    # Case-insensitive fallback
     lower_lookup = {k.lower(): v for k, v in lookup.items()}
     for key in keys_to_try:
         if key.lower() in lower_lookup:
             return lower_lookup[key.lower()]
 
-    # Last resort: first non-empty string
     for p in profiles_list:
         s = p.get("string", "").strip()
         if s:
@@ -179,7 +200,7 @@ def write_if_changed(filepath: str, content: str) -> bool:
     return True
 
 
-# ─── Lua Generators ──────────────────────────────────
+# ─── Addon Lua Generators ───────────────────────────
 
 def generate_simple_lua(var_name: str, profile_string: str, has_1080p: bool = False) -> str:
     """Generate a simple D.var = "string" Lua file."""
@@ -193,14 +214,10 @@ def generate_simple_lua(var_name: str, profile_string: str, has_1080p: bool = Fa
 
 
 def generate_table_lua(var_name: str, profile_map: dict, profiles_list: list, extras: dict = None) -> str:
-    """
-    Generate a table-style Lua file (used for ElvUI).
-    D.elvui = { profile = "...", private = "...", global = "...", aurafilters = "..." }
-    """
+    """Generate a table-style Lua file (used for ElvUI)."""
     lines = [LUA_HEADER, ""]
     lines.append(f"D.{var_name} = {{")
 
-    # Build lookup from profiles list
     lookup = {}
     for p in profiles_list:
         name = p.get("profile", "")
@@ -214,7 +231,6 @@ def generate_table_lua(var_name: str, profile_map: dict, profiles_list: list, ex
             if key in lookup and lookup[key]:
                 value = lookup[key]
                 break
-        # Case-insensitive fallback
         if not value:
             lower_lookup = {k.lower(): v for k, v in lookup.items()}
             for key in api_keys:
@@ -284,7 +300,6 @@ def generate_wowup_lua(wowup_data: dict):
     required_string = None
     optional_string = None
 
-    # Try to find Required and Optional strings
     for key in ["Required", "required", "WowUp required", "WowUP required",
                  "WowUp", "Default", "MagguuUI"]:
         entry = wowup_data.get(key)
@@ -342,38 +357,81 @@ def generate_wowup_lua(wowup_data: dict):
     return "\n".join(lines)
 
 
+# ─── Class Layouts ───────────────────────────────────
+
+def generate_class_lua(class_name: str, specs: list) -> str:
+    """
+    Generate a Data/Classes/<Class>.lua file.
+
+    Output format (matches existing addon structure):
+        D.warrior = {
+            "1|LdC9L...", -- Arms
+            "1|LdC7S...", -- Fury
+            "1|NdC7L...", -- Protection
+        }
+    """
+    _, var_name = CLASS_MAP.get(class_name, (class_name, class_name.lower().replace(" ", "")))
+
+    lines = [LUA_HEADER]
+    lines.append("")
+    lines.append(f"D.{var_name} = {{")
+
+    for spec in specs:
+        import_string = spec.get("importString", "") or ""
+        spec_name = spec.get("spec", "") or spec.get("description", "") or ""
+
+        escaped = escape_lua_string(import_string)
+        comment = f" -- {spec_name}" if spec_name else ""
+        lines.append(f'    "{escaped}",{comment}')
+
+    lines.append("}")
+    lines.append("")
+
+    return "\n".join(lines)
+
+
+def generate_classes_load_xml(class_files: list) -> str:
+    """Generate Data/Classes/!load.xml listing all class Lua files."""
+    lines = ['<Ui xmlns="http://www.blizzard.com/wow/ui/">']
+    for filename in sorted(class_files):
+        lines.append(f'    <Script file="{filename}"/>')
+    lines.append('</Ui>')
+    lines.append('')
+    return "\n".join(lines)
+
+
 # ─── Main ────────────────────────────────────────────
 
 def main():
     print("=" * 50)
     print("MagguuUI Profile Sync (Nuxt v2 API)")
     print(f"API: {API_URL}")
-    print(f"Data Dir: {DATA_DIR}")
+    print(f"AddOns Dir: {ADDONS_DIR}")
+    print(f"Classes Dir: {CLASSES_DIR}")
     print("=" * 50)
 
-    if not os.path.isdir(DATA_DIR):
-        print(f"ERROR: Data directory not found: {DATA_DIR}")
-        sys.exit(1)
+    for d in [ADDONS_DIR, CLASSES_DIR]:
+        if not os.path.isdir(d):
+            print(f"ERROR: Directory not found: {d}")
+            sys.exit(1)
 
     updated = []
     errors = []
 
     # ── 1. Fetch Addon Profiles ──────────────────
-    print("\n[1/2] Fetching addon profiles...")
+    print("\n[1/3] Fetching addon profiles...")
     profiles_data = fetch_json("/api/v1/profiles")
 
     if profiles_data and isinstance(profiles_data, dict):
         for api_name, config in ADDON_MAP.items():
             addon_profiles = profiles_data.get(api_name)
 
-            # Try case-insensitive lookup
             if not addon_profiles:
                 for k, v in profiles_data.items():
                     if k.lower() == api_name.lower():
                         addon_profiles = v
                         break
 
-            # Handle "Details!" vs "Details"
             if not addon_profiles and api_name == "Details":
                 addon_profiles = profiles_data.get("Details!")
 
@@ -381,7 +439,7 @@ def main():
                 print(f"  SKIP: {api_name} not found in API")
                 continue
 
-            filepath = os.path.join(DATA_DIR, config["file"])
+            filepath = os.path.join(ADDONS_DIR, config["file"])
 
             if config["style"] == "simple":
                 profile_string = find_profile_string(addon_profiles, config["profiles"])
@@ -406,10 +464,10 @@ def main():
                 continue
 
             if write_if_changed(filepath, content):
-                print(f"  UPDATED: {config['file']}")
-                updated.append(config["file"])
+                print(f"  UPDATED: AddOns/{config['file']}")
+                updated.append(f"AddOns/{config['file']}")
             else:
-                print(f"  OK (unchanged): {config['file']}")
+                print(f"  OK (unchanged): AddOns/{config['file']}")
 
     elif profiles_data is None:
         print("  ERROR: Could not fetch profiles")
@@ -419,30 +477,70 @@ def main():
         errors.append("profiles-format")
 
     # ── 2. Fetch WowUp Strings ───────────────────
-    print("\n[2/2] Fetching WowUp strings...")
+    print("\n[2/3] Fetching WowUp strings...")
     wowup_data = fetch_json("/api/v1/wowup")
 
     if wowup_data and isinstance(wowup_data, dict):
         content = generate_wowup_lua(wowup_data)
         if content:
-            filepath = os.path.join(DATA_DIR, "WowUp.lua")
+            filepath = os.path.join(ADDONS_DIR, "WowUp.lua")
             if write_if_changed(filepath, content):
-                print(f"  UPDATED: WowUp.lua")
-                updated.append("WowUp.lua")
+                print(f"  UPDATED: AddOns/WowUp.lua")
+                updated.append("AddOns/WowUp.lua")
             else:
-                print(f"  OK (unchanged): WowUp.lua")
+                print(f"  OK (unchanged): AddOns/WowUp.lua")
         else:
             errors.append("WowUp")
     elif wowup_data is None:
         print("  ERROR: Could not fetch WowUp data")
         errors.append("wowup-endpoint")
 
+    # ── 3. Fetch Class Layouts ───────────────────
+    print("\n[3/3] Fetching class layouts...")
+    layouts_data = fetch_json("/api/v1/layouts/grouped")
+
+    if layouts_data and isinstance(layouts_data, dict):
+        class_files = []
+        for class_name, specs in layouts_data.items():
+            if not specs:
+                continue
+
+            filename, _ = CLASS_MAP.get(class_name, (class_name.replace(" ", ""), None))
+            filepath = os.path.join(CLASSES_DIR, f"{filename}.lua")
+            class_files.append(f"{filename}.lua")
+
+            content = generate_class_lua(class_name, specs)
+
+            if write_if_changed(filepath, content):
+                spec_names = [s.get("spec", "?") for s in specs if s.get("spec")]
+                print(f"  UPDATED: Classes/{filename}.lua ({len(specs)} specs: {', '.join(spec_names)})")
+                updated.append(f"Classes/{filename}.lua")
+            else:
+                print(f"  OK (unchanged): Classes/{filename}.lua")
+
+        # Update !load.xml
+        if class_files:
+            load_xml = generate_classes_load_xml(class_files)
+            load_xml_path = os.path.join(CLASSES_DIR, "!load.xml")
+            if write_if_changed(load_xml_path, load_xml):
+                print(f"  UPDATED: Classes/!load.xml ({len(class_files)} classes)")
+                updated.append("Classes/!load.xml")
+            else:
+                print(f"  OK (unchanged): Classes/!load.xml")
+
+        print(f"  Total: {len(class_files)} classes synced")
+    elif layouts_data is None:
+        print("  ERROR: Could not fetch class layouts")
+        errors.append("layouts-endpoint")
+    else:
+        print("  No class layout data found")
+
     # ── Summary ──────────────────────────────────
     print(f"\n{'=' * 50}")
     print(f"Updated: {len(updated)} file(s)")
     if updated:
         for f in updated:
-            print(f"  ✓ {f}")
+            print(f"  ✓ Data/{f}")
     if errors:
         print(f"Errors/Warnings: {len(errors)}")
         for e in errors:
