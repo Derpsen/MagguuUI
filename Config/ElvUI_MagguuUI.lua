@@ -146,13 +146,16 @@ end
 local function InsertMagguuUIOptions()
     if not E.Options or not E.Options.args then return end
 
-    -- Update ElvUI options title bar to show MagguuUI
-    E.Options.name = format(
-        "%s + %s |cff4A8FD9%s|r",
-        E.Options.name,
-        MUI.title,
-        MUI.version or ""
-    )
+    -- Update ElvUI options title bar to show MagguuUI (guard against duplicate appending)
+    if not E.Options._muiPatched then
+        E.Options.name = format(
+            "%s + %s |cff4A8FD9%s|r",
+            E.Options.name,
+            MUI.title,
+            MUI.version or ""
+        )
+        E.Options._muiPatched = true
+    end
 
     E.Options.args.magguuui = {
         type = "group",
@@ -440,7 +443,6 @@ local function InsertMagguuUIOptions()
 
             -- ========================================
             -- 3. Information (Tree Entry with Sub-Tabs)
-            --    Tabs: About, Changelog, System
             --    Tabs: About, Changelog, System
             -- ========================================
             information = {
