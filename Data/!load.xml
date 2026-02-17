@@ -1,9 +1,4 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-    <Script file="BetterCooldownManager.lua"/>
-    <Script file="BigWigs.lua"/>
-    <Script file="Blizzard_EditMode.lua"/>
-    <Script file="Details.lua"/>
-    <Script file="ElvUI.lua"/>
-    <Script file="Plater.lua"/>
-    <Script file="WowUp.lua"/>
+    <Include file="AddOns\!load.xml"/>
+    <Include file="Classes\!load.xml"/>
 </Ui>

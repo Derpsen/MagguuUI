@@ -1,7 +1,4 @@
 push.bat
 push.ps1
 deploy.bat
-unlock-git.bat
-CODE_REVIEW.md
-SharedMedia.lua
-Data/AddOns/
+CLAUDE.md

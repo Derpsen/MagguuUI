@@ -1,6 +1,7 @@
 local MUI = unpack(MagguuUI)
 local SE = MUI:GetModule("Setup")
 
+local format = format
 local C_EditMode, Enum = C_EditMode, Enum
 
 local function IsLayoutExisting()
@@ -26,6 +27,11 @@ local function ImportBlizzard_EditMode(addon, resolution)
         if layouts.layouts[i].layoutName == "MagguuUI" then
             tremove(layouts.layouts, i)
         end
+    end
+
+    if not D[layout] then
+        MUI:Print(format("|cff999999No profile data found for|r |cff4A8FD9%s|r", addon))
+        return
     end
 
     info = C_EditMode.ConvertStringToLayoutInfo(D[layout])

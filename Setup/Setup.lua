@@ -1,8 +1,11 @@
 local MUI = unpack(MagguuUI)
 local SE = MUI:GetModule("Setup")
 
+local format = format
+local C = MUI.Colors
+
 StaticPopupDialogs["MAGGUUI_OVERWRITE_PROFILE"] = {
-    text = "A profile named |cff4A8FD9MagguuUI|r already exists for |cffC0C8D4%s|r.\n\nDo you want to overwrite it?",
+    text = format("A profile named |cff%sMagguuUI|r already exists for |cff%s%%s|r.\n\nDo you want to overwrite it?", C.HEX_BLUE, C.HEX_SILVER),
     button1 = "Overwrite",
     button2 = "Cancel",
     OnAccept = function(self)

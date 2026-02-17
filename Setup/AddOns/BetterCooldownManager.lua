@@ -8,6 +8,11 @@ function SE.BetterCooldownManager(addon, import, resolution)
     local BCDMDB = BCDMDB
     local db
 
+    if not D[profile] then
+        MUI:Print(format("|cff999999No profile data found for|r |cff4A8FD9%s|r", addon))
+        return
+    end
+
     if import then
         BCDMG:ImportBCDM(D[profile], "MagguuUI")
 

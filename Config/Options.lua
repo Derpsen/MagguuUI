@@ -2,6 +2,9 @@ local MUI = unpack(MagguuUI)
 local SE = MUI:GetModule("Setup")
 local D = MUI:GetModule("Data")
 
+local format = format
+local ipairs = ipairs
+local tinsert = tinsert
 local InCombatLockdown = InCombatLockdown
 
 -- Use centralized colors

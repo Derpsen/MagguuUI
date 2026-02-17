@@ -3,6 +3,7 @@ local MUI = unpack(MagguuUI)
 local format = format
 local rad, deg, cos, sin, atan2 = math.rad, math.deg, math.cos, math.sin, math.atan2
 
+local C = MUI.Colors
 local chatCommands = {}
 
 function MUI.SetFrameStrata(frame, strata)
@@ -37,7 +38,7 @@ end
 
 function MUI:ToggleInstaller()
     if InCombatLockdown() then
-        self:Print("|cffff4444Cannot run installer during combat.|r")
+        self:Print(format("|cff%sCannot run installer during combat.|r", C.HEX_RED))
 
         return
     end
@@ -77,7 +78,7 @@ function MUI:RunInstaller()
     local I = MUI:GetModule("Installer")
 
     if InCombatLockdown() then
-        MUI:Print("|cffff4444Cannot run installer during combat.|r")
+        MUI:Print(format("|cff%sCannot run installer during combat.|r", C.HEX_RED))
 
         return
     end
@@ -108,7 +109,7 @@ function chatCommands.settings()
 end
 
 function chatCommands.version()
-    MUI:Print(format("Version: |cff4A8FD9%s|r", MUI.version or "unknown"))
+    MUI:Print(format("Version: |cff%s%s|r", C.HEX_BLUE, MUI.version or "unknown"))
 end
 
 function chatCommands.changelog()
@@ -116,21 +117,21 @@ function chatCommands.changelog()
 end
 
 function chatCommands.status()
-    MUI:Print("|cff4A8FD9Addon Status:|r")
+    MUI:Print(format("|cff%sAddon Status:|r", C.HEX_BLUE))
 
-    local addons = {"ElvUI", "BigWigs", "Details", "Plater", "BetterCooldownManager"}
+    local addons = MUI.STATUS_ADDONS
 
     for _, name in ipairs(addons) do
         if MUI:IsAddOnEnabled(name) then
             local installed = MUI.db.global.profiles and MUI.db.global.profiles[name]
 
             if installed then
-                print(format("  |cff4A8FD9%s|r |cff00ff88Installed|r", name))
+                print(format("  |cff%s%s|r |cff%sInstalled|r", C.HEX_BLUE, name, C.HEX_GREEN))
             else
-                print(format("  |cffC0C8D4%s|r |cff999999Enabled, not installed|r", name))
+                print(format("  |cff%s%s|r |cff%sEnabled, not installed|r", C.HEX_SILVER, name, C.HEX_DIM))
             end
         else
-            print(format("  |cff666666%s|r |cff666666Not enabled|r", name))
+            print(format("  |cff%s%s|r |cff%sNot enabled|r", C.HEX_DARK, name, C.HEX_DARK))
         end
     end
 end
@@ -140,13 +141,13 @@ function MUI:HandleChatCommand(input)
     local command = chatCommands[input]
 
     if not command then
-        self:Print("|cff999999Available commands:|r")
-        print("  |cff4A8FD9/mui|r |cffC0C8D4install|r    |cff999999- Toggle the installer|r")
-        print("  |cff4A8FD9/mui|r |cffC0C8D4settings|r   |cff999999- Toggle settings panel|r")
-        print("  |cff4A8FD9/mui|r |cffC0C8D4minimap|r    |cff999999- Toggle minimap button|r")
-        print("  |cff4A8FD9/mui|r |cffC0C8D4version|r    |cff999999- Show addon version|r")
-        print("  |cff4A8FD9/mui|r |cffC0C8D4status|r     |cff999999- Show installed profiles|r")
-        print("  |cff4A8FD9/mui|r |cffC0C8D4changelog|r  |cff999999- Show changelog|r")
+        self:Print(format("|cff%sAvailable commands:|r", C.HEX_DIM))
+        print(format("  |cff%s/mui|r |cff%sinstall|r    |cff%s- Toggle the installer|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM))
+        print(format("  |cff%s/mui|r |cff%ssettings|r   |cff%s- Toggle settings panel|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM))
+        print(format("  |cff%s/mui|r |cff%sminimap|r    |cff%s- Toggle minimap button|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM))
+        print(format("  |cff%s/mui|r |cff%sversion|r    |cff%s- Show addon version|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM))
+        print(format("  |cff%s/mui|r |cff%sstatus|r     |cff%s- Show installed profiles|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM))
+        print(format("  |cff%s/mui|r |cff%schangelog|r  |cff%s- Show changelog|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM))
 
         return
     end
@@ -156,7 +157,7 @@ end
 
 function MUI:LoadProfiles()
     if not self.db.global.profiles then
-        self:Print("|cff999999No profiles to load.|r")
+        self:Print(format("|cff%sNo profiles to load.|r", C.HEX_DIM))
 
         return
     end
@@ -171,13 +172,13 @@ function MUI:CreateMinimapButton()
     if self.MinimapBtn then return end
 
     local btn = CreateFrame("Button", "MagguuUIMinimapButton", Minimap)
-    btn:SetSize(32, 32)
+    btn:SetSize(MUI.Constants.MINIMAP_BUTTON_SIZE, MUI.Constants.MINIMAP_BUTTON_SIZE)
     btn:SetFrameStrata("MEDIUM")
     btn:SetFrameLevel(8)
     btn:SetMovable(true)
     btn:SetClampedToScreen(true)
 
-    local angle = self.db.global.minimapAngle or 220
+    local angle = self.db.global.minimapAngle or MUI.Constants.MINIMAP_DEFAULT_ANGLE
     self:UpdateMinimapPosition(btn, angle)
 
     local bg = btn:CreateTexture(nil, "BACKGROUND")
@@ -205,11 +206,11 @@ function MUI:CreateMinimapButton()
     btn:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_LEFT")
         GameTooltip:AddLine(MUI.title)
-        GameTooltip:AddLine("|cff4A8FD9Left-Click:|r Toggle Installer", 1, 1, 1)
-        GameTooltip:AddLine("|cffC0C8D4Right-Click:|r Toggle Settings", 1, 1, 1)
-        GameTooltip:AddLine("|cff999999Middle-Click:|r Toggle Changelog", 1, 1, 1)
+        GameTooltip:AddLine(format("|cff%sLeft-Click:|r Toggle Installer", C.HEX_BLUE), 1, 1, 1)
+        GameTooltip:AddLine(format("|cff%sRight-Click:|r Toggle Settings", C.HEX_SILVER), 1, 1, 1)
+        GameTooltip:AddLine(format("|cff%sMiddle-Click:|r Toggle Changelog", C.HEX_DIM), 1, 1, 1)
         GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("|cff666666/mui for commands|r", 0.5, 0.5, 0.5)
+        GameTooltip:AddLine(format("|cff%s/mui for commands|r", C.HEX_DARK), 0.5, 0.5, 0.5)
         GameTooltip:Show()
     end)
 
@@ -246,7 +247,7 @@ end
 
 function MUI:UpdateMinimapPosition(btn, angle)
     local r = rad(angle)
-    local radius = 80
+    local radius = MUI.Constants.MINIMAP_RADIUS
     local x = cos(r) * radius
     local y = sin(r) * radius
 
@@ -258,11 +259,11 @@ function MUI:ToggleMinimapButton()
     if self.db.global.minimapButton == false then
         self.db.global.minimapButton = true
         if self.MinimapBtn then self.MinimapBtn:Show() end
-        self:Print("Minimap button |cff00ff88enabled|r.")
+        self:Print(format("Minimap button |cff%senabled|r.", C.HEX_GREEN))
     else
         self.db.global.minimapButton = false
         if self.MinimapBtn then self.MinimapBtn:Hide() end
-        self:Print("Minimap button |cffff4444disabled|r.")
+        self:Print(format("Minimap button |cff%sdisabled|r.", C.HEX_RED))
     end
 end
 

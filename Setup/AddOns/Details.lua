@@ -8,6 +8,11 @@ function SE.Details(addon, import, resolution)
     local profile = "details" .. (resolution or "")
     local Details = Details
 
+    if not D[profile] then
+        MUI:Print(format("|cff999999No profile data found for|r |cff4A8FD9%s|r", addon))
+        return
+    end
+
     if import then
         data = DetailsFramework:Trim(D[profile])
         decompressedData = Details:DecompressData(data, "print")

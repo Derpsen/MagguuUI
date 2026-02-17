@@ -17,7 +17,7 @@ local POPUP_BORDER = C.POPUP_BORDER
 -- ============================================================
 -- Install All Profiles (fresh install, sequential)
 -- ============================================================
-local INSTALL_ORDER = {"ElvUI", "BetterCooldownManager", "Blizzard_EditMode", "Details", "Plater"}
+local INSTALL_ORDER = MUI.INSTALL_ORDER
 
 local function InstallAllProfiles()
     MUI:ProcessProfileQueue(true, INSTALL_ORDER)
@@ -292,6 +292,12 @@ end
 -- ============================================================
 -- Make Installer Frame Bigger
 -- ============================================================
+local function SetFontSize(fontString, size)
+    if not fontString then return end
+    local font = fontString:GetFont()
+    if font then fontString:SetFont(font, size, "OUTLINE") end
+end
+
 local function EnlargeInstaller()
     local frame = PluginInstallFrame
     if not frame or frame.MagguuEnlarged then return end
@@ -303,53 +309,17 @@ local function EnlargeInstaller()
     end
 
     -- Increase font sizes for title and descriptions
-    if frame.Title then
-        local titleFont, _, titleFlags = frame.Title:GetFont()
-        if titleFont then
-            frame.Title:SetFont(titleFont, 16, "OUTLINE")
-        end
-    end
-
-    if frame.SubTitle then
-        local subFont, _, subFlags = frame.SubTitle:GetFont()
-        if subFont then
-            frame.SubTitle:SetFont(subFont, 13, "OUTLINE")
-        end
-    end
-
-    -- Increase description text sizes
-    if frame.Desc1 then
-        local desc1Font, _, desc1Flags = frame.Desc1:GetFont()
-        if desc1Font then
-            frame.Desc1:SetFont(desc1Font, 12, "OUTLINE")
-        end
-    end
-
-    if frame.Desc2 then
-        local desc2Font, _, desc2Flags = frame.Desc2:GetFont()
-        if desc2Font then
-            frame.Desc2:SetFont(desc2Font, 12, "OUTLINE")
-        end
-    end
-
-    if frame.Desc3 then
-        local desc3Font, _, desc3Flags = frame.Desc3:GetFont()
-        if desc3Font then
-            frame.Desc3:SetFont(desc3Font, 12, "OUTLINE")
-        end
-    end
+    SetFontSize(frame.Title, 16)
+    SetFontSize(frame.SubTitle, 13)
+    SetFontSize(frame.Desc1, 12)
+    SetFontSize(frame.Desc2, 12)
+    SetFontSize(frame.Desc3, 12)
 
     -- Increase option button font sizes
     for i = 1, 4 do
         local optBtn = frame["Option" .. i]
         if optBtn then
-            local fs = optBtn:GetFontString()
-            if fs then
-                local optFont, _, optFlags = fs:GetFont()
-                if optFont then
-                    fs:SetFont(optFont, 12, "OUTLINE")
-                end
-            end
+            SetFontSize(optBtn:GetFontString(), 12)
         end
     end
 
@@ -573,6 +543,19 @@ I.installer = {
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
         end,
         [8] = function()
+            local className = SE.GetPlayerClassDisplayName and SE.GetPlayerClassDisplayName() or "your class"
+            PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Character Layouts|r")
+            PluginInstallFrame.Desc1:SetText(format("|cff999999Class-specific layouts for|r |cff4A8FD9%s|r", className))
+            PluginInstallFrame.Desc2:SetText("|cff999999Auto-selects layout matching your active spec|r")
+            PluginInstallFrame.Desc3:SetText("|cff999999More layouts:|r |cffC0C8D4ui.magguu.xyz|r")
+            PluginInstallFrame.Option1:Show()
+            PluginInstallFrame.Option1:SetScript("OnClick", function()
+                SE:Setup("ClassCooldowns", true)
+                ReloadUI()
+            end)
+            PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
+        end,
+        [9] = function()
             PluginInstallFrame.SubTitle:SetText("|cff00ff88Installation Complete|r")
             PluginInstallFrame.Desc1:SetText("|cff999999You have completed the installation process|r")
             PluginInstallFrame.Desc2:SetText("|cff999999Click|r |cffC0C8D4Reload|r |cff999999to save your settings|r")
@@ -589,7 +572,8 @@ I.installer = {
         [5] = "EditMode",
         [6] = "Details",
         [7] = "Plater",
-        [8] = "Complete"
+        [8] = "Layouts",
+        [9] = "Complete"
     },
     StepTitlesColor = {DIM[1], DIM[2], DIM[3]},
     StepTitlesColorSelected = {BLUE[1], BLUE[2], BLUE[3]},
