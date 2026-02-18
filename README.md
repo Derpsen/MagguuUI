@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/Derpsen/MagguuUI/main/Media/Textures/LogoTop.tga" width="256" alt="MagguuUI Logo">
+<img src="https://raw.githubusercontent.com/Derpsen/MagguuUI/main/Media/Textures/LogoTop.png" width="256" alt="MagguuUI Logo">
 
 # MagguuUI
 
