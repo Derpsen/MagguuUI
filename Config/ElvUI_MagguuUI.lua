@@ -15,6 +15,34 @@ local tinsert = tinsert
 
 local C = MUI.Colors
 
+-- Gradient text helper (interpolates hex colors per character)
+local function GradientText(text, hexFrom, hexTo)
+    local len = #text
+    if len == 0 then return "" end
+    if len == 1 then return format("|cff%s%s|r", hexFrom, text) end
+
+    local r1, g1, b1 = tonumber(hexFrom:sub(1,2), 16), tonumber(hexFrom:sub(3,4), 16), tonumber(hexFrom:sub(5,6), 16)
+    local r2, g2, b2 = tonumber(hexTo:sub(1,2), 16), tonumber(hexTo:sub(3,4), 16), tonumber(hexTo:sub(5,6), 16)
+
+    local result = ""
+    for i = 1, len do
+        local t = (i - 1) / (len - 1)
+        local r = math.floor(r1 + (r2 - r1) * t + 0.5)
+        local g = math.floor(g1 + (g2 - g1) * t + 0.5)
+        local b = math.floor(b1 + (b2 - b1) * t + 0.5)
+        result = result .. format("|cff%02x%02x%02x%s|r", r, g, b, text:sub(i, i))
+    end
+
+    return result
+end
+
+-- Icon paths (replace nil with custom icon paths when ready)
+local ICONS = {
+    installer   = nil, -- "Interface\\AddOns\\MagguuUI\\Media\\Textures\\Icons\\Installer"
+    settings    = nil, -- "Interface\\AddOns\\MagguuUI\\Media\\Textures\\Icons\\Settings"
+    information = nil, -- "Interface\\AddOns\\MagguuUI\\Media\\Textures\\Icons\\Information"
+}
+
 -- ============================================================
 -- Build Changelog Sub-Tab (with version select dropdown)
 -- ============================================================
@@ -166,17 +194,42 @@ local function InsertMagguuUIOptions()
         order = 100,
         args = {
             -- ========================================
+            -- Logo + Title (shown above tree entries)
+            -- ========================================
+            logo = {
+                order = 0,
+                type = "description",
+                name = "",
+                image = "Interface\\AddOns\\MagguuUI\\Media\\Textures\\LogoTop",
+                imageWidth = 256,
+                imageHeight = 128,
+            },
+            title = {
+                order = 0.1,
+                type = "description",
+                name = format("\n%s |cff%sv%s|r\n", MUI.title, C.HEX_DIM, MUI.version or ""),
+                fontSize = "large",
+            },
+
+            -- ========================================
             -- 1. Installer (Tree Entry)
             -- ========================================
             installer = {
                 order = 1,
                 type = "group",
-                name = format("|cff%sInstaller|r", C.HEX_BLUE),
+                name = GradientText("Installer", C.HEX_BLUE, C.HEX_SILVER),
+                icon = ICONS.installer,
                 args = {
                     desc = {
                         order = 1,
                         type = "description",
                         name = format("|cff%sInstall or load MagguuUI profiles for all supported addons.|r\n", C.HEX_DIM),
+                        fontSize = "medium",
+                    },
+                    resolution_notice = {
+                        order = 1.5,
+                        type = "description",
+                        name = format("|cff%sOptimized for 4K (3840x2160).|r |cff%sOther resolutions may need manual adjustments.|r\n", C.HEX_YELLOW, C.HEX_DIM),
                         fontSize = "medium",
                     },
                     run_installer = {
@@ -228,7 +281,7 @@ local function InsertMagguuUIOptions()
                     status_header = {
                         order = 7,
                         type = "header",
-                        name = format("|cff%sProfile Status|r", C.HEX_DIM),
+                        name = format("|cff%sProfile Status|r", C.HEX_BLUE),
                     },
                     addon_status = {
                         order = 8,
@@ -240,19 +293,29 @@ local function InsertMagguuUIOptions()
                                 local installed = MUI.db.global.profiles
                                     and MUI.db.global.profiles[addon]
                                 local icon, state
+
                                 if not enabled then
                                     icon = format("|cff%s--|r", C.HEX_DARK)
                                     state = format("|cff%sNot enabled|r", C.HEX_DARK)
                                 elseif installed then
-                                    icon = format("|cff%s+|r", C.HEX_GREEN)
-                                    state = format("|cff%sInstalled|r", C.HEX_GREEN)
+                                    -- Check if MagguuUI profile is currently active
+                                    local SE = MUI:GetModule("Setup")
+                                    local active = SE and SE.IsProfileActive and SE.IsProfileActive(addon)
+
+                                    if active then
+                                        icon = format("|cff%s+|r", C.HEX_GREEN)
+                                        state = format("|cff%sActive|r", C.HEX_GREEN)
+                                    else
+                                        icon = format("|cff%s+|r", C.HEX_GREEN)
+                                        state = format("|cff%sInstalled|r", C.HEX_GREEN)
+                                    end
                                 else
                                     icon = format("|cff%so|r", C.HEX_YELLOW)
                                     state = format("|cff%sNot installed|r", C.HEX_YELLOW)
                                 end
                                 tinsert(lines, format(
-                                    "  %s |cff" .. C.HEX_SILVER .. "%s|r  %s",
-                                    icon, addon, state
+                                    "  %s  |cff%s%s|r  %s",
+                                    icon, C.HEX_SILVER, addon, state
                                 ))
                             end
                             return table.concat(lines, "\n")
@@ -269,7 +332,8 @@ local function InsertMagguuUIOptions()
                 order = 2,
                 type = "group",
                 childGroups = "tab",
-                name = format("|cff%sSettings|r", C.HEX_SILVER),
+                name = GradientText("Settings", C.HEX_BLUE, C.HEX_SILVER),
+                icon = ICONS.settings,
                 args = {
                     -- Tab: General
                     general = {
@@ -335,7 +399,7 @@ local function InsertMagguuUIOptions()
                             howto_header = {
                                 order = 2,
                                 type = "header",
-                                name = format("|cff%sHow to use|r", C.HEX_DIM),
+                                name = format("|cff%sHow to use|r", C.HEX_BLUE),
                             },
                             howto = {
                                 order = 3,
@@ -443,7 +507,8 @@ local function InsertMagguuUIOptions()
                 order = 3,
                 type = "group",
                 childGroups = "tab",
-                name = format("|cff%sInformation|r", C.HEX_SILVER),
+                name = GradientText("Information", C.HEX_BLUE, C.HEX_SILVER),
+                icon = ICONS.information,
                 args = {
                     -- Tab: About
                     about = {
@@ -454,7 +519,7 @@ local function InsertMagguuUIOptions()
                             author_header = {
                                 order = 1,
                                 type = "header",
-                                name = format("|cff%sAuthor|r", C.HEX_DIM),
+                                name = format("|cff%sAuthor|r", C.HEX_BLUE),
                             },
                             author = {
                                 order = 2,
@@ -470,7 +535,7 @@ local function InsertMagguuUIOptions()
                             links_header = {
                                 order = 4,
                                 type = "header",
-                                name = format("|cff%sLinks & Support|r", C.HEX_DIM),
+                                name = format("|cff%sLinks & Support|r", C.HEX_BLUE),
                             },
                             website = {
                                 order = 5,
@@ -506,7 +571,7 @@ local function InsertMagguuUIOptions()
                             license_header = {
                                 order = 8,
                                 type = "header",
-                                name = format("|cff%sLicense|r", C.HEX_DIM),
+                                name = format("|cff%sLicense|r", C.HEX_BLUE),
                             },
                             license = {
                                 order = 9,
@@ -535,15 +600,15 @@ local function InsertMagguuUIOptions()
                             version_header = {
                                 order = 1,
                                 type = "header",
-                                name = format("|cff%sVersion Info|r", C.HEX_DIM),
+                                name = format("|cff%sVersion Info|r", C.HEX_BLUE),
                             },
                             magguuui_ver = {
                                 order = 2,
                                 type = "description",
                                 name = function()
                                     return format(
-                                        "MagguuUI: |cff" .. C.HEX_BLUE .. "%s|r",
-                                        MUI.version or "Unknown"
+                                        "  |cff%sMagguuUI|r  |cff%s%s|r",
+                                        C.HEX_SILVER, C.HEX_BLUE, MUI.version or "Unknown"
                                     )
                                 end,
                                 fontSize = "medium",
@@ -553,8 +618,8 @@ local function InsertMagguuUIOptions()
                                 type = "description",
                                 name = function()
                                     return format(
-                                        "ElvUI: |cff" .. C.HEX_BLUE .. "%s|r",
-                                        E.version or "Unknown"
+                                        "  |cff%sElvUI|r  |cff%s%s|r",
+                                        C.HEX_SILVER, C.HEX_BLUE, E.version or "Unknown"
                                     )
                                 end,
                                 fontSize = "medium",
@@ -565,8 +630,8 @@ local function InsertMagguuUIOptions()
                                 name = function()
                                     local version, build = GetBuildInfo()
                                     return format(
-                                        "WoW: |cff" .. C.HEX_BLUE .. "%s|r |cff" .. C.HEX_DARK .. "(Build %s)|r",
-                                        version, build
+                                        "  |cff%sWoW|r  |cff%s%s|r |cff%s(Build %s)|r",
+                                        C.HEX_SILVER, C.HEX_BLUE, version, C.HEX_DARK, build
                                     )
                                 end,
                                 fontSize = "medium",
@@ -574,12 +639,12 @@ local function InsertMagguuUIOptions()
                             spacer1 = {
                                 order = 5,
                                 type = "description",
-                                name = " ",
+                                name = "\n",
                             },
                             addons_header = {
                                 order = 6,
                                 type = "header",
-                                name = format("|cff%sAddon Status|r", C.HEX_DIM),
+                                name = format("|cff%sAddon Status|r", C.HEX_BLUE),
                             },
                             addon_status = {
                                 order = 7,
@@ -592,14 +657,14 @@ local function InsertMagguuUIOptions()
                                             and format("|cff%s+|r", C.HEX_GREEN)
                                             or format("|cff%sx|r", C.HEX_SOFT_RED)
                                         local ver = enabled
-                                            and (C_AddOns.GetAddOnMetadata(addon, "Version") or "???")
+                                            and (C_AddOns.GetAddOnMetadata(addon, "Version") or "")
                                             or ""
                                         local verStr = ver ~= ""
-                                            and format(" |cff" .. C.HEX_DARK .. "(%s)|r", ver)
+                                            and format("  |cff%s%s|r", C.HEX_DIM, ver)
                                             or ""
                                         tinsert(lines, format(
-                                            "  %s |cff" .. C.HEX_SILVER .. "%s|r%s",
-                                            icon, addon, verStr
+                                            "  %s  |cff%s%s|r%s",
+                                            icon, C.HEX_SILVER, addon, verStr
                                         ))
                                     end
                                     return table.concat(lines, "\n")

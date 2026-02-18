@@ -327,6 +327,18 @@ local function EnlargeInstaller()
 end
 
 -- ============================================================
+-- Clear ElvUI default tooltips from option buttons
+-- ============================================================
+local function ClearOptionTooltips()
+    for i = 1, 4 do
+        local btn = PluginInstallFrame["Option" .. i]
+        if btn then
+            btn.tooltipText = nil
+        end
+    end
+end
+
+-- ============================================================
 -- Hook into ElvUI PluginInstaller
 -- ============================================================
 function I:HookInstaller()
@@ -338,6 +350,7 @@ function I:HookInstaller()
         C_Timer.After(0.05, function()
             EnlargeInstaller()
             StyleStepButtons()
+            ClearOptionTooltips()
             if PluginInstallFrame.CurrentPage then
                 UpdateStepHighlight(PluginInstallFrame.CurrentPage)
             else
@@ -349,6 +362,7 @@ function I:HookInstaller()
     if PluginInstallFrame.Next then
         PluginInstallFrame.Next:HookScript("OnClick", function()
             C_Timer.After(0.05, function()
+                ClearOptionTooltips()
                 if PluginInstallFrame.CurrentPage then
                     UpdateStepHighlight(PluginInstallFrame.CurrentPage)
                 end
@@ -359,6 +373,7 @@ function I:HookInstaller()
     if PluginInstallFrame.Prev then
         PluginInstallFrame.Prev:HookScript("OnClick", function()
             C_Timer.After(0.05, function()
+                ClearOptionTooltips()
                 if PluginInstallFrame.CurrentPage then
                     UpdateStepHighlight(PluginInstallFrame.CurrentPage)
                 end
@@ -372,6 +387,7 @@ function I:HookInstaller()
         if not btn then break end
         btn:HookScript("OnClick", function()
             C_Timer.After(0.05, function()
+                ClearOptionTooltips()
                 if PluginInstallFrame.CurrentPage then
                     UpdateStepHighlight(PluginInstallFrame.CurrentPage)
                 end
@@ -392,6 +408,7 @@ I.installer = {
     tutorialImage = "Interface\\AddOns\\MagguuUI\\Media\\Textures\\LogoTop.tga",
     Pages = {
         [1] = function()
+            if PluginInstallFrame.tutorialImage2 then PluginInstallFrame.tutorialImage2:Hide() end
             PluginInstallFrame.SubTitle:SetFormattedText("|cffccccccWelcome to|r %s", MUI.title)
 
             -- Check if profiles need (re-)installation:
@@ -406,36 +423,43 @@ I.installer = {
             end
 
             if needsInstall then
-                PluginInstallFrame.Desc1:SetText("|cff999999Click|r |cff4A8FD9Install All|r |cff999999to set up all profiles at once|r")
-                PluginInstallFrame.Desc2:SetText("|cff999999Or click|r |cffC0C8D4Continue|r |cff999999to install addons individually|r")
+                PluginInstallFrame.Desc1:SetText("|cff999999Click|r |cff4A8FD9Install All|r |cff999999to set up all profiles at once, or click|r |cffC0C8D4Continue|r |cff999999to install individually|r")
+                PluginInstallFrame.Desc2:SetText("|cffFFFF00Optimized for 4K.|r |cff999999Other resolutions may need manual adjustments.|r")
                 PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Copy a|r |cff4A8FD9WowUp|r |cff999999import string:|r")
                 PluginInstallFrame.Option1:Show()
                 PluginInstallFrame.Option1:SetScript("OnClick", function() InstallAllProfiles() end)
                 PluginInstallFrame.Option1:SetText("|cff4A8FD9Install All|r")
+
                 PluginInstallFrame.Option2:Show()
                 PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpRequired() end)
                 PluginInstallFrame.Option2:SetText("|cffFF6666Required|r")
+
                 PluginInstallFrame.Option3:Show()
                 PluginInstallFrame.Option3:SetScript("OnClick", function() ShowWowUpOptional() end)
                 PluginInstallFrame.Option3:SetText("|cff999999Optional|r")
 
+
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText("|cff999999Click|r |cff4A8FD9Load Profiles|r |cff999999to apply your profiles to this character|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Or click|r |cffC0C8D4Continue|r |cff999999to reinstall individual addons|r")
+            PluginInstallFrame.Desc1:SetText("|cff999999Click|r |cff4A8FD9Load Profiles|r |cff999999to apply your profiles, or click|r |cffC0C8D4Continue|r |cff999999to reinstall individually|r")
+            PluginInstallFrame.Desc2:SetText("|cffFFFF00Optimized for 4K.|r |cff999999Other resolutions may need manual adjustments.|r")
             PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Copy a|r |cff4A8FD9WowUp|r |cff999999import string:|r")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() MUI:LoadProfiles() end)
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Load Profiles|r")
+            PluginInstallFrame.Option1.tooltipText = nil
             PluginInstallFrame.Option2:Show()
             PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpRequired() end)
             PluginInstallFrame.Option2:SetText("|cffFF6666Required|r")
+            PluginInstallFrame.Option2.tooltipText = nil
             PluginInstallFrame.Option3:Show()
             PluginInstallFrame.Option3:SetScript("OnClick", function() ShowWowUpOptional() end)
             PluginInstallFrame.Option3:SetText("|cff999999Optional|r")
+            PluginInstallFrame.Option3.tooltipText = nil
         end,
         [2] = function()
+
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4ElvUI|r")
 
             if not MUI:IsAddOnEnabled("ElvUI") then
@@ -445,13 +469,14 @@ I.installer = {
             end
 
             PluginInstallFrame.Desc1:SetText("|cff999999Complete UI replacement for action bars, unit frames, and more|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Movable frames with built-in configuration GUI|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Adds quality-of-life features beyond the default interface|r")
+            PluginInstallFrame.Desc2:SetText("|cff999999Pre-configured layout with clean, modern styling|r")
+            PluginInstallFrame.Desc3:SetText("|cff999999Includes optimized settings for chat, tooltips, and bags|r")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("ElvUI", true) end)
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
         end,
         [3] = function()
+
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4BetterCooldownManager|r")
 
             if not MUI:IsAddOnEnabled("BetterCooldownManager") then
@@ -461,13 +486,14 @@ I.installer = {
             end
 
             PluginInstallFrame.Desc1:SetText("|cff999999Enhanced cooldown tracking with flexible bar layouts|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Configurable tracking for spells, items, and trinkets|r")
-            PluginInstallFrame.Desc3:SetText("|cff4A8FD9Class-specific layouts:|r |cffC0C8D4ui.magguu.xyz|r")
+            PluginInstallFrame.Desc2:SetText("|cff999999Pre-configured bars for spells, items, and trinkets|r")
+            PluginInstallFrame.Desc3:SetText("|cff999999Includes tracking for offensive, defensive, and utility cooldowns|r")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("BetterCooldownManager", true) end)
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
         end,
         [4] = function()
+
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4BigWigs|r")
 
             if not MUI:IsAddOnEnabled("BigWigs") then
@@ -477,22 +503,24 @@ I.installer = {
             end
 
             PluginInstallFrame.Desc1:SetText("|cff999999Lightweight boss mod with alerts, timers, and sounds|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Real-time warnings for boss abilities and phase changes|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Extremely optimized with minimal CPU and memory usage|r")
+            PluginInstallFrame.Desc2:SetText("|cff999999Pre-configured bar positions and sound settings|r")
+            PluginInstallFrame.Desc3:SetText("|cff999999Optimized layout that integrates with the MagguuUI design|r")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("BigWigs", true) end)
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
         end,
         [5] = function()
+
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Blizzard EditMode|r")
             PluginInstallFrame.Desc1:SetText("|cff999999Blizzard's built-in UI layout editor for HUD elements|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Drag, resize, and snap UI elements with saveable layouts|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Fine-tune action bars, unit frames, minimap, and more|r")
+            PluginInstallFrame.Desc2:SetText("|cff999999Installs a pre-configured MagguuUI layout|r")
+            PluginInstallFrame.Desc3:SetText("|cff999999Positions objective tracker, minimap, and Blizzard frames|r")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("Blizzard_EditMode", true) end)
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
         end,
         [6] = function()
+
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Details|r")
 
             if not MUI:IsAddOnEnabled("Details") then
@@ -502,13 +530,14 @@ I.installer = {
             end
 
             PluginInstallFrame.Desc1:SetText("|cff999999Real-time combat meter for damage, healing, and more|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Detailed encounter breakdowns with custom displays|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Includes death logs, raid tools, and guild rankings|r")
+            PluginInstallFrame.Desc2:SetText("|cff999999Pre-configured window layout with clean styling|r")
+            PluginInstallFrame.Desc3:SetText("|cff999999Includes custom displays for damage, healing, and DPS|r")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("Details", true) end)
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
         end,
         [7] = function()
+
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Plater|r")
 
             if not MUI:IsAddOnEnabled("Plater") then
@@ -517,9 +546,9 @@ I.installer = {
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText("|cff999999Highly customizable nameplates with health and cast bars|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Scripting, animations, and importable Wago profiles|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Automatic threat coloring and per-unit-type settings|r")
+            PluginInstallFrame.Desc1:SetText("|cff999999Customizable nameplates with health and cast bars|r")
+            PluginInstallFrame.Desc2:SetText("|cff999999Pre-configured with threat coloring and clean styling|r")
+            PluginInstallFrame.Desc3:SetText("|cffFFFF00Requires a UI reload after installation|r")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function()
                 if SE:ProfileExistsForAddon("Plater") then
@@ -543,11 +572,12 @@ I.installer = {
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
         end,
         [8] = function()
+
             local className = SE.GetPlayerClassDisplayName and SE.GetPlayerClassDisplayName() or "your class"
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Character Layouts|r")
             PluginInstallFrame.Desc1:SetText(format("|cff999999Class-specific layouts for|r |cff4A8FD9%s|r", className))
             PluginInstallFrame.Desc2:SetText("|cff999999Auto-selects layout matching your active spec|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999More layouts:|r |cffC0C8D4ui.magguu.xyz|r")
+            PluginInstallFrame.Desc3:SetText("|cffFFFF00Requires a UI reload after installation|r")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function()
                 SE:Setup("ClassCooldowns", true)
@@ -556,6 +586,7 @@ I.installer = {
             PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
         end,
         [9] = function()
+
             PluginInstallFrame.SubTitle:SetText("|cff00ff88Installation Complete|r")
             PluginInstallFrame.Desc1:SetText("|cff999999You have completed the installation process|r")
             PluginInstallFrame.Desc2:SetText("|cff999999Click|r |cffC0C8D4Reload|r |cff999999to save your settings|r")

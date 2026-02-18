@@ -99,6 +99,37 @@ function SE.IsProfileExisting(svTable)
     return svTable.profiles["MagguuUI"] ~= nil
 end
 
+function SE.IsProfileActive(addon)
+    if addon == "ElvUI" then
+        if MUI:IsAddOnEnabled("ElvUI") and ElvDB and ElvDB.profileKeys then
+            local key = MUI.myname .. " - " .. GetRealmName()
+            return ElvDB.profileKeys[key] == "MagguuUI"
+        end
+    elseif addon == "BetterCooldownManager" then
+        if MUI:IsAddOnEnabled("BetterCooldownManager") and BetterCooldownManagerDB and BetterCooldownManagerDB.profileKeys then
+            local key = MUI.myname .. " - " .. GetRealmName()
+            return BetterCooldownManagerDB.profileKeys[key] == "MagguuUI"
+        end
+    elseif addon == "BigWigs" then
+        if MUI:IsAddOnEnabled("BigWigs") and BigWigs3DB and BigWigs3DB.profileKeys then
+            local key = MUI.myname .. " - " .. GetRealmName()
+            return BigWigs3DB.profileKeys[key] == "MagguuUI"
+        end
+    elseif addon == "Details" then
+        if MUI:IsAddOnEnabled("Details") and Details then
+            local current = Details.GetCurrentProfileName and Details:GetCurrentProfileName()
+            return current == "MagguuUI"
+        end
+    elseif addon == "Plater" then
+        if MUI:IsAddOnEnabled("Plater") and Plater and Plater.db then
+            local profile = Plater.db.GetCurrentProfile and Plater.db:GetCurrentProfile()
+            return profile == "MagguuUI"
+        end
+    end
+
+    return false
+end
+
 function SE.RemoveFromDatabase(addon)
     if not MUI.db.global.profiles then return end
 

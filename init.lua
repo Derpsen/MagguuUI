@@ -50,6 +50,8 @@ function MUI:OnInitialize()
         self.db:ResetDB()
     end
 
+    self:DBConvert()
+
     self:RegisterChatCommand("mui", "HandleChatCommand")
 
     -- Only register standalone Blizzard settings when ElvUI is NOT active

@@ -62,6 +62,21 @@ MUI.STATUS_ADDONS = {"ElvUI", "BetterCooldownManager", "BigWigs", "Details", "Pl
 MUI.SYSTEM_ADDONS = {"ElvUI", "ElvUI_WindTools", "ElvUI_Anchor", "BetterCooldownManager", "BigWigs", "Details", "Plater"}
 
 -- ============================================================
+-- Database Migration (runs once per version update)
+-- ============================================================
+function MUI:DBConvert()
+    local db = self.db.global
+    local lastConversion = db.lastDBConversion or "0"
+    local currentVersion = self.version or "0"
+
+    if lastConversion == currentVersion then return end
+
+    -- === Migrationen hier einfuegen ===
+
+    db.lastDBConversion = currentVersion
+end
+
+-- ============================================================
 -- Popup Helpers
 -- ============================================================
 local C = MUI.Colors
@@ -229,11 +244,12 @@ function MUI:Initialize()
         E.global.ignoreIncompatible = true
     end
 
-    -- First run: Auto-open installer
-    if not self.db.global.firstRun and not InCombatLockdown() then
-        self.db.global.firstRun = true
+    -- Auto-open installer if no profiles installed (re-opens every login until installed)
+    if not self.db.global.profiles and not InCombatLockdown() then
         C_Timer.After(MUI.Constants.FIRST_RUN_DELAY, function()
-            MUI:RunInstaller()
+            if not InCombatLockdown() then
+                MUI:RunInstaller()
+            end
         end)
     elseif self.db.global.profiles and not self.db.char.loaded and not InCombatLockdown() then
         -- New character with existing profiles: Show load popup

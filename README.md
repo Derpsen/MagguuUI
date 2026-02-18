@@ -4,6 +4,8 @@ A pre-configured World of Warcraft UI compilation that installs optimized profil
 
 Compatible with **WoW Retail 12.0+** (The War Within / Midnight).
 
+**Optimized for 4K (3840x2160).** The setup is designed for the best experience on 4K monitors. If you're using a different resolution, some UI elements may need manual adjustment after installation.
+
 **Website:** [ui.magguu.xyz](https://ui.magguu.xyz)
 
 ## Features
