@@ -11,6 +11,7 @@ local InCombatLockdown = InCombatLockdown
 local C = MUI.Colors
 local POPUP_BG = C.POPUP_BG
 local POPUP_BORDER = C.POPUP_BORDER
+local L = LibStub("AceLocale-3.0"):GetLocale("MagguuUI")
 
 -- ============================================================
 -- Helper: Build addon list string from D.WowUpRequiredList / OptionalList
@@ -19,12 +20,12 @@ local function BuildAddonListString(listTable, headerColor, headerText)
     local header = format("|cff%s%s:|r\n\n", headerColor, headerText)
 
     if not listTable or #listTable == 0 then
-        return header .. "|cff666666No addon data available. Run /reload after updating.|r"
+        return header .. format("|cff%s%s|r", C.HEX_DARK, L["NO_ADDON_DATA_RELOAD"])
     end
 
     local lines = {}
     for _, name in ipairs(listTable) do
-        tinsert(lines, format("|cff4A8FD9%s|r", name))
+        tinsert(lines, format("|cff%s%s|r", C.HEX_BLUE, name))
     end
 
     return header .. table.concat(lines, "\n")
@@ -73,7 +74,7 @@ local function GetOrCreateURLPopup()
     -- Description
     local desc = popup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     desc:SetPoint("TOP", title, "BOTTOM", 0, -4)
-    desc:SetText("|cff999999Press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r")
+    desc:SetText(format("|cff%s%s|r", C.HEX_DIM, L["PRESS_CTRL_C"]))
     popup.desc = desc
 
     -- EditBox
@@ -104,10 +105,10 @@ local function GetOrCreateURLPopup()
     -- Detect Ctrl+C → show feedback → auto-close
     editBox:SetScript("OnKeyDown", function(self, key)
         if key == "C" and IsControlKeyDown() then
-            desc:SetText("|cff00ff88Copied!|r")
+            desc:SetText(format("|cff%s%s|r", C.HEX_GREEN, L["COPIED"]))
             C_Timer.After(0.5, function()
                 popup:Hide()
-                desc:SetText("|cff999999Press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r")
+                desc:SetText(format("|cff%s%s|r", C.HEX_DIM, L["PRESS_CTRL_C"]))
             end)
         end
     end)
@@ -118,7 +119,7 @@ local function GetOrCreateURLPopup()
     local closeBtn = CreateFrame("Button", nil, popup, "UIPanelButtonTemplate")
     closeBtn:SetSize(80, 22)
     closeBtn:SetPoint("BOTTOM", popup, "BOTTOM", 0, 10)
-    closeBtn:SetText("Close")
+    closeBtn:SetText(L["CLOSE"])
     closeBtn:SetScript("OnClick", function() popup:Hide() end)
 
     -- ESC to close
@@ -155,7 +156,7 @@ MUI.options = {
     type = "group",
     args = {
         profiles = {
-            name = "Profiles",
+            name = L["PROFILES"],
             order = 1,
             hidden = function()
                 if MUI:IsAddOnEnabled("ElvUI") or InCombatLockdown() then
@@ -168,7 +169,7 @@ MUI.options = {
             args = {
                 bettercooldownmanager = {
                     name = "BetterCooldownManager",
-                    desc = "Setup BetterCooldownManager",
+                    desc = format(L["SETUP_ADDON"], "BetterCooldownManager"),
                     hidden = function()
                         if not MUI:IsAddOnEnabled("BetterCooldownManager") then
                             return true
@@ -179,7 +180,7 @@ MUI.options = {
                 },
                 bigwigs = {
                     name = "BigWigs",
-                    desc = "Setup BigWigs",
+                    desc = format(L["SETUP_ADDON"], "BigWigs"),
                     hidden = function()
                         if not MUI:IsAddOnEnabled("BigWigs") then
                             return true
@@ -190,13 +191,13 @@ MUI.options = {
                 },
                 blizzard_editmode = {
                     name = "Blizzard_EditMode",
-                    desc = "Setup Blizzard_EditMode",
+                    desc = format(L["SETUP_ADDON"], "Blizzard_EditMode"),
                     type = "execute",
                     func = function() SE:Setup("Blizzard_EditMode", true) end
                 },
                 details = {
                     name = "Details",
-                    desc = "Setup Details",
+                    desc = format(L["SETUP_ADDON"], "Details"),
                     hidden = function()
                         if not MUI:IsAddOnEnabled("Details") then
                             return true
@@ -207,7 +208,7 @@ MUI.options = {
                 },
                 plater = {
                     name = "Plater",
-                    desc = "Setup Plater",
+                    desc = format(L["SETUP_ADDON"], "Plater"),
                     hidden = function()
                         if not MUI:IsAddOnEnabled("Plater") then
                             return true
@@ -223,16 +224,16 @@ MUI.options = {
             }
         },
         settings = {
-            name = "Settings",
+            name = L["SETTINGS"],
             order = 2,
             type = "group",
             args = {
                 minimap_toggle = {
-                    name = "Show Minimap Button",
-                    desc = "Toggle the minimap button on or off",
+                    name = L["SHOW_MINIMAP_BUTTON"],
+                    desc = L["SHOW_MINIMAP_BUTTON_DESC"],
                     order = 1,
                     type = "toggle",
-                    get = function() return MUI.db.global.minimapButton ~= false end,
+                    get = function() return not (MUI.db.global.minimap and MUI.db.global.minimap.hide) end,
                     set = function() MUI:ToggleMinimapButton() end,
                     width = "full"
                 },
@@ -267,8 +268,8 @@ MUI.options = {
                     fontSize = "medium"
                 },
                 open_website = {
-                    name = "Open Website",
-                    desc = "Copies the website URL to your clipboard",
+                    name = L["OPEN_WEBSITE"],
+                    desc = L["OPEN_WEBSITE_DESC"],
                     order = 15,
                     type = "execute",
                     func = function()
@@ -281,8 +282,8 @@ MUI.options = {
                     type = "description"
                 },
                 show_changelog = {
-                    name = "Show Changelog",
-                    desc = "Show what changed in recent updates",
+                    name = L["SHOW_CHANGELOG"],
+                    desc = L["SHOW_CHANGELOG_DESC"],
                     order = 17,
                     type = "execute",
                     func = function()
@@ -292,25 +293,24 @@ MUI.options = {
             }
         },
         wowup = {
-            name = "|cff4A8FD9WowUp|r",
+            name = format("|cff%sWowUp|r", C.HEX_BLUE),
             order = 3,
             type = "group",
             args = {
                 header = {
-                    name = "|cff4A8FD9WowUp|r |cffC0C8D4Addon Import|r",
+                    name = format("|cff%sWowUp|r |cff%s%s|r", C.HEX_BLUE, C.HEX_SILVER, L["WOWUP_ADDON_IMPORT"]),
                     order = 1,
                     type = "header"
                 },
                 info = {
-                    name = "|cff999999MagguuUI uses several addons. "
-                        .. "You can install them using|r |cff4A8FD9WowUp|r|cff999999's import feature.|r\n\n"
-                        .. "|cffFF6666Required|r |cff999999— Core addons needed for MagguuUI to work properly|r\n"
-                        .. "|cff999999Optional|r |cff999999— Extra addons for the best experience|r\n\n"
-                        .. "|cffC0C8D4How to use:|r\n"
-                        .. "|cff9999991.|r |cff999999Click|r |cffFF6666Required|r |cff999999or|r |cff999999Optional below|r\n"
-                        .. "|cff9999992.|r |cff999999The string is selected automatically — press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r\n"
-                        .. "|cff9999993.|r |cff999999Open|r |cff4A8FD9WowUp|r |cff999999> More > Import/Export Addons|r\n"
-                        .. "|cff9999994.|r |cff999999Switch to|r |cffC0C8D4Import|r|cff999999, paste the string, click|r |cff4A8FD9Install|r",
+                    name = format("|cff%s%s|r\n\n", C.HEX_DIM, L["WOWUP_DESC"])
+                        .. format("|cff%s%s|r |cff%s— %s|r\n", C.HEX_SOFT_RED, L["REQUIRED"], C.HEX_DIM, L["WOWUP_REQUIRED_DESC"])
+                        .. format("|cff%s%s — %s|r\n\n", C.HEX_DIM, L["OPTIONAL"], L["WOWUP_OPTIONAL_DESC"])
+                        .. format("|cff%s%s:|r\n", C.HEX_SILVER, L["WOWUP_HOW_TO"])
+                        .. format("|cff%s1.|r |cff%sClick|r |cff%s%s|r |cff%sor|r %s |cff%sbelow|r\n", C.HEX_DIM, C.HEX_DIM, C.HEX_SOFT_RED, L["REQUIRED"], C.HEX_DIM, L["OPTIONAL"], C.HEX_DIM)
+                        .. format("|cff%s2.|r |cff%sThe string is selected — press|r |cff%sCtrl+C|r |cff%sto copy|r\n", C.HEX_DIM, C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM)
+                        .. format("|cff%s3.|r |cff%sOpen|r |cff%sWowUp|r |cff%s> More > Import/Export Addons|r\n", C.HEX_DIM, C.HEX_DIM, C.HEX_BLUE, C.HEX_DIM)
+                        .. format("|cff%s4.|r |cff%sSwitch to|r |cff%sImport|r|cff%s, paste, click|r |cff%sInstall|r", C.HEX_DIM, C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM, C.HEX_BLUE),
                     order = 2,
                     type = "description",
                     fontSize = "medium"
@@ -321,8 +321,8 @@ MUI.options = {
                     type = "description"
                 },
                 import_required = {
-                    name = "|cffFF6666Copy Required Addons|r",
-                    desc = "Opens a popup with the WowUp import string for required addons",
+                    name = format("|cff%s%s|r", C.HEX_SOFT_RED, L["COPY_REQUIRED_ADDONS"]),
+                    desc = L["COPY_REQUIRED_DESC"],
                     order = 4,
                     type = "execute",
                     func = function()
@@ -333,8 +333,8 @@ MUI.options = {
                     end
                 },
                 import_optional = {
-                    name = "Copy Optional Addons",
-                    desc = "Opens a popup with the WowUp import string for optional addons",
+                    name = L["COPY_OPTIONAL_ADDONS"],
+                    desc = L["COPY_OPTIONAL_DESC"],
                     order = 5,
                     type = "execute",
                     func = function()
@@ -350,7 +350,7 @@ MUI.options = {
                     type = "description"
                 },
                 required_list = {
-                    name = BuildAddonListString(D.WowUpRequiredList, "FF6666", "Required Addons"),
+                    name = BuildAddonListString(D.WowUpRequiredList, C.HEX_SOFT_RED, L["REQUIRED_ADDONS"]),
                     order = 7,
                     type = "description",
                     fontSize = "medium"
@@ -361,7 +361,7 @@ MUI.options = {
                     type = "description"
                 },
                 optional_list = {
-                    name = BuildAddonListString(D.WowUpOptionalList, "999999", "Optional Addons"),
+                    name = BuildAddonListString(D.WowUpOptionalList, C.HEX_DIM, L["OPTIONAL_ADDONS"]),
                     order = 9,
                     type = "description",
                     fontSize = "medium"

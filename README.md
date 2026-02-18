@@ -25,8 +25,9 @@
 | 🎭 | **Character Layouts** | Class-specific layouts that auto-select based on your spec |
 | 🔄 | **Automatic Profile Loading** | New characters automatically receive all profiles |
 | 📦 | **WowUp Integration** | Built-in export string to install all addons via WowUp |
-| 🗺️ | **Minimap Button** | Quick access to installer and settings |
+| 🗺️ | **Minimap Button** | Drag-and-drop minimap button via LibDBIcon |
 | 📋 | **Changelog Popup** | See what's new after every update |
+| 🌍 | **9 Languages** | EN, DE, FR, ES, PT, IT, RU, KO, ZH |
 
 ## 🧩 Supported Addons
 

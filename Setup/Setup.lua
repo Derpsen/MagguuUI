@@ -3,11 +3,12 @@ local SE = MUI:GetModule("Setup")
 
 local format = format
 local C = MUI.Colors
+local L = LibStub("AceLocale-3.0"):GetLocale("MagguuUI")
 
 StaticPopupDialogs["MAGGUUI_OVERWRITE_PROFILE"] = {
-    text = format("A profile named |cff%sMagguuUI|r already exists for |cff%s%%s|r.\n\nDo you want to overwrite it?", C.HEX_BLUE, C.HEX_SILVER),
-    button1 = "Overwrite",
-    button2 = "Cancel",
+    text = format(L["OVERWRITE_TEXT"], "%s"),
+    button1 = L["OVERWRITE_BUTTON"],
+    button2 = L["CANCEL"],
     OnAccept = function(self)
         if self.data and self.data.callback then
             self.data.callback()
@@ -65,7 +66,7 @@ function SE:ProfileExistsForAddon(addon)
             end
         end
     elseif addon == "BetterCooldownManager" then
-        return MUI:IsAddOnEnabled("BetterCooldownManager") and BetterCooldownManagerDB and self.IsProfileExisting(BetterCooldownManagerDB)
+        return MUI:IsAddOnEnabled("BetterCooldownManager") and BCDMDB and self.IsProfileExisting(BCDMDB)
     end
 
     return false
@@ -79,7 +80,7 @@ function SE.CompleteSetup(addon)
             PluginInstallStepComplete:Hide()
         end
 
-        PluginInstallStepComplete.message = "Success"
+        PluginInstallStepComplete.message = L["SUCCESS"]
 
         PluginInstallStepComplete:Show()
     end
@@ -106,9 +107,9 @@ function SE.IsProfileActive(addon)
             return ElvDB.profileKeys[key] == "MagguuUI"
         end
     elseif addon == "BetterCooldownManager" then
-        if MUI:IsAddOnEnabled("BetterCooldownManager") and BetterCooldownManagerDB and BetterCooldownManagerDB.profileKeys then
+        if MUI:IsAddOnEnabled("BetterCooldownManager") and BCDMDB and BCDMDB.profileKeys then
             local key = MUI.myname .. " - " .. GetRealmName()
-            return BetterCooldownManagerDB.profileKeys[key] == "MagguuUI"
+            return BCDMDB.profileKeys[key] == "MagguuUI"
         end
     elseif addon == "BigWigs" then
         if MUI:IsAddOnEnabled("BigWigs") and BigWigs3DB and BigWigs3DB.profileKeys then

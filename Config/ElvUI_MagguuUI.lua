@@ -14,6 +14,7 @@ local tonumber = tonumber
 local tinsert = tinsert
 
 local C = MUI.Colors
+local ML = LibStub("AceLocale-3.0"):GetLocale("MagguuUI")
 
 -- Gradient text helper (interpolates hex colors per character)
 local function GradientText(text, hexFrom, hexTo)
@@ -80,7 +81,7 @@ local function BuildChangelogOptions()
         page.date = {
             order = 1,
             type = "description",
-            name = "|cffbbbbbb" .. dateString .. " Released|r",
+            name = "|cffbbbbbb" .. dateString .. " " .. ML["RELEASED"] .. "|r",
             fontSize = "small",
         }
 
@@ -148,8 +149,8 @@ local function BuildChangelogOptions()
         page.confirm = {
             order = 92,
             type = "execute",
-            name = format("|cff%sI got it!|r", C.HEX_GREEN),
-            desc = "Mark as read — the changelog popup won't show for this version on next login.",
+            name = format("|cff%s%s|r", C.HEX_GREEN, ML["GOT_IT"]),
+            desc = ML["GOT_IT_DESC"],
             width = "full",
             hidden = isChangelogRead,
             func = function()
@@ -223,20 +224,20 @@ local function InsertMagguuUIOptions()
                     desc = {
                         order = 1,
                         type = "description",
-                        name = format("|cff%sInstall or load MagguuUI profiles for all supported addons.|r\n", C.HEX_DIM),
+                        name = format("|cff%s%s|r\n", C.HEX_DIM, ML["INSTALLER_DESC"]),
                         fontSize = "medium",
                     },
                     resolution_notice = {
                         order = 1.5,
                         type = "description",
-                        name = format("|cff%sOptimized for 4K (3840x2160).|r |cff%sOther resolutions may need manual adjustments.|r\n", C.HEX_YELLOW, C.HEX_DIM),
+                        name = format("|cff%s%s|r |cff%s%s|r\n", C.HEX_YELLOW, ML["RESOLUTION_NOTICE"], C.HEX_DIM, ML["RESOLUTION_NOTICE_SUB"]),
                         fontSize = "medium",
                     },
                     run_installer = {
                         order = 2,
                         type = "execute",
-                        name = "Open Installer",
-                        desc = "Opens the MagguuUI step-by-step installation wizard",
+                        name = ML["OPEN_INSTALLER"],
+                        desc = ML["OPEN_INSTALLER_DESC"],
                         func = function()
                             MUI:RunInstaller()
                         end,
@@ -250,8 +251,8 @@ local function InsertMagguuUIOptions()
                     install_all = {
                         order = 4,
                         type = "execute",
-                        name = "Install All Profiles",
-                        desc = "Install all MagguuUI profiles at once (ElvUI, BCM, EditMode, Details, Plater)",
+                        name = ML["INSTALL_ALL_PROFILES"],
+                        desc = ML["INSTALL_ALL_PROFILES_DESC"],
                         func = function()
                             MUI:ProcessProfileQueue(true, MUI.INSTALL_ORDER)
                         end,
@@ -263,8 +264,8 @@ local function InsertMagguuUIOptions()
                     load_profiles = {
                         order = 5,
                         type = "execute",
-                        name = "Load Profiles",
-                        desc = "Load previously saved profiles on this character",
+                        name = ML["LOAD_PROFILES_BUTTON"],
+                        desc = ML["LOAD_PROFILES_DESC"],
                         func = function()
                             MUI:LoadProfiles()
                         end,
@@ -281,7 +282,7 @@ local function InsertMagguuUIOptions()
                     status_header = {
                         order = 7,
                         type = "header",
-                        name = format("|cff%sProfile Status|r", C.HEX_BLUE),
+                        name = format("|cff%s%s|r", C.HEX_BLUE, ML["PROFILE_STATUS"]),
                     },
                     addon_status = {
                         order = 8,
@@ -296,7 +297,7 @@ local function InsertMagguuUIOptions()
 
                                 if not enabled then
                                     icon = format("|cff%s--|r", C.HEX_DARK)
-                                    state = format("|cff%sNot enabled|r", C.HEX_DARK)
+                                    state = format("|cff%s%s|r", C.HEX_DARK, ML["NOT_ENABLED"])
                                 elseif installed then
                                     -- Check if MagguuUI profile is currently active
                                     local SE = MUI:GetModule("Setup")
@@ -304,14 +305,14 @@ local function InsertMagguuUIOptions()
 
                                     if active then
                                         icon = format("|cff%s+|r", C.HEX_GREEN)
-                                        state = format("|cff%sActive|r", C.HEX_GREEN)
+                                        state = format("|cff%s%s|r", C.HEX_GREEN, ML["ACTIVE"])
                                     else
                                         icon = format("|cff%s+|r", C.HEX_GREEN)
-                                        state = format("|cff%sInstalled|r", C.HEX_GREEN)
+                                        state = format("|cff%s%s|r", C.HEX_GREEN, ML["STATUS_INSTALLED"])
                                     end
                                 else
-                                    icon = format("|cff%so|r", C.HEX_YELLOW)
-                                    state = format("|cff%sNot installed|r", C.HEX_YELLOW)
+                                    icon = format("|cff%so|r", C.HEX_SOFT_RED)
+                                    state = format("|cff%s%s|r", C.HEX_SOFT_RED, ML["NOT_INSTALLED"])
                                 end
                                 tinsert(lines, format(
                                     "  %s  |cff%s%s|r  %s",
@@ -344,10 +345,10 @@ local function InsertMagguuUIOptions()
                             minimap_toggle = {
                                 order = 1,
                                 type = "toggle",
-                                name = "Show Minimap Button",
-                                desc = "Toggle the minimap button on or off",
+                                name = ML["SHOW_MINIMAP_BUTTON"],
+                                desc = ML["SHOW_MINIMAP_BUTTON_DESC"],
                                 get = function()
-                                    return MUI.db.global.minimapButton ~= false
+                                    return not (MUI.db.global.minimap and MUI.db.global.minimap.hide)
                                 end,
                                 set = function()
                                     MUI:ToggleMinimapButton()
@@ -362,8 +363,8 @@ local function InsertMagguuUIOptions()
                             changelog_popup = {
                                 order = 3,
                                 type = "toggle",
-                                name = "Show Changelog on Update",
-                                desc = "Show the changelog popup when a new version is detected",
+                                name = ML["SHOW_CHANGELOG_ON_UPDATE"],
+                                desc = ML["SHOW_CHANGELOG_ON_UPDATE_DESC"],
                                 get = function()
                                     if not MUI.db or not MUI.db.global then return true end
                                     return MUI.db.global.changelogDismissed ~= MUI.version
@@ -385,21 +386,20 @@ local function InsertMagguuUIOptions()
                     wowup = {
                         order = 2,
                         type = "group",
-                        name = "WowUp Import",
+                        name = format("|cff%sWowUp|r %s", C.HEX_BLUE, ML["WOWUP_ADDON_IMPORT"]),
                         args = {
                             desc = {
                                 order = 1,
                                 type = "description",
-                                name = format("|cff%sMagguuUI uses several addons. You can install them using|r ", C.HEX_DIM)
-                                    .. format("|cff%sWowUp|r|cff%s's import feature.|r\n\n", C.HEX_BLUE, C.HEX_DIM)
-                                    .. format("|cff%sRequired|r |cff%s— Core addons needed for MagguuUI|r\n", C.HEX_SOFT_RED, C.HEX_DIM)
-                                    .. format("|cff%sOptional — Extra addons for the best experience|r\n", C.HEX_DIM),
+                                name = format("|cff%s%s|r\n\n", C.HEX_DIM, ML["WOWUP_DESC"])
+                                    .. format("|cff%s%s|r |cff%s— %s|r\n", C.HEX_SOFT_RED, ML["REQUIRED"], C.HEX_DIM, ML["WOWUP_REQUIRED_DESC"])
+                                    .. format("|cff%s%s — %s|r\n", C.HEX_DIM, ML["OPTIONAL"], ML["WOWUP_OPTIONAL_DESC"]),
                                 fontSize = "medium",
                             },
                             howto_header = {
                                 order = 2,
                                 type = "header",
-                                name = format("|cff%sHow to use|r", C.HEX_BLUE),
+                                name = format("|cff%s%s|r", C.HEX_BLUE, ML["WOWUP_HOW_TO"]),
                             },
                             howto = {
                                 order = 3,
@@ -419,8 +419,8 @@ local function InsertMagguuUIOptions()
                             copy_required = {
                                 order = 5,
                                 type = "execute",
-                                name = format("|cff%sCopy Required Addons|r", C.HEX_SOFT_RED),
-                                desc = "Opens a popup with the WowUp import string for required addons",
+                                name = format("|cff%s%s|r", C.HEX_SOFT_RED, ML["COPY_REQUIRED_ADDONS"]),
+                                desc = ML["COPY_REQUIRED_DESC"],
                                 func = function()
                                     local I = MUI:GetModule("Installer")
                                     if I and I.ShowWowUpRequired then
@@ -432,8 +432,8 @@ local function InsertMagguuUIOptions()
                             copy_optional = {
                                 order = 6,
                                 type = "execute",
-                                name = "Copy Optional Addons",
-                                desc = "Opens a popup with the WowUp import string for optional addons",
+                                name = ML["COPY_OPTIONAL_ADDONS"],
+                                desc = ML["COPY_OPTIONAL_DESC"],
                                 func = function()
                                     local I = MUI:GetModule("Installer")
                                     if I and I.ShowWowUpOptional then
@@ -450,7 +450,7 @@ local function InsertMagguuUIOptions()
                             required_header = {
                                 order = 8,
                                 type = "header",
-                                name = format("|cff%sRequired Addons|r", C.HEX_SOFT_RED),
+                                name = format("|cff%s%s|r", C.HEX_SOFT_RED, ML["REQUIRED_ADDONS"]),
                             },
                             required_list = {
                                 order = 9,
@@ -458,7 +458,7 @@ local function InsertMagguuUIOptions()
                                 name = function()
                                     local D = MUI:GetModule("Data")
                                     if not D or not D.WowUpRequiredList or #D.WowUpRequiredList == 0 then
-                                        return format("|cff%sNo addon data available.|r", C.HEX_DARK)
+                                        return format("|cff%s%s|r", C.HEX_DARK, ML["NO_ADDON_DATA"])
                                     end
                                     local lines = {}
                                     for _, name in ipairs(D.WowUpRequiredList) do
@@ -476,7 +476,7 @@ local function InsertMagguuUIOptions()
                             optional_header = {
                                 order = 11,
                                 type = "header",
-                                name = format("|cff%sOptional Addons|r", C.HEX_DIM),
+                                name = format("|cff%s%s|r", C.HEX_DIM, ML["OPTIONAL_ADDONS"]),
                             },
                             optional_list = {
                                 order = 12,
@@ -484,7 +484,7 @@ local function InsertMagguuUIOptions()
                                 name = function()
                                     local D = MUI:GetModule("Data")
                                     if not D or not D.WowUpOptionalList or #D.WowUpOptionalList == 0 then
-                                        return format("|cff%sNo addon data available.|r", C.HEX_DARK)
+                                        return format("|cff%s%s|r", C.HEX_DARK, ML["NO_ADDON_DATA"])
                                     end
                                     local lines = {}
                                     for _, name in ipairs(D.WowUpOptionalList) do
@@ -519,7 +519,7 @@ local function InsertMagguuUIOptions()
                             author_header = {
                                 order = 1,
                                 type = "header",
-                                name = format("|cff%sAuthor|r", C.HEX_BLUE),
+                                name = format("|cff%s%s|r", C.HEX_BLUE, ML["AUTHOR"]),
                             },
                             author = {
                                 order = 2,
@@ -535,13 +535,13 @@ local function InsertMagguuUIOptions()
                             links_header = {
                                 order = 4,
                                 type = "header",
-                                name = format("|cff%sLinks & Support|r", C.HEX_BLUE),
+                                name = format("|cff%s%s|r", C.HEX_BLUE, ML["LINKS_SUPPORT"]),
                             },
                             website = {
                                 order = 5,
                                 type = "execute",
-                                name = format("Website  |cff%sui.magguu.xyz|r", C.HEX_BLUE),
-                                desc = "Copy the MagguuUI website URL",
+                                name = format("%s  |cff%sui.magguu.xyz|r", ML["WEBSITE"], C.HEX_BLUE),
+                                desc = ML["OPEN_WEBSITE_DESC"],
                                 func = function()
                                     MUI:ShowURLPopup(
                                         format("|cff%sWebsite|r", C.HEX_BLUE),
@@ -571,7 +571,7 @@ local function InsertMagguuUIOptions()
                             license_header = {
                                 order = 8,
                                 type = "header",
-                                name = format("|cff%sLicense|r", C.HEX_BLUE),
+                                name = format("|cff%s%s|r", C.HEX_BLUE, ML["LICENSE"]),
                             },
                             license = {
                                 order = 9,
@@ -600,7 +600,7 @@ local function InsertMagguuUIOptions()
                             version_header = {
                                 order = 1,
                                 type = "header",
-                                name = format("|cff%sVersion Info|r", C.HEX_BLUE),
+                                name = format("|cff%s%s|r", C.HEX_BLUE, ML["VERSION_INFO"]),
                             },
                             magguuui_ver = {
                                 order = 2,
@@ -644,7 +644,7 @@ local function InsertMagguuUIOptions()
                             addons_header = {
                                 order = 6,
                                 type = "header",
-                                name = format("|cff%sAddon Status|r", C.HEX_BLUE),
+                                name = format("|cff%s%s|r", C.HEX_BLUE, ML["ADDON_STATUS_HEADER"]),
                             },
                             addon_status = {
                                 order = 7,

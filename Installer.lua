@@ -5,6 +5,7 @@ local D = MUI:GetModule("Data")
 
 -- Use centralized colors
 local C = MUI.Colors
+local L = LibStub("AceLocale-3.0"):GetLocale("MagguuUI")
 local BLUE = C.BLUE
 local SILVER = C.SILVER
 local DARK_BG = C.DARK_BG
@@ -68,7 +69,7 @@ local function GetOrCreateWowUpPopup()
     desc:SetPoint("TOP", title, "BOTTOM", 0, -4)
     desc:SetPoint("LEFT", popup, "LEFT", 14, 0)
     desc:SetPoint("RIGHT", popup, "RIGHT", -14, 0)
-    desc:SetText("|cff999999Click the text below to select all, then press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r")
+    desc:SetText(format("|cff%s%s|r", C.HEX_DIM, L["COPY_HINT"]))
     popup.desc = desc
 
     -- ScrollFrame + EditBox (relative anchoring to desc)
@@ -119,10 +120,10 @@ local function GetOrCreateWowUpPopup()
     -- Detect Ctrl+C → show feedback → auto-close
     editBox:SetScript("OnKeyDown", function(self, key)
         if key == "C" and IsControlKeyDown() then
-            desc:SetText("|cff00ff88Copied!|r")
+            desc:SetText(format("|cff%s%s|r", C.HEX_GREEN, L["COPIED"]))
             C_Timer.After(0.6, function()
                 popup:Hide()
-                desc:SetText("|cff999999Click the text below to select all, then press|r |cffC0C8D4Ctrl+C|r |cff999999to copy|r")
+                desc:SetText(format("|cff%s%s|r", C.HEX_DIM, L["COPY_HINT"]))
             end)
         end
     end)
@@ -134,7 +135,7 @@ local function GetOrCreateWowUpPopup()
     local closeBtn = CreateFrame("Button", nil, popup, "UIPanelButtonTemplate")
     closeBtn:SetSize(80, 22)
     closeBtn:SetPoint("BOTTOM", popup, "BOTTOM", 0, 14)
-    closeBtn:SetText("Close")
+    closeBtn:SetText(L["CLOSE"])
     closeBtn:SetScript("OnClick", function() popup:Hide() end)
 
     -- ESC to close
@@ -149,7 +150,7 @@ end
 -- Generic function: show popup with a title and string
 local function ShowWowUpString(popupTitle, str)
     local popup = GetOrCreateWowUpPopup()
-    local text = str or "No WowUp string configured"
+    local text = str or L["NO_WOWUP_STRING"]
 
     popup.title:SetText(popupTitle)
     popup.editBox._muiText = text
@@ -166,16 +167,16 @@ end
 -- Required addons string
 function I:ShowWowUpRequired()
     ShowWowUpString(
-        "|cff4A8FD9WowUp|r |cffC0C8D4Required Addons|r",
-        D.WowUpRequired or D.WowUpString or "No required addons string configured"
+        format("|cff%sWowUp|r |cff%s%s|r", C.HEX_BLUE, C.HEX_SILVER, L["REQUIRED_ADDONS"]),
+        D.WowUpRequired or D.WowUpString or L["NO_REQUIRED_STRING"]
     )
 end
 
 -- Optional/recommended addons string
 function I:ShowWowUpOptional()
     ShowWowUpString(
-        "|cff4A8FD9WowUp|r |cffC0C8D4Optional Addons|r",
-        D.WowUpOptional or "No optional addons string configured"
+        format("|cff%sWowUp|r |cff%s%s|r", C.HEX_BLUE, C.HEX_SILVER, L["OPTIONAL_ADDONS"]),
+        D.WowUpOptional or L["NO_OPTIONAL_STRING"]
     )
 end
 
@@ -400,16 +401,38 @@ function I:HookInstaller()
 end
 
 -- ============================================================
+-- Profile Status Helper
+-- ============================================================
+local function GetProfileStatusText(addon)
+    if SE.IsProfileActive(addon) then
+        return format("|cff%s%s|r", C.HEX_GREEN, L["PROFILE_ACTIVE"])
+    elseif SE:ProfileExistsForAddon(addon) then
+        return format("|cff%s%s|r", C.HEX_YELLOW, L["PROFILE_INSTALLED"])
+    else
+        return format("|cff%s%s|r", C.HEX_SOFT_RED, L["PROFILE_NOT_INSTALLED"])
+    end
+end
+
+-- EditMode has no IsProfileActive check
+local function GetEditModeStatusText()
+    if SE:ProfileExistsForAddon("Blizzard_EditMode") then
+        return format("|cff%s%s|r", C.HEX_YELLOW, L["PROFILE_INSTALLED"])
+    else
+        return format("|cff%s%s|r", C.HEX_SOFT_RED, L["PROFILE_NOT_INSTALLED"])
+    end
+end
+
+-- ============================================================
 -- Installer Pages
 -- ============================================================
 I.installer = {
-    Title = format("%s %s", MUI.title, "|cff888888Installation|r"),
+    Title = format("%s |cff888888%s|r", MUI.title, L["INSTALLATION"]),
     Name = MUI.title,
     tutorialImage = "Interface\\AddOns\\MagguuUI\\Media\\Textures\\LogoTop.tga",
     Pages = {
         [1] = function()
             if PluginInstallFrame.tutorialImage2 then PluginInstallFrame.tutorialImage2:Hide() end
-            PluginInstallFrame.SubTitle:SetFormattedText("|cffccccccWelcome to|r %s", MUI.title)
+            PluginInstallFrame.SubTitle:SetFormattedText("|cffcccccc%s|r %s", L["WELCOME_TO"], MUI.title)
 
             -- Check if profiles need (re-)installation:
             -- No profiles at all, OR version changed since last install
@@ -423,39 +446,39 @@ I.installer = {
             end
 
             if needsInstall then
-                PluginInstallFrame.Desc1:SetText("|cff999999Click|r |cff4A8FD9Install All|r |cff999999to set up all profiles at once, or click|r |cffC0C8D4Continue|r |cff999999to install individually|r")
-                PluginInstallFrame.Desc2:SetText("|cffFFFF00Optimized for 4K.|r |cff999999Other resolutions may need manual adjustments.|r")
-                PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Copy a|r |cff4A8FD9WowUp|r |cff999999import string:|r")
+                PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["INSTALL_ALL_DESC"]))
+                PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r |cff%s%s|r", C.HEX_YELLOW, L["OPTIMIZED_4K"], C.HEX_DIM, L["OTHER_RESOLUTIONS"]))
+                PluginInstallFrame.Desc3:SetText(format("|cff%s%s|r", C.HEX_DIM, L["MISSING_ADDONS"]))
                 PluginInstallFrame.Option1:Show()
                 PluginInstallFrame.Option1:SetScript("OnClick", function() InstallAllProfiles() end)
-                PluginInstallFrame.Option1:SetText("|cff4A8FD9Install All|r")
+                PluginInstallFrame.Option1:SetText(format("|cff%s%s|r", C.HEX_BLUE, L["INSTALL_ALL"]))
 
                 PluginInstallFrame.Option2:Show()
                 PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpRequired() end)
-                PluginInstallFrame.Option2:SetText("|cffFF6666Required|r")
+                PluginInstallFrame.Option2:SetText(format("|cff%s%s|r", C.HEX_SOFT_RED, L["REQUIRED"]))
 
                 PluginInstallFrame.Option3:Show()
                 PluginInstallFrame.Option3:SetScript("OnClick", function() ShowWowUpOptional() end)
-                PluginInstallFrame.Option3:SetText("|cff999999Optional|r")
+                PluginInstallFrame.Option3:SetText(format("|cff%s%s|r", C.HEX_DIM, L["OPTIONAL"]))
 
 
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText("|cff999999Click|r |cff4A8FD9Load Profiles|r |cff999999to apply your profiles, or click|r |cffC0C8D4Continue|r |cff999999to reinstall individually|r")
-            PluginInstallFrame.Desc2:SetText("|cffFFFF00Optimized for 4K.|r |cff999999Other resolutions may need manual adjustments.|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Missing addons? Copy a|r |cff4A8FD9WowUp|r |cff999999import string:|r")
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["LOAD_PROFILES_INSTALLER_DESC"]))
+            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r |cff%s%s|r", C.HEX_YELLOW, L["OPTIMIZED_4K"], C.HEX_DIM, L["OTHER_RESOLUTIONS"]))
+            PluginInstallFrame.Desc3:SetText(format("|cff%s%s|r", C.HEX_DIM, L["MISSING_ADDONS"]))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() MUI:LoadProfiles() end)
-            PluginInstallFrame.Option1:SetText("|cff4A8FD9Load Profiles|r")
+            PluginInstallFrame.Option1:SetText(format("|cff%s%s|r", C.HEX_BLUE, L["LOAD_PROFILES"]))
             PluginInstallFrame.Option1.tooltipText = nil
             PluginInstallFrame.Option2:Show()
             PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpRequired() end)
-            PluginInstallFrame.Option2:SetText("|cffFF6666Required|r")
+            PluginInstallFrame.Option2:SetText(format("|cff%s%s|r", C.HEX_SOFT_RED, L["REQUIRED"]))
             PluginInstallFrame.Option2.tooltipText = nil
             PluginInstallFrame.Option3:Show()
             PluginInstallFrame.Option3:SetScript("OnClick", function() ShowWowUpOptional() end)
-            PluginInstallFrame.Option3:SetText("|cff999999Optional|r")
+            PluginInstallFrame.Option3:SetText(format("|cff%s%s|r", C.HEX_DIM, L["OPTIONAL"]))
             PluginInstallFrame.Option3.tooltipText = nil
         end,
         [2] = function()
@@ -463,92 +486,92 @@ I.installer = {
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4ElvUI|r")
 
             if not MUI:IsAddOnEnabled("ElvUI") then
-                PluginInstallFrame.Desc1:SetText("|cff666666Enable ElvUI to unlock this step|r")
+                PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DARK, L["ELVUI_ENABLE"]))
 
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText("|cff999999Complete UI replacement for action bars, unit frames, and more|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Pre-configured layout with clean, modern styling|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Includes optimized settings for chat, tooltips, and bags|r")
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["ELVUI_DESC1"]))
+            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["ELVUI_DESC2"]))
+            PluginInstallFrame.Desc3:SetText(GetProfileStatusText("ElvUI"))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("ElvUI", true) end)
-            PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
+            PluginInstallFrame.Option1:SetText(format("|cff%s%s|r", C.HEX_BLUE, L["INSTALL"]))
         end,
         [3] = function()
 
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4BetterCooldownManager|r")
 
             if not MUI:IsAddOnEnabled("BetterCooldownManager") then
-                PluginInstallFrame.Desc1:SetText("|cff666666Enable BetterCooldownManager to unlock this step|r")
+                PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DARK, L["BCM_ENABLE"]))
 
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText("|cff999999Enhanced cooldown tracking with flexible bar layouts|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Pre-configured bars for spells, items, and trinkets|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Includes tracking for offensive, defensive, and utility cooldowns|r")
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["BCM_DESC1"]))
+            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["BCM_DESC2"]))
+            PluginInstallFrame.Desc3:SetText(GetProfileStatusText("BetterCooldownManager"))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("BetterCooldownManager", true) end)
-            PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
+            PluginInstallFrame.Option1:SetText(format("|cff%s%s|r", C.HEX_BLUE, L["INSTALL"]))
         end,
         [4] = function()
 
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4BigWigs|r")
 
             if not MUI:IsAddOnEnabled("BigWigs") then
-                PluginInstallFrame.Desc1:SetText("|cff666666Enable BigWigs to unlock this step|r")
+                PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DARK, L["BIGWIGS_ENABLE"]))
 
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText("|cff999999Lightweight boss mod with alerts, timers, and sounds|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Pre-configured bar positions and sound settings|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Optimized layout that integrates with the MagguuUI design|r")
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["BIGWIGS_DESC1"]))
+            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["BIGWIGS_DESC2"]))
+            PluginInstallFrame.Desc3:SetText(GetProfileStatusText("BigWigs"))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("BigWigs", true) end)
-            PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
+            PluginInstallFrame.Option1:SetText(format("|cff%s%s|r", C.HEX_BLUE, L["INSTALL"]))
         end,
         [5] = function()
 
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Blizzard EditMode|r")
-            PluginInstallFrame.Desc1:SetText("|cff999999Blizzard's built-in UI layout editor for HUD elements|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Installs a pre-configured MagguuUI layout|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Positions objective tracker, minimap, and Blizzard frames|r")
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["EDITMODE_DESC1"]))
+            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["EDITMODE_DESC2"]))
+            PluginInstallFrame.Desc3:SetText(GetEditModeStatusText())
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("Blizzard_EditMode", true) end)
-            PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
+            PluginInstallFrame.Option1:SetText(format("|cff%s%s|r", C.HEX_BLUE, L["INSTALL"]))
         end,
         [6] = function()
 
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Details|r")
 
             if not MUI:IsAddOnEnabled("Details") then
-                PluginInstallFrame.Desc1:SetText("|cff666666Enable Details to unlock this step|r")
+                PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DARK, L["DETAILS_ENABLE"]))
 
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText("|cff999999Real-time combat meter for damage, healing, and more|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Pre-configured window layout with clean styling|r")
-            PluginInstallFrame.Desc3:SetText("|cff999999Includes custom displays for damage, healing, and DPS|r")
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["DETAILS_DESC1"]))
+            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["DETAILS_DESC2"]))
+            PluginInstallFrame.Desc3:SetText(GetProfileStatusText("Details"))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("Details", true) end)
-            PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
+            PluginInstallFrame.Option1:SetText(format("|cff%s%s|r", C.HEX_BLUE, L["INSTALL"]))
         end,
         [7] = function()
 
             PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Plater|r")
 
             if not MUI:IsAddOnEnabled("Plater") then
-                PluginInstallFrame.Desc1:SetText("|cff666666Enable Plater to unlock this step|r")
+                PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DARK, L["PLATER_ENABLE"]))
 
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText("|cff999999Customizable nameplates with health and cast bars|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Pre-configured with threat coloring and clean styling|r")
-            PluginInstallFrame.Desc3:SetText("|cffFFFF00Requires a UI reload after installation|r")
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["PLATER_DESC1"]))
+            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["PLATER_DESC2"]))
+            PluginInstallFrame.Desc3:SetText(GetProfileStatusText("Plater") .. "  |  " .. format("|cff%s%s|r", C.HEX_YELLOW, L["REQUIRES_RELOAD"]))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function()
                 if SE:ProfileExistsForAddon("Plater") then
@@ -569,42 +592,42 @@ I.installer = {
                     ReloadUI()
                 end
             end)
-            PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
+            PluginInstallFrame.Option1:SetText(format("|cff%s%s|r", C.HEX_BLUE, L["INSTALL"]))
         end,
         [8] = function()
 
-            local className = SE.GetPlayerClassDisplayName and SE.GetPlayerClassDisplayName() or "your class"
-            PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Character Layouts|r")
-            PluginInstallFrame.Desc1:SetText(format("|cff999999Class-specific layouts for|r |cff4A8FD9%s|r", className))
-            PluginInstallFrame.Desc2:SetText("|cff999999Auto-selects layout matching your active spec|r")
-            PluginInstallFrame.Desc3:SetText("|cffFFFF00Requires a UI reload after installation|r")
+            local className = SE.GetPlayerClassDisplayName and SE.GetPlayerClassDisplayName() or L["YOUR_CLASS"]
+            PluginInstallFrame.SubTitle:SetText(format("|cffC0C8D4%s|r", L["STEP_LAYOUTS"]))
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r |cff%s%s|r", C.HEX_DIM, L["CLASS_LAYOUTS_FOR"], C.HEX_BLUE, className))
+            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r  |  |cff%s%s|r", C.HEX_DIM, L["CLASS_LAYOUTS_DESC2"], C.HEX_YELLOW, L["REQUIRES_RELOAD"]))
+            PluginInstallFrame.Desc3:SetText("")
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function()
                 SE:Setup("ClassCooldowns", true)
                 ReloadUI()
             end)
-            PluginInstallFrame.Option1:SetText("|cff4A8FD9Install|r")
+            PluginInstallFrame.Option1:SetText(format("|cff%s%s|r", C.HEX_BLUE, L["INSTALL"]))
         end,
         [9] = function()
 
-            PluginInstallFrame.SubTitle:SetText("|cff00ff88Installation Complete|r")
-            PluginInstallFrame.Desc1:SetText("|cff999999You have completed the installation process|r")
-            PluginInstallFrame.Desc2:SetText("|cff999999Click|r |cffC0C8D4Reload|r |cff999999to save your settings|r")
+            PluginInstallFrame.SubTitle:SetText(format("|cff%s%s|r", C.HEX_GREEN, L["INSTALLATION_COMPLETE"]))
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["COMPLETED_DESC1"]))
+            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["COMPLETED_DESC2"]))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() ReloadUI() end)
-            PluginInstallFrame.Option1:SetText("|cffC0C8D4Reload|r")
+            PluginInstallFrame.Option1:SetText(format("|cff%s%s|r", C.HEX_SILVER, L["RELOAD_BUTTON"]))
         end
     },
     StepTitles = {
-        [1] = "Welcome",
+        [1] = L["STEP_WELCOME"],
         [2] = "ElvUI",
         [3] = "BCM",
         [4] = "BigWigs",
         [5] = "EditMode",
         [6] = "Details",
         [7] = "Plater",
-        [8] = "Layouts",
-        [9] = "Complete"
+        [8] = L["STEP_LAYOUTS"],
+        [9] = L["STEP_COMPLETE"],
     },
     StepTitlesColor = {DIM[1], DIM[2], DIM[3]},
     StepTitlesColorSelected = {BLUE[1], BLUE[2], BLUE[3]},

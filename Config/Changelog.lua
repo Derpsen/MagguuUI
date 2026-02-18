@@ -11,6 +11,27 @@ local tinsert = tinsert
 -- ============================================================
 MUI.Changelog = {}
 
+MUI.Changelog[120007] = {
+    RELEASE_DATE = "2026/02/18",
+    NEW = {
+        "Localization support (9 languages) via [AceLocale-3.0]",
+        "LibDataBroker minimap button (replaces custom implementation)",
+        "Active profile status on installer pages (green/yellow/red)",
+    },
+    IMPROVEMENT = {
+        "All user-facing strings use locale keys instead of hardcoded text",
+        "Minimap button now supports standard [LibDBIcon] dragging",
+        "Profile status shown in [Settings] panel with color coding",
+        "[Not installed] profiles now shown in red instead of gray",
+        "Removed unused color constants and dead locale keys",
+    },
+    BUGFIX = {
+        "BCM profile status always showed [Not installed] (wrong SavedVariable name)",
+        "Duplicate [LOAD_PROFILES_DESC] locale key caused wrong text",
+        "embeds.xml used [Include] instead of [Script] for .lua library files",
+    },
+}
+
 MUI.Changelog[120006] = {
     RELEASE_DATE = "2026/02/15",
     IMPROVEMENT = {
@@ -120,6 +141,7 @@ local C = MUI.Colors
 local POPUP_BG = C.POPUP_BG
 local POPUP_BORDER = C.POPUP_BORDER
 local CONTENT_BG = C.CONTENT_BG
+local L = LibStub("AceLocale-3.0"):GetLocale("MagguuUI")
 
 -- ============================================================
 -- Build changelog text for popup display
@@ -229,7 +251,7 @@ local function GetOrCreateChangelogPopup()
     subtitle:SetPoint("TOP", title, "BOTTOM", 0, -4)
     subtitle:SetPoint("LEFT", popup, "LEFT", 14, 0)
     subtitle:SetPoint("RIGHT", popup, "RIGHT", -14, 0)
-    subtitle:SetText("|cff999999What's new in this update|r")
+    subtitle:SetText(format("|cff%s%s|r", C.HEX_DIM, L["WHATS_NEW"]))
 
     -- ScrollFrame (fully relative — anchored below subtitle with one line gap)
     local scrollFrame = CreateFrame("ScrollFrame", nil, popup, "UIPanelScrollFrameTemplate")
@@ -274,7 +296,7 @@ local function GetOrCreateChangelogPopup()
     local closeBtn = CreateFrame("Button", nil, popup, "UIPanelButtonTemplate")
     closeBtn:SetSize(120, 26)
     closeBtn:SetPoint("BOTTOM", popup, "BOTTOM", 0, 14)
-    closeBtn:SetText("Got it!")
+    closeBtn:SetText(L["GOT_IT"])
     closeBtn:SetScript("OnClick", function()
         popup:Hide()
         -- If this was an automatic update popup, open the installer

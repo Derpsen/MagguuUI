@@ -30,6 +30,8 @@
 
 embeds.xml
 
+Locales\!load.xml
+
 init.lua
 Core.lua
 Functions.lua

@@ -22,7 +22,6 @@ MUI.Colors = {
     DIM = {0.45, 0.45, 0.50},
     POPUP_BG = {0.05, 0.05, 0.05},
     POPUP_BORDER = {0.12, 0.12, 0.12},
-    EDITBOX_BG = {0.02, 0.02, 0.02},
     CONTENT_BG = {0.02, 0.02, 0.02},
 
     -- Hex strings for |cff...|r chat/text formatting
@@ -34,8 +33,6 @@ MUI.Colors = {
     HEX_YELLOW = "FFFF00",
     HEX_DIM = "999999",
     HEX_DARK = "666666",
-    HEX_LIGHT = "cccccc",
-    HEX_WHITE = "ffffff",
 }
 
 function MUI:ColorText(text, hexColor)
@@ -49,9 +46,6 @@ MUI.Constants = {
     PROFILE_QUEUE_DELAY = 0.3,
     FIRST_RUN_DELAY = 2,
     UI_SETTLE_DELAY = 0.05,
-    MINIMAP_RADIUS = 80,
-    MINIMAP_DEFAULT_ANGLE = 220,
-    MINIMAP_BUTTON_SIZE = 32,
 }
 
 -- ============================================================
@@ -73,6 +67,14 @@ function MUI:DBConvert()
 
     -- === Migrationen hier einfuegen ===
 
+    -- Migrate old minimap format (minimapButton/minimapAngle) to LibDBIcon format (minimap.hide)
+    if db.minimapButton ~= nil or db.minimapAngle ~= nil then
+        local wasHidden = db.minimapButton == false
+        db.minimap = { hide = wasHidden }
+        db.minimapButton = nil
+        db.minimapAngle = nil
+    end
+
     db.lastDBConversion = currentVersion
 end
 
@@ -80,6 +82,7 @@ end
 -- Popup Helpers
 -- ============================================================
 local C = MUI.Colors
+local L = LibStub("AceLocale-3.0"):GetLocale("MagguuUI")
 
 local POPUP_DEFAULTS = {
     timeout = 0,
@@ -100,8 +103,8 @@ end
 -- Reload Popup (ReloadUI requires a hardware click event)
 -- ============================================================
 StaticPopupDialogs["MAGGUUI_RELOAD"] = CreatePopup({
-    text = format("|cff%sMagguuUI|r\n\n|cff%sAll profiles loaded successfully.|r\n|cff%sClick Reload to apply your settings.|r", C.HEX_BLUE, C.HEX_GREEN, C.HEX_DIM),
-    button1 = format("|cff%sReload|r", C.HEX_BLUE),
+    text = format("|cff%sMagguuUI|r\n\n|cff%s%s|r", C.HEX_BLUE, C.HEX_GREEN, L["RELOAD_TEXT"]),
+    button1 = format("|cff%s%s|r", C.HEX_BLUE, L["RELOAD_BUTTON"]),
     OnAccept = function()
         ReloadUI()
     end,
@@ -150,7 +153,7 @@ function MUI:ProcessProfileQueue(install, addonOrder)
         self.db.char.loaded = true
 
         if addonOrder then
-            self:Print(format("|cff%sNo supported addons are enabled.|r", C.HEX_DIM))
+            self:Print(format("|cff%s%s|r", C.HEX_DIM, L["NO_SUPPORTED_ADDONS"]))
         end
 
         return
@@ -158,7 +161,7 @@ function MUI:ProcessProfileQueue(install, addonOrder)
 
     local index = 0
     local total = #queue
-    local verb = install and "Installing" or "Loading"
+    local verb = install and L["INSTALLING"] or L["LOADING"]
 
     local function ProcessNext()
         index = index + 1
@@ -172,7 +175,7 @@ function MUI:ProcessProfileQueue(install, addonOrder)
 
                 SE:Setup("BigWigs", true)
             else
-                self:Print(format("|cff%sAll %d profiles %s.|r", C.HEX_GREEN, total, install and "installed" or "loaded"))
+                self:Print(format("|cff%s%s|r", C.HEX_GREEN, format(install and L["ALL_PROFILES_INSTALLED"] or L["ALL_PROFILES_LOADED"], total)))
 
                 StaticPopup_Show("MAGGUUI_RELOAD")
             end
@@ -195,9 +198,9 @@ end
 -- New Character Popup
 -- ============================================================
 StaticPopupDialogs["MAGGUUI_LOAD_NEW_CHAR"] = CreatePopup({
-    text = format("|cff%sMagguuUI|r\n\n|cff%sProfiles have been installed on another character.\nWould you like to load all profiles onto this character?|r\n\n|cff%sProfiles will be applied one at a time.|r", C.HEX_BLUE, C.HEX_DIM, C.HEX_DARK),
-    button1 = format("|cff%sLoad All Profiles|r", C.HEX_BLUE),
-    button2 = format("|cff%sSkip|r", C.HEX_SILVER),
+    text = format("|cff%sMagguuUI|r\n\n|cff%s%s|r\n\n|cff%s%s|r", C.HEX_BLUE, C.HEX_DIM, L["NEW_CHAR_TEXT"], C.HEX_DARK, L["NEW_CHAR_APPLIED"]),
+    button1 = format("|cff%s%s|r", C.HEX_BLUE, L["NEW_CHAR_LOAD_ALL"]),
+    button2 = format("|cff%s%s|r", C.HEX_SILVER, L["NEW_CHAR_SKIP"]),
     OnAccept = function()
         MUI:ProcessProfileQueue(false)
     end,
