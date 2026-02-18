@@ -1,79 +1,85 @@
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/Derpsen/MagguuUI/main/Media/Textures/LogoTop.tga" width="256" alt="MagguuUI Logo">
+
 # MagguuUI
 
-A pre-configured World of Warcraft UI compilation that installs optimized profiles for popular addons with a single click. No more hours of tweaking settings — just install, click, and play.
+**A pre-configured World of Warcraft UI — install, click, play.**
 
-Compatible with **WoW Retail 12.0+** (The War Within / Midnight).
+[![WoW Version](https://img.shields.io/badge/WoW-12.0%2B-blue?style=flat-square&logo=battle.net&logoColor=white)](https://worldofwarcraft.blizzard.com)
+[![Resolution](https://img.shields.io/badge/Optimized-4K%20(3840%C3%972160)-blueviolet?style=flat-square)](https://ui.magguu.xyz)
+[![Website](https://img.shields.io/badge/Website-ui.magguu.xyz-4A8FD9?style=flat-square)](https://ui.magguu.xyz)
+[![License](https://img.shields.io/badge/License-GPLv3-green?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.html)
 
-**Optimized for 4K (3840x2160).** The setup is designed for the best experience on 4K monitors. If you're using a different resolution, some UI elements may need manual adjustment after installation.
+> **Optimized for 4K (3840x2160).** Other resolutions may need manual adjustments.
 
-**Website:** [ui.magguu.xyz](https://ui.magguu.xyz)
+---
 
-## Features
+</div>
 
-- **One-Click Installation** — Install all addon profiles at once or step by step through the guided installer
-- **Character Layouts** — Class-specific layouts that auto-select based on your active spec
-- **Automatic Profile Loading** — New characters automatically receive all configured profiles
-- **WowUp Integration** — Built-in export string to quickly install all required addons via WowUp
-- **Minimap Button & Addon Compartment** — Quick access to installer and settings
-- **Changelog Popup** — See what's new after every update, or open anytime via `/mui changelog`
+## ✨ Features
 
-## Supported Addons
+| | Feature | Description |
+|---|---|---|
+| 🚀 | **One-Click Installation** | Install all addon profiles at once or step by step |
+| 🎭 | **Character Layouts** | Class-specific layouts that auto-select based on your spec |
+| 🔄 | **Automatic Profile Loading** | New characters automatically receive all profiles |
+| 📦 | **WowUp Integration** | Built-in export string to install all addons via WowUp |
+| 🗺️ | **Minimap Button** | Quick access to installer and settings |
+| 📋 | **Changelog Popup** | See what's new after every update |
+
+## 🧩 Supported Addons
 
 | Addon | Description |
-|-------|-------------|
-| **ElvUI** | Complete UI replacement (action bars, unit frames, nameplates, and more) |
-| **BetterCooldownManager** | Enhanced cooldown tracking with flexible bar layouts |
-| **BigWigs** | Lightweight boss mod with alerts, timers, and sounds |
-| **Details!** | Real-time combat meter for damage, healing, and encounters |
-| **Plater** | Customizable nameplates with threat coloring and scripting |
-| **Blizzard EditMode** | Optimized layout for Blizzard's built-in HUD editor |
-| **Character Layouts** | Class-specific layouts for all 13 classes, matched to your spec |
+|:------|:------------|
+| 🔷 **ElvUI** | Complete UI replacement (action bars, unit frames, and more) |
+| ⏱️ **BetterCooldownManager** | Enhanced cooldown tracking with flexible bar layouts |
+| 🐉 **BigWigs** | Lightweight boss mod with alerts, timers, and sounds |
+| 📊 **Details!** | Real-time combat meter for damage, healing, and encounters |
+| 🏷️ **Plater** | Customizable nameplates with threat coloring and scripting |
+| 🖼️ **Blizzard EditMode** | Optimized layout for Blizzard's built-in HUD editor |
+| 🎯 **Character Layouts** | Class-specific layouts for all 13 classes |
 
-## Requirements
+## 📥 Installation
 
-- **ElvUI** is required — [Download from tukui.org](https://tukui.org/elvui)
-- All other addons are optional — disabled addons are automatically skipped
+```
+1.  Install ElvUI          →  tukui.org/elvui
+2.  Install MagguuUI       →  CurseForge / Wago / WowInterface
+3.  Install ElvUI_Anchor   →  CurseForge (recommended)
+4.  Log in                 →  Installer opens automatically
+5.  Click "Install All"    →  All profiles applied at once
+6.  Click "Reload"         →  Done!
+```
 
-### Recommended Addons
+## ⚙️ Requirements
 
-These addons are optional but recommended for the full MagguuUI experience:
+| | Addon | Status |
+|---|---|---|
+| ✅ | **ElvUI** | Required — [Download](https://tukui.org/elvui) |
+| ➖ | All other addons | Optional — skipped if not installed |
 
-- **ElvUI_Anchor** — Extended frame positioning — [CurseForge](https://www.curseforge.com/wow/addons/elvui-anchor)
-- **ElvUI WindTools** — Enhanced skins, animations, and QoL — [CurseForge](https://www.curseforge.com/wow/addons/elvui-windtools)
-- **Details!** — Damage and healing meter — [CurseForge](https://www.curseforge.com/wow/addons/details)
-- **Plater** — Customizable nameplates — [CurseForge](https://www.curseforge.com/wow/addons/plater-nameplates)
-- **HandyNotes** — Map notes and pins — [CurseForge](https://www.curseforge.com/wow/addons/handynotes)
+### 💡 Recommended Addons
 
-## Installation
+| Addon | Description | Link |
+|:------|:------------|:----:|
+| **ElvUI_Anchor** | Extended frame positioning | [CurseForge](https://www.curseforge.com/wow/addons/elvui-anchor) |
+| **ElvUI WindTools** | Enhanced skins, animations, QoL | [CurseForge](https://www.curseforge.com/wow/addons/elvui-windtools) |
+| **Details!** | Damage and healing meter | [CurseForge](https://www.curseforge.com/wow/addons/details) |
+| **Plater** | Customizable nameplates | [CurseForge](https://www.curseforge.com/wow/addons/plater-nameplates) |
+| **HandyNotes** | Map notes and pins | [CurseForge](https://www.curseforge.com/wow/addons/handynotes) |
 
-1. Install **ElvUI** from [tukui.org](https://tukui.org/elvui)
-2. Install **MagguuUI** from [CurseForge](https://www.curseforge.com/wow/addons/magguuui)
-3. *(Recommended)* Install **ElvUI_Anchor** from [CurseForge](https://www.curseforge.com/wow/addons/elvui-anchor)
-4. Log in — the installer opens automatically on first launch
-5. Click **Install All** to apply all profiles at once, or step through individually
-6. Click **Reload** when prompted
+## 🖱️ Minimap Controls
 
-### Installing Required Addons via WowUp
+| Click | Action |
+|:------|:-------|
+| **Left-click** | Open the Installer |
+| **Right-click** | Open ElvUI settings (MagguuUI section) |
+| **Middle-click** | Toggle the Changelog popup |
 
-1. Open MagguuUI settings in-game (`/mui settings`)
-2. Go to **Settings** > **WowUp Import**
-3. Click **Copy Required Addons** or **Copy Optional Addons**
-4. Open WowUp > Import/Export > Import > paste the string
-
-## Settings
-
-Access settings through the minimap button or Addon Compartment:
-
-- **Left-click** — Open the Installer
-- **Right-click** — Open ElvUI settings (MagguuUI section)
-- **Middle-click** — Toggle the Changelog popup
-
-In the settings panel (`/mui settings`) you can configure general options, import WowUp strings, and view system info.
-
-## Chat Commands
+## 💬 Chat Commands
 
 | Command | Description |
-|---------|-------------|
+|:--------|:------------|
 | `/mui install` | Toggle the installer |
 | `/mui settings` | Toggle settings panel |
 | `/mui minimap` | Toggle minimap button |
@@ -81,25 +87,43 @@ In the settings panel (`/mui settings`) you can configure general options, impor
 | `/mui changelog` | Show the changelog popup |
 | `/mui status` | Show installed profile status |
 
-## New Characters
+## 📦 WowUp Import
+
+1. Open MagguuUI settings in-game (`/mui settings`)
+2. Go to **Settings** → **WowUp Import**
+3. Click **Copy Required Addons** or **Copy Optional Addons**
+4. Open WowUp → Import/Export → Import → paste the string
+
+## 🔄 New Characters
 
 When logging in with a new character, MagguuUI automatically asks if you want to load all existing profiles. Profiles are applied one at a time to prevent conflicts, followed by a Reload prompt.
 
-## FAQ
+## ❓ FAQ
 
-**Do I need all the supported addons?**
+<details>
+<summary><b>Do I need all the supported addons?</b></summary>
+<br>
 No. Only ElvUI is required. All other addons are optional — MagguuUI automatically skips any addon that isn't installed or enabled.
+</details>
 
-**Will this overwrite my existing profiles?**
+<details>
+<summary><b>Will this overwrite my existing profiles?</b></summary>
+<br>
 MagguuUI creates a separate profile named "MagguuUI" for each addon. If a profile already exists, you'll be asked to confirm before overwriting.
+</details>
 
-**How do I reset and reinstall?**
-Type `/mui install` to reopen the installer at any time.
+<details>
+<summary><b>How do I reset and reinstall?</b></summary>
+<br>
+Type <code>/mui install</code> to reopen the installer at any time.
+</details>
 
-## Feedback & Support
+---
 
-Found a bug or have a suggestion? Visit [ui.magguu.xyz](https://ui.magguu.xyz) or open an issue on [GitHub](https://github.com/Derpsen/MagguuUI/issues).
+<div align="center">
 
-## License
+**Found a bug or have a suggestion?** Visit [ui.magguu.xyz](https://ui.magguu.xyz) or open an [issue on GitHub](https://github.com/Derpsen/MagguuUI/issues).
 
 This project is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html).
+
+</div>
