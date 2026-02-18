@@ -17,6 +17,7 @@ MUI.Changelog[120007] = {
         "Localization support (9 languages) via [AceLocale-3.0]",
         "LibDataBroker minimap button (replaces custom implementation)",
         "Active profile status on installer pages (green/yellow/red)",
+        "Reinstall warning on [Character Layouts] page",
     },
     IMPROVEMENT = {
         "All user-facing strings use locale keys instead of hardcoded text",
@@ -29,6 +30,7 @@ MUI.Changelog[120007] = {
         "BCM profile status always showed [Not installed] (wrong SavedVariable name)",
         "Duplicate [LOAD_PROFILES_DESC] locale key caused wrong text",
         "embeds.xml used [Include] instead of [Script] for .lua library files",
+        "Settings title showed [vv12.0.x] instead of [v12.0.x]",
     },
 }
 

@@ -90,6 +90,7 @@ L["REQUIRES_RELOAD"] = "Requer uma recarga da interface apos a instalacao"
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "Layouts especificos de classe para"
 L["CLASS_LAYOUTS_DESC2"] = "Seleciona automaticamente o layout correspondente a sua especializacao ativa"
+L["CLASS_LAYOUTS_DESC3"] = "Reinstalando? Exclua os layouts antigos manualmente no EditMode primeiro"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "Instalacao Concluida"

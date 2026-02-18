@@ -90,6 +90,7 @@ L["REQUIRES_RELOAD"] = "설치 후 UI 새로고침이 필요합니다"
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "직업별 레이아웃"
 L["CLASS_LAYOUTS_DESC2"] = "활성 전문화에 맞는 레이아웃을 자동으로 선택합니다"
+L["CLASS_LAYOUTS_DESC3"] = "재설치하시나요? 먼저 EditMode에서 이전 레이아웃을 수동으로 삭제하세요"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "설치 완료"

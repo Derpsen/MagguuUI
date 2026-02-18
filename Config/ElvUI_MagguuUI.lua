@@ -208,7 +208,7 @@ local function InsertMagguuUIOptions()
             title = {
                 order = 0.1,
                 type = "description",
-                name = format("\n%s |cff%sv%s|r\n", MUI.title, C.HEX_DIM, MUI.version or ""),
+                name = format("\n%s |cff%s%s|r\n", MUI.title, C.HEX_DIM, MUI.version or ""),
                 fontSize = "large",
             },
 

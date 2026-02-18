@@ -600,7 +600,7 @@ I.installer = {
             PluginInstallFrame.SubTitle:SetText(format("|cffC0C8D4%s|r", L["STEP_LAYOUTS"]))
             PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r |cff%s%s|r", C.HEX_DIM, L["CLASS_LAYOUTS_FOR"], C.HEX_BLUE, className))
             PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r  |  |cff%s%s|r", C.HEX_DIM, L["CLASS_LAYOUTS_DESC2"], C.HEX_YELLOW, L["REQUIRES_RELOAD"]))
-            PluginInstallFrame.Desc3:SetText("")
+            PluginInstallFrame.Desc3:SetText(format("|cff%s%s|r", C.HEX_YELLOW, L["CLASS_LAYOUTS_DESC3"]))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function()
                 SE:Setup("ClassCooldowns", true)

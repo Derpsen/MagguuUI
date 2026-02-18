@@ -2,6 +2,29 @@
 
 All notable changes to MagguuUI will be documented in this file.
 
+## 🔧 v12.0.7 — Localization, Minimap & Profile Status (2026-02-18)
+
+### ✨ Added
+
+- 🌍 **Localization** support (9 languages) via AceLocale-3.0 (EN, DE, FR, ES, PT, IT, RU, KO, ZH)
+- 🗺️ **LibDataBroker minimap button** replaces custom implementation (standard LibDBIcon dragging)
+- 🟢 **Active profile status** on installer pages 2-8 (green/yellow/red)
+- ⚠️ **Reinstall warning** on Character Layouts page (delete old layouts manually)
+
+### 📝 Changed
+
+- 🌐 All user-facing strings use locale keys instead of hardcoded text
+- 📊 Profile status shown in Settings panel with color coding
+- 🔴 Not installed profiles now shown in red instead of gray
+- 🧹 Removed unused color constants and dead locale keys
+
+### 🛠️ Fixed
+
+- 🐛 BCM profile status always showed "Not installed" (wrong SavedVariable name)
+- 🐛 Duplicate LOAD_PROFILES_DESC locale key caused wrong text
+- 🐛 embeds.xml used Include instead of Script for .lua library files
+- 🐛 Settings title showed "vv12.0.x" instead of "v12.0.x"
+
 ## 🔧 v12.0.6 — Update Flow (2026-02-15)
 
 ### 📝 Changed
