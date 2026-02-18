@@ -57,7 +57,7 @@ MUI.Constants = {
 -- ============================================================
 -- Centralized Addon Lists (single source of truth)
 -- ============================================================
-MUI.INSTALL_ORDER = {"ElvUI", "BetterCooldownManager", "Blizzard_EditMode", "Details", "Plater", "ClassCooldowns"}
+MUI.INSTALL_ORDER = {"ElvUI", "BetterCooldownManager", "Blizzard_EditMode", "Details", "Plater"}
 MUI.STATUS_ADDONS = {"ElvUI", "BetterCooldownManager", "BigWigs", "Details", "Plater"}
 MUI.SYSTEM_ADDONS = {"ElvUI", "ElvUI_WindTools", "ElvUI_Anchor", "BetterCooldownManager", "BigWigs", "Details", "Plater"}
 

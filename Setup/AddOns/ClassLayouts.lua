@@ -93,18 +93,16 @@ local function ImportClassCooldowns()
 end
 
 function SE.ClassCooldowns(addon, import)
-    local layout
+    if not import then return end
 
-    if import then
-        if ImportClassCooldowns() then
-            SE.CompleteSetup(addon)
+    if ImportClassCooldowns() then
+        SE.CompleteSetup(addon)
 
-            MUI.db.char.loaded = true
-            MUI.db.global.version = MUI.version
-        end
+        MUI.db.char.loaded = true
+        MUI.db.global.version = MUI.version
     end
 
-    layout = IsEditModeLayoutExisting()
+    local layout = IsEditModeLayoutExisting()
 
     if not layout then
         return
