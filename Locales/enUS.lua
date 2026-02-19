@@ -89,7 +89,7 @@ L["REQUIRES_RELOAD"] = "Requires a UI reload after installation"
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "Class-specific layouts for"
 L["CLASS_LAYOUTS_DESC2"] = "Auto-selects layout matching your active spec"
-L["CLASS_LAYOUTS_DESC3"] = "Reinstalling? Delete old layouts manually in EditMode first"
+L["CLASS_LAYOUTS_DESC3"] = "Reinstalling? Delete old layouts manually in Advanced Cooldown Settings first"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "Installation Complete"

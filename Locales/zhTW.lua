@@ -90,7 +90,7 @@ L["REQUIRES_RELOAD"] = "安裝後需要重新載入UI"
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "職業專屬佈局"
 L["CLASS_LAYOUTS_DESC2"] = "自動選擇符合目前專精的佈局"
-L["CLASS_LAYOUTS_DESC3"] = "重新安裝？請先在編輯模式中手動刪除舊佈局"
+L["CLASS_LAYOUTS_DESC3"] = "重新安裝？請先在 Advanced Cooldown Settings 中手動刪除舊佈局"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "安裝完成"

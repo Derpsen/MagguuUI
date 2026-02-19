@@ -90,7 +90,7 @@ L["REQUIRES_RELOAD"] = "Richiede un ricaricamento dell'interfaccia dopo l'instal
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "Layout specifici per la classe"
 L["CLASS_LAYOUTS_DESC2"] = "Seleziona automaticamente il layout corrispondente alla specializzazione attiva"
-L["CLASS_LAYOUTS_DESC3"] = "Reinstallazione? Elimina prima i vecchi layout manualmente in EditMode"
+L["CLASS_LAYOUTS_DESC3"] = "Reinstallazione? Elimina prima i vecchi layout manualmente in Advanced Cooldown Settings"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "Installazione Completata"

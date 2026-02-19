@@ -90,7 +90,7 @@ L["REQUIRES_RELOAD"] = "Требуется перезагрузка интерф
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "Макеты для класса"
 L["CLASS_LAYOUTS_DESC2"] = "Автоматически выбирает макет для активной специализации"
-L["CLASS_LAYOUTS_DESC3"] = "Переустановка? Сначала удалите старые макеты вручную в EditMode"
+L["CLASS_LAYOUTS_DESC3"] = "Переустановка? Сначала удалите старые макеты вручную в Advanced Cooldown Settings"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "Установка завершена"
