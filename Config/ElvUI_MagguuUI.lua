@@ -81,7 +81,7 @@ local function BuildChangelogOptions()
         page.date = {
             order = 1,
             type = "description",
-            name = "|cffbbbbbb" .. dateString .. " " .. ML["RELEASED"] .. "|r",
+            name = format("|cff%s%s %s|r", C.HEX_DIM, dateString, ML["RELEASED"]),
             fontSize = "small",
         }
 

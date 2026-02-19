@@ -2,6 +2,7 @@ local MUI = unpack(MagguuUI)
 local SE = MUI:GetModule("Setup")
 
 local format = format
+local C = MUI.Colors
 local C_EditMode, Enum = C_EditMode, Enum
 
 local function IsLayoutExisting()
@@ -30,7 +31,7 @@ local function ImportBlizzard_EditMode(addon, resolution)
     end
 
     if not D[layout] then
-        MUI:Print(format("|cff999999No profile data found for|r |cff4A8FD9%s|r", addon))
+        MUI:Print(format("|cff%sNo profile data found for|r |cff%s%s|r", C.HEX_DIM, C.HEX_BLUE, addon))
         return
     end
 

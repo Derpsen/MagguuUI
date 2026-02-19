@@ -85,7 +85,7 @@ local function ImportClassCooldowns()
     layoutManager:SetActiveLayoutByID(activeLayoutID)
     layoutManager:SaveLayouts()
 
-    if StaticPopup1Button2Text and StaticPopup1Button2Text:GetText() == "Ignore" then
+    if StaticPopup1 and StaticPopup1:IsShown() and StaticPopup1Button2 then
         StaticPopup1Button2:Click()
     end
 

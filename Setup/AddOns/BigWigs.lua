@@ -2,6 +2,7 @@ local MUI = unpack(MagguuUI)
 local SE = MUI:GetModule("Setup")
 
 local format = format
+local C = MUI.Colors
 
 local function ImportBigWigs(addon, resolution)
     local D = MUI:GetModule("Data")
@@ -9,7 +10,7 @@ local function ImportBigWigs(addon, resolution)
     local profile = "bigwigs" .. (resolution or "")
 
     if not D[profile] then
-        MUI:Print(format("|cff999999No profile data found for|r |cff4A8FD9%s|r", addon))
+        MUI:Print(format("|cff%sNo profile data found for|r |cff%s%s|r", C.HEX_DIM, C.HEX_BLUE, addon))
         return
     end
 
