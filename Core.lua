@@ -51,8 +51,13 @@ MUI.Constants = {
 -- ============================================================
 -- Centralized Addon Lists (single source of truth)
 -- ============================================================
-MUI.INSTALL_ORDER = {"ElvUI", "BetterCooldownManager", "Blizzard_EditMode", "Details", "Plater"}
+MUI.INSTALL_ORDER = {"ElvUI", "BetterCooldownManager", "Blizzard_EditMode", "Details", "Plater", "ClassCooldowns"}
 MUI.STATUS_ADDONS = {"ElvUI", "BetterCooldownManager", "BigWigs", "Details", "Plater"}
+
+-- Maps virtual addon names to their actual dependency for IsAddOnEnabled checks
+MUI.ADDON_DEPENDENCY_MAP = {
+    ClassCooldowns = "BetterCooldownManager",
+}
 MUI.SYSTEM_ADDONS = {"ElvUI", "ElvUI_WindTools", "ElvUI_Anchor", "BetterCooldownManager", "BigWigs", "Details", "Plater"}
 
 -- ============================================================
@@ -122,7 +127,8 @@ function MUI:ProcessProfileQueue(install, addonOrder)
     if addonOrder then
         -- Fixed order (Install All)
         for _, addon in ipairs(addonOrder) do
-            if self:IsAddOnEnabled(addon) then
+            local checkAddon = self.ADDON_DEPENDENCY_MAP[addon] or addon
+            if self:IsAddOnEnabled(checkAddon) then
                 tinsert(queue, addon)
             end
         end
@@ -139,7 +145,8 @@ function MUI:ProcessProfileQueue(install, addonOrder)
         end
 
         for addon in pairs(self.db.global.profiles) do
-            if self:IsAddOnEnabled(addon) then
+            local checkAddon = self.ADDON_DEPENDENCY_MAP[addon] or addon
+            if self:IsAddOnEnabled(checkAddon) then
                 if addon == "BigWigs" then
                     hasBigWigs = true
                 else

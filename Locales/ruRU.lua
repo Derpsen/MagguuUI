@@ -90,7 +90,7 @@ L["REQUIRES_RELOAD"] = "Требуется перезагрузка интерф
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "Макеты для класса"
 L["CLASS_LAYOUTS_DESC2"] = "Автоматически выбирает макет для активной специализации"
-L["CLASS_LAYOUTS_DESC3"] = "Переустановка? Сначала удалите старые макеты вручную в Advanced Cooldown Settings"
+L["CLASS_LAYOUTS_DESC3"] = "Старые макеты будут заменены автоматически"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "Установка завершена"
@@ -100,7 +100,7 @@ L["COMPLETED_DESC2"] = "Нажмите |cffC0C8D4Перезагрузить|r, �
 -- Installer: Step Titles
 L["STEP_WELCOME"] = "Приветствие"
 L["STEP_COMPLETE"] = "Готово"
-L["STEP_LAYOUTS"] = "Макеты"
+L["STEP_LAYOUTS"] = "Макеты классов"
 
 -- Profile Status (Installer + Settings)
 L["PROFILE_ACTIVE"] = "Профиль: Активен"

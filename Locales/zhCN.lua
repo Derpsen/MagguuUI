@@ -90,7 +90,7 @@ L["REQUIRES_RELOAD"] = "安装后需要重新加载UI"
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "职业专属布局"
 L["CLASS_LAYOUTS_DESC2"] = "自动选择匹配当前专精的布局"
-L["CLASS_LAYOUTS_DESC3"] = "重新安装？请先在 Advanced Cooldown Settings 中手动删除旧布局"
+L["CLASS_LAYOUTS_DESC3"] = "旧布局将自动替换"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "安装完成"
@@ -100,7 +100,7 @@ L["COMPLETED_DESC2"] = "点击 |cffC0C8D4重新加载|r 以保存您的设置"
 -- Installer: Step Titles
 L["STEP_WELCOME"] = "欢迎"
 L["STEP_COMPLETE"] = "完成"
-L["STEP_LAYOUTS"] = "布局"
+L["STEP_LAYOUTS"] = "职业布局"
 
 -- Profile Status (Installer + Settings)
 L["PROFILE_ACTIVE"] = "配置文件：活跃"

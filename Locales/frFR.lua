@@ -90,7 +90,7 @@ L["REQUIRES_RELOAD"] = "Necessite un rechargement de l'interface apres l'install
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "Dispositions specifiques a la classe pour"
 L["CLASS_LAYOUTS_DESC2"] = "Selectionne automatiquement la disposition correspondant a votre specialisation active"
-L["CLASS_LAYOUTS_DESC3"] = "Reinstallation ? Supprimez d'abord les anciens layouts manuellement dans Advanced Cooldown Settings"
+L["CLASS_LAYOUTS_DESC3"] = "Les anciens layouts seront remplaces automatiquement"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "Installation terminee"
@@ -100,7 +100,7 @@ L["COMPLETED_DESC2"] = "Cliquez sur |cffC0C8D4Recharger|r pour sauvegarder vos p
 -- Installer: Step Titles
 L["STEP_WELCOME"] = "Bienvenue"
 L["STEP_COMPLETE"] = "Termine"
-L["STEP_LAYOUTS"] = "Dispositions"
+L["STEP_LAYOUTS"] = "Dispositions de classe"
 
 -- Profile Status (Installer + Settings)
 L["PROFILE_ACTIVE"] = "Profil : Actif"

@@ -11,6 +11,24 @@ local tinsert = tinsert
 -- ============================================================
 MUI.Changelog = {}
 
+MUI.Changelog[120008] = {
+    RELEASE_DATE = "2026/02/19",
+    NEW = {
+        "Class-specific BCM layouts integrated into [Install All] and [Load Profiles]",
+        "Class and spec names shown in class colors on [Class Layouts] page",
+    },
+    IMPROVEMENT = {
+        "Installer pages reformatted with cleaner multi-line descriptions",
+        "[Class Layouts] replaces old layouts instead of duplicating on reinstall",
+        "[STEP_LAYOUTS] renamed to [Class Layouts] in all 11 locales",
+    },
+    BUGFIX = {
+        "[Load Profiles] now correctly checks addon dependencies for ClassCooldowns",
+        "Replaced hardcoded hex color codes with [MUI.Colors.HEX_*] constants",
+        "Fixed locale key for [Ignore] button",
+    },
+}
+
 MUI.Changelog[120007] = {
     RELEASE_DATE = "2026/02/18",
     NEW = {

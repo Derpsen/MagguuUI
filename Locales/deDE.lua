@@ -90,7 +90,7 @@ L["REQUIRES_RELOAD"] = "Erfordert ein UI-Neuladen nach der Installation"
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "Klassenspezifische Layouts fuer"
 L["CLASS_LAYOUTS_DESC2"] = "Waehlt automatisch das Layout passend zur aktiven Spezialisierung"
-L["CLASS_LAYOUTS_DESC3"] = "Erneut installieren? Alte Layouts vorher manuell in den Advanced Cooldown Settings loeschen"
+L["CLASS_LAYOUTS_DESC3"] = "Alte Layouts werden automatisch ersetzt"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "Installation abgeschlossen"
@@ -100,7 +100,7 @@ L["COMPLETED_DESC2"] = "Klicke |cffC0C8D4Neuladen|r um deine Einstellungen zu sp
 -- Installer: Step Titles
 L["STEP_WELCOME"] = "Willkommen"
 L["STEP_COMPLETE"] = "Fertig"
-L["STEP_LAYOUTS"] = "Layouts"
+L["STEP_LAYOUTS"] = "Klassen Layouts"
 
 -- Profile Status (Installer + Settings)
 L["PROFILE_ACTIVE"] = "Profil: Aktiv"

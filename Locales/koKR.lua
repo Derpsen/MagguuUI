@@ -90,7 +90,7 @@ L["REQUIRES_RELOAD"] = "설치 후 UI 새로고침이 필요합니다"
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "직업별 레이아웃"
 L["CLASS_LAYOUTS_DESC2"] = "활성 전문화에 맞는 레이아웃을 자동으로 선택합니다"
-L["CLASS_LAYOUTS_DESC3"] = "재설치하시나요? 먼저 Advanced Cooldown Settings에서 이전 레이아웃을 수동으로 삭제하세요"
+L["CLASS_LAYOUTS_DESC3"] = "이전 레이아웃은 자동으로 교체됩니다"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "설치 완료"
@@ -100,7 +100,7 @@ L["COMPLETED_DESC2"] = "|cffC0C8D4새로고침|r을 클릭하여 설정을 저�
 -- Installer: Step Titles
 L["STEP_WELCOME"] = "환영"
 L["STEP_COMPLETE"] = "완료"
-L["STEP_LAYOUTS"] = "레이아웃"
+L["STEP_LAYOUTS"] = "직업 레이아웃"
 
 -- Profile Status (Installer + Settings)
 L["PROFILE_ACTIVE"] = "프로필: 활성"

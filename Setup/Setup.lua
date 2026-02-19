@@ -28,7 +28,7 @@ function SE:Setup(addon, ...)
         return
     end
 
-    setup(addon, ...)
+    return setup(addon, ...)
 end
 
 function SE:SetupWithConfirmation(addon, ...)
@@ -72,6 +72,8 @@ function SE:ProfileExistsForAddon(addon)
         end
     elseif addon == "BetterCooldownManager" then
         return MUI:IsAddOnEnabled("BetterCooldownManager") and BCDMDB and self.IsProfileExisting(BCDMDB)
+    elseif addon == "ClassCooldowns" then
+        return SE.HasExistingClassLayouts and SE.HasExistingClassLayouts()
     end
 
     return false
@@ -131,6 +133,8 @@ function SE.IsProfileActive(addon)
             local profile = Plater.db.GetCurrentProfile and Plater.db:GetCurrentProfile()
             return profile == "MagguuUI"
         end
+    elseif addon == "ClassCooldowns" then
+        return SE.IsClassLayoutActive and SE.IsClassLayoutActive()
     end
 
     return false

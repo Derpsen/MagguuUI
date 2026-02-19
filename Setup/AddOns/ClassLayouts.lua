@@ -30,6 +30,25 @@ local function IsEditModeLayoutExisting()
     end
 end
 
+local function HasExistingClassLayouts()
+    if not CooldownViewerSettings then return false end
+
+    local layoutManager = CooldownViewerSettings:GetLayoutManager()
+    if not layoutManager or not layoutManager.layouts then return false end
+
+    for _, layout in pairs(layoutManager.layouts) do
+        if layout then
+            local layoutName = layout.layoutName or layout.name
+
+            if layoutName and layoutName:find("MagguuUI - ", 1, true) == 1 then
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
 local function ImportClassCooldowns()
     local D = MUI:GetModule("Data")
 
@@ -42,6 +61,21 @@ local function ImportClassCooldowns()
     local layoutManager = CooldownViewerSettings:GetLayoutManager()
     if not layoutManager then return false end
 
+    -- Remove old MagguuUI layouts (raw table delete, no API calls, no SaveLayouts yet)
+    if layoutManager.layouts then
+        for id, layout in pairs(layoutManager.layouts) do
+            if layout then
+                local name = layout.layoutName or layout.name
+
+                if name and name:find("MagguuUI - ", 1, true) == 1 then
+                    layoutManager.layouts[id] = nil
+                end
+            end
+        end
+    end
+
+    -- Import new layouts
+    local specName = GetSpecName()
     local allLayoutIDs = {}
 
     if type(classData) == "table" then
@@ -68,7 +102,6 @@ local function ImportClassCooldowns()
 
     if #allLayoutIDs == 0 then return false end
 
-    local specName = GetSpecName()
     local activeLayoutID = allLayoutIDs[1]
 
     if specName and layoutManager.layouts then
@@ -92,9 +125,7 @@ local function ImportClassCooldowns()
     return true
 end
 
-function SE.ClassCooldowns(addon, import)
-    if not import then return end
-
+function SE.ClassCooldowns(addon)
     if ImportClassCooldowns() then
         SE.CompleteSetup(addon)
     end
@@ -112,4 +143,30 @@ function SE.GetPlayerClassDisplayName()
     local _, className = UnitClass("player")
 
     return LOCALIZED_CLASS_NAMES_MALE[className] or className
+end
+
+function SE.HasExistingClassLayouts()
+    return HasExistingClassLayouts()
+end
+
+function SE.IsClassLayoutActive()
+    if not CooldownViewerSettings then return false end
+
+    local layoutManager = CooldownViewerSettings:GetLayoutManager()
+    if not layoutManager or not layoutManager.layouts then return false end
+
+    local specName = GetSpecName()
+    if not specName then return false end
+
+    for _, layout in pairs(layoutManager.layouts) do
+        if layout then
+            local name = layout.layoutName or layout.name
+
+            if name and name:find("MagguuUI - ", 1, true) == 1 and name:find(specName, 1, true) then
+                return true
+            end
+        end
+    end
+
+    return false
 end

@@ -90,7 +90,7 @@ L["REQUIRES_RELOAD"] = "安裝後需要重新載入UI"
 -- Installer: Character Layouts (Page 8)
 L["CLASS_LAYOUTS_FOR"] = "職業專屬佈局"
 L["CLASS_LAYOUTS_DESC2"] = "自動選擇符合目前專精的佈局"
-L["CLASS_LAYOUTS_DESC3"] = "重新安裝？請先在 Advanced Cooldown Settings 中手動刪除舊佈局"
+L["CLASS_LAYOUTS_DESC3"] = "舊佈局將自動替換"
 
 -- Installer: Complete (Page 9)
 L["INSTALLATION_COMPLETE"] = "安裝完成"
@@ -100,7 +100,7 @@ L["COMPLETED_DESC2"] = "點擊 |cffC0C8D4重新載入|r 以儲存您的設定"
 -- Installer: Step Titles
 L["STEP_WELCOME"] = "歡迎"
 L["STEP_COMPLETE"] = "完成"
-L["STEP_LAYOUTS"] = "佈局"
+L["STEP_LAYOUTS"] = "職業佈局"
 
 -- Profile Status (Installer + Settings)
 L["PROFILE_ACTIVE"] = "設定檔：使用中"

@@ -447,7 +447,7 @@ I.installer = {
 
             if needsInstall then
                 PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["INSTALL_ALL_DESC"]))
-                PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r |cff%s%s|r", C.HEX_YELLOW, L["OPTIMIZED_4K"], C.HEX_DIM, L["OTHER_RESOLUTIONS"]))
+                PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r\n|cff%s%s|r", C.HEX_YELLOW, L["OPTIMIZED_4K"], C.HEX_DIM, L["OTHER_RESOLUTIONS"]))
                 PluginInstallFrame.Desc3:SetText(format("|cff%s%s|r", C.HEX_DIM, L["MISSING_ADDONS"]))
                 PluginInstallFrame.Option1:Show()
                 PluginInstallFrame.Option1:SetScript("OnClick", function() InstallAllProfiles() end)
@@ -466,7 +466,7 @@ I.installer = {
             end
 
             PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["LOAD_PROFILES_INSTALLER_DESC"]))
-            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r |cff%s%s|r", C.HEX_YELLOW, L["OPTIMIZED_4K"], C.HEX_DIM, L["OTHER_RESOLUTIONS"]))
+            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r\n|cff%s%s|r", C.HEX_YELLOW, L["OPTIMIZED_4K"], C.HEX_DIM, L["OTHER_RESOLUTIONS"]))
             PluginInstallFrame.Desc3:SetText(format("|cff%s%s|r", C.HEX_DIM, L["MISSING_ADDONS"]))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() MUI:LoadProfiles() end)
@@ -491,8 +491,7 @@ I.installer = {
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["ELVUI_DESC1"]))
-            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["ELVUI_DESC2"]))
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r\n|cff%s%s|r", C.HEX_DIM, L["ELVUI_DESC1"], C.HEX_DIM, L["ELVUI_DESC2"]))
             PluginInstallFrame.Desc3:SetText(GetProfileStatusText("ElvUI"))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("ElvUI", true) end)
@@ -508,8 +507,7 @@ I.installer = {
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["BCM_DESC1"]))
-            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["BCM_DESC2"]))
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r\n|cff%s%s|r", C.HEX_DIM, L["BCM_DESC1"], C.HEX_DIM, L["BCM_DESC2"]))
             PluginInstallFrame.Desc3:SetText(GetProfileStatusText("BetterCooldownManager"))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("BetterCooldownManager", true) end)
@@ -525,8 +523,7 @@ I.installer = {
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["BIGWIGS_DESC1"]))
-            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["BIGWIGS_DESC2"]))
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r\n|cff%s%s|r", C.HEX_DIM, L["BIGWIGS_DESC1"], C.HEX_DIM, L["BIGWIGS_DESC2"]))
             PluginInstallFrame.Desc3:SetText(GetProfileStatusText("BigWigs"))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("BigWigs", true) end)
@@ -535,8 +532,7 @@ I.installer = {
         [5] = function()
 
             PluginInstallFrame.SubTitle:SetText(format("|cff%sBlizzard EditMode|r", C.HEX_SILVER))
-            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["EDITMODE_DESC1"]))
-            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["EDITMODE_DESC2"]))
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r\n|cff%s%s|r", C.HEX_DIM, L["EDITMODE_DESC1"], C.HEX_DIM, L["EDITMODE_DESC2"]))
             PluginInstallFrame.Desc3:SetText(GetEditModeStatusText())
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("Blizzard_EditMode", true) end)
@@ -552,8 +548,7 @@ I.installer = {
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["DETAILS_DESC1"]))
-            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["DETAILS_DESC2"]))
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r\n|cff%s%s|r", C.HEX_DIM, L["DETAILS_DESC1"], C.HEX_DIM, L["DETAILS_DESC2"]))
             PluginInstallFrame.Desc3:SetText(GetProfileStatusText("Details"))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() SE:SetupWithConfirmation("Details", true) end)
@@ -569,9 +564,8 @@ I.installer = {
                 return
             end
 
-            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["PLATER_DESC1"]))
-            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["PLATER_DESC2"]))
-            PluginInstallFrame.Desc3:SetText(GetProfileStatusText("Plater") .. "  |  " .. format("|cff%s%s|r", C.HEX_YELLOW, L["REQUIRES_RELOAD"]))
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r\n|cff%s%s|r", C.HEX_DIM, L["PLATER_DESC1"], C.HEX_DIM, L["PLATER_DESC2"]))
+            PluginInstallFrame.Desc3:SetText(GetProfileStatusText("Plater") .. "\n" .. format("|cff%s%s|r", C.HEX_YELLOW, L["REQUIRES_RELOAD"]))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function()
                 if SE:ProfileExistsForAddon("Plater") then
@@ -596,11 +590,27 @@ I.installer = {
         end,
         [8] = function()
 
-            local className = SE.GetPlayerClassDisplayName and SE.GetPlayerClassDisplayName() or L["YOUR_CLASS"]
             PluginInstallFrame.SubTitle:SetText(format("|cff%s%s|r", C.HEX_SILVER, L["STEP_LAYOUTS"]))
-            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r |cff%s%s|r", C.HEX_DIM, L["CLASS_LAYOUTS_FOR"], C.HEX_BLUE, className))
-            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r  |  |cff%s%s|r", C.HEX_DIM, L["CLASS_LAYOUTS_DESC2"], C.HEX_YELLOW, L["REQUIRES_RELOAD"]))
-            PluginInstallFrame.Desc3:SetText(format("|cff%s%s|r", C.HEX_YELLOW, L["CLASS_LAYOUTS_DESC3"]))
+
+            local _, classToken = UnitClass("player")
+            local classColor = RAID_CLASS_COLORS[classToken]
+            local colorize = classColor and function(text) return classColor:WrapTextInColorCode(text) end or function(text) return format("|cff%s%s|r", C.HEX_BLUE, text) end
+
+            local className = SE.GetPlayerClassDisplayName and SE.GetPlayerClassDisplayName() or L["YOUR_CLASS"]
+
+            -- Build spec list for current class
+            local specNames = {}
+            for i = 1, GetNumSpecializations() do
+                local _, name = GetSpecializationInfo(i)
+                if name then
+                    specNames[#specNames + 1] = colorize(name)
+                end
+            end
+            local specList = table.concat(specNames, format("|cff%s, |r", C.HEX_DIM))
+
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r %s", C.HEX_DIM, L["CLASS_LAYOUTS_FOR"], colorize(className)))
+            PluginInstallFrame.Desc2:SetText(specList)
+            PluginInstallFrame.Desc3:SetText(GetProfileStatusText("ClassCooldowns") .. "\n" .. format("|cff%s%s|r", C.HEX_YELLOW, L["REQUIRES_RELOAD"]))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function()
                 SE:Setup("ClassCooldowns", true)
@@ -611,8 +621,7 @@ I.installer = {
         [9] = function()
 
             PluginInstallFrame.SubTitle:SetText(format("|cff%s%s|r", C.HEX_GREEN, L["INSTALLATION_COMPLETE"]))
-            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["COMPLETED_DESC1"]))
-            PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["COMPLETED_DESC2"]))
+            PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r\n|cff%s%s|r", C.HEX_DIM, L["COMPLETED_DESC1"], C.HEX_DIM, L["COMPLETED_DESC2"]))
             PluginInstallFrame.Option1:Show()
             PluginInstallFrame.Option1:SetScript("OnClick", function() ReloadUI() end)
             PluginInstallFrame.Option1:SetText(format("|cff%s%s|r", C.HEX_SILVER, L["RELOAD_BUTTON"]))
