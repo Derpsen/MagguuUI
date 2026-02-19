@@ -97,9 +97,6 @@ function SE.ClassCooldowns(addon, import)
 
     if ImportClassCooldowns() then
         SE.CompleteSetup(addon)
-
-        MUI.db.char.loaded = true
-        MUI.db.global.version = MUI.version
     end
 
     local layout = IsEditModeLayoutExisting()

@@ -1,6 +1,8 @@
 local MUI = unpack(MagguuUI)
 local SE = MUI:GetModule("Setup")
 
+local format = format
+
 function SE.Details(addon, import, resolution)
     local D = MUI:GetModule("Data")
 

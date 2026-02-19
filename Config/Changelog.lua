@@ -156,9 +156,9 @@ local function VersionCodeToString(code)
 end
 
 local CATEGORY_LABELS = {
-    { key = "NEW",         label = "New",     color = "00ff88" },
-    { key = "IMPROVEMENT", label = "Changed",  color = "FFFF00" },
-    { key = "BUGFIX",      label = "Fixed",    color = "FF6666" },
+    { key = "NEW",         label = "New",     color = C.HEX_GREEN },
+    { key = "IMPROVEMENT", label = "Changed",  color = C.HEX_YELLOW },
+    { key = "BUGFIX",      label = "Fixed",    color = C.HEX_SOFT_RED },
 }
 
 local function BuildChangelogText(fromVersionCode)
@@ -177,7 +177,7 @@ local function BuildChangelogText(fromVersionCode)
 
         -- Show the latest version always, or all versions newer than lastSeen
         if not fromVersionCode or code >= fromVersionCode or code == versions[1] then
-            tinsert(lines, format("|cff4A8FD9v%s|r  |cff666666— %s|r", vStr, data.RELEASE_DATE or ""))
+            tinsert(lines, format("|cff%sv%s|r  |cff%s— %s|r", C.HEX_BLUE, vStr, C.HEX_DARK, data.RELEASE_DATE or ""))
             tinsert(lines, "")
 
             for _, cat in ipairs(CATEGORY_LABELS) do
@@ -322,7 +322,7 @@ local function ShowChangelog(fromVersion, isAutoUpdate)
     local version = MUI.version or "Unknown"
 
     popup.isUpdatePopup = isAutoUpdate or false
-    popup.title:SetText(format("|cff4A8FD9MagguuUI|r |cffC0C8D4v%s|r", StripVersionPrefix(version)))
+    popup.title:SetText(format("|cff%sMagguuUI|r |cff%sv%s|r", C.HEX_BLUE, C.HEX_SILVER, StripVersionPrefix(version)))
 
     local fromCode = VersionStringToCode(fromVersion)
     local changelogText = BuildChangelogText(fromCode > 0 and fromCode or nil)

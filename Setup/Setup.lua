@@ -23,6 +23,11 @@ StaticPopupDialogs["MAGGUUI_OVERWRITE_PROFILE"] = {
 function SE:Setup(addon, ...)
     local setup = self[addon]
 
+    if not setup then
+        MUI:Print(format("|cff%sNo setup handler for:|r |cff%s%s|r", C.HEX_DIM, C.HEX_BLUE, tostring(addon)))
+        return
+    end
+
     setup(addon, ...)
 end
 

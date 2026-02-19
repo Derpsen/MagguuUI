@@ -1,6 +1,8 @@
 local MUI = unpack(MagguuUI)
 local SE = MUI:GetModule("Setup")
 
+local format = format
+
 function SE.BetterCooldownManager(addon, import, resolution)
     local D = MUI:GetModule("Data")
 
@@ -14,7 +16,12 @@ function SE.BetterCooldownManager(addon, import, resolution)
     end
 
     if import then
-        BCDMG:ImportBCDM(D[profile], "MagguuUI")
+        if not BCDMDB then
+            MUI:Print(format("|cff999999BetterCooldownManager data not available for|r |cff4A8FD9%s|r", addon))
+            return
+        end
+
+        BCDMDB:ImportBCDM(D[profile], "MagguuUI")
 
         SE.CompleteSetup(addon)
 
@@ -27,7 +34,7 @@ function SE.BetterCooldownManager(addon, import, resolution)
         return
     end
 
-    db = LibStub("AceDB-3.0"):New(BCDMDB)
+    db = LibStub("AceDB-3.0"):New("BCDMDB")
 
     db:SetProfile("MagguuUI")
 end

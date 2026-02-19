@@ -134,7 +134,7 @@ end
 local function ShowURLPopup(label, url)
     local popup = GetOrCreateURLPopup()
 
-    popup.title:SetText(label or "|cff4A8FD9Website|r")
+    popup.title:SetText(label or format("|cff%sWebsite|r", C.HEX_BLUE))
     popup.editBox._muiText = url
     popup.editBox:SetText(url)
     popup:Show()
@@ -243,14 +243,14 @@ MUI.options = {
                     type = "description"
                 },
                 info_header = {
-                    name = "|cffC0C8D4Info|r",
+                    name = format("|cff%sInfo|r", C.HEX_SILVER),
                     order = 11,
                     type = "header"
                 },
                 version_info = {
                     name = function()
                         local version = MUI.version or C_AddOns.GetAddOnMetadata("MagguuUI", "Version") or "Unknown"
-                        return "|cff999999Version:|r |cff4A8FD9" .. version .. "|r"
+                        return format("|cff%sVersion:|r |cff%s%s|r", C.HEX_DIM, C.HEX_BLUE, version)
                     end,
                     order = 12,
                     type = "description",
@@ -262,7 +262,7 @@ MUI.options = {
                     type = "description"
                 },
                 website_link = {
-                    name = "|cff999999Website:|r |cff4A8FD9ui.magguu.xyz|r",
+                    name = format("|cff%sWebsite:|r |cff%sui.magguu.xyz|r", C.HEX_DIM, C.HEX_BLUE),
                     order = 14,
                     type = "description",
                     fontSize = "medium"
@@ -273,7 +273,7 @@ MUI.options = {
                     order = 15,
                     type = "execute",
                     func = function()
-                        ShowURLPopup("|cff4A8FD9Website|r", "https://ui.magguu.xyz")
+                        ShowURLPopup(format("|cff%sWebsite|r", C.HEX_BLUE), "https://ui.magguu.xyz")
                     end
                 },
                 spacer_changelog = {

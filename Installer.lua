@@ -426,13 +426,13 @@ end
 -- Installer Pages
 -- ============================================================
 I.installer = {
-    Title = format("%s |cff888888%s|r", MUI.title, L["INSTALLATION"]),
+    Title = format("%s |cff%s%s|r", MUI.title, C.HEX_DIM, L["INSTALLATION"]),
     Name = MUI.title,
     tutorialImage = "Interface\\AddOns\\MagguuUI\\Media\\Textures\\LogoTop.tga",
     Pages = {
         [1] = function()
             if PluginInstallFrame.tutorialImage2 then PluginInstallFrame.tutorialImage2:Hide() end
-            PluginInstallFrame.SubTitle:SetFormattedText("|cffcccccc%s|r %s", L["WELCOME_TO"], MUI.title)
+            PluginInstallFrame.SubTitle:SetFormattedText("|cff%s%s|r %s", C.HEX_SILVER, L["WELCOME_TO"], MUI.title)
 
             -- Check if profiles need (re-)installation:
             -- No profiles at all, OR version changed since last install
@@ -483,7 +483,7 @@ I.installer = {
         end,
         [2] = function()
 
-            PluginInstallFrame.SubTitle:SetText("|cffC0C8D4ElvUI|r")
+            PluginInstallFrame.SubTitle:SetText(format("|cff%sElvUI|r", C.HEX_SILVER))
 
             if not MUI:IsAddOnEnabled("ElvUI") then
                 PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DARK, L["ELVUI_ENABLE"]))
@@ -500,7 +500,7 @@ I.installer = {
         end,
         [3] = function()
 
-            PluginInstallFrame.SubTitle:SetText("|cffC0C8D4BetterCooldownManager|r")
+            PluginInstallFrame.SubTitle:SetText(format("|cff%sBetterCooldownManager|r", C.HEX_SILVER))
 
             if not MUI:IsAddOnEnabled("BetterCooldownManager") then
                 PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DARK, L["BCM_ENABLE"]))
@@ -517,7 +517,7 @@ I.installer = {
         end,
         [4] = function()
 
-            PluginInstallFrame.SubTitle:SetText("|cffC0C8D4BigWigs|r")
+            PluginInstallFrame.SubTitle:SetText(format("|cff%sBigWigs|r", C.HEX_SILVER))
 
             if not MUI:IsAddOnEnabled("BigWigs") then
                 PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DARK, L["BIGWIGS_ENABLE"]))
@@ -534,7 +534,7 @@ I.installer = {
         end,
         [5] = function()
 
-            PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Blizzard EditMode|r")
+            PluginInstallFrame.SubTitle:SetText(format("|cff%sBlizzard EditMode|r", C.HEX_SILVER))
             PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DIM, L["EDITMODE_DESC1"]))
             PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r", C.HEX_DIM, L["EDITMODE_DESC2"]))
             PluginInstallFrame.Desc3:SetText(GetEditModeStatusText())
@@ -544,7 +544,7 @@ I.installer = {
         end,
         [6] = function()
 
-            PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Details|r")
+            PluginInstallFrame.SubTitle:SetText(format("|cff%sDetails|r", C.HEX_SILVER))
 
             if not MUI:IsAddOnEnabled("Details") then
                 PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DARK, L["DETAILS_ENABLE"]))
@@ -561,7 +561,7 @@ I.installer = {
         end,
         [7] = function()
 
-            PluginInstallFrame.SubTitle:SetText("|cffC0C8D4Plater|r")
+            PluginInstallFrame.SubTitle:SetText(format("|cff%sPlater|r", C.HEX_SILVER))
 
             if not MUI:IsAddOnEnabled("Plater") then
                 PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r", C.HEX_DARK, L["PLATER_ENABLE"]))
@@ -597,7 +597,7 @@ I.installer = {
         [8] = function()
 
             local className = SE.GetPlayerClassDisplayName and SE.GetPlayerClassDisplayName() or L["YOUR_CLASS"]
-            PluginInstallFrame.SubTitle:SetText(format("|cffC0C8D4%s|r", L["STEP_LAYOUTS"]))
+            PluginInstallFrame.SubTitle:SetText(format("|cff%s%s|r", C.HEX_SILVER, L["STEP_LAYOUTS"]))
             PluginInstallFrame.Desc1:SetText(format("|cff%s%s|r |cff%s%s|r", C.HEX_DIM, L["CLASS_LAYOUTS_FOR"], C.HEX_BLUE, className))
             PluginInstallFrame.Desc2:SetText(format("|cff%s%s|r  |  |cff%s%s|r", C.HEX_DIM, L["CLASS_LAYOUTS_DESC2"], C.HEX_YELLOW, L["REQUIRES_RELOAD"]))
             PluginInstallFrame.Desc3:SetText(format("|cff%s%s|r", C.HEX_YELLOW, L["CLASS_LAYOUTS_DESC3"]))
