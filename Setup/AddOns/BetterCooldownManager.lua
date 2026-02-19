@@ -2,6 +2,7 @@ local MUI = unpack(MagguuUI)
 local SE = MUI:GetModule("Setup")
 
 local format = format
+local C = MUI.Colors
 
 function SE.BetterCooldownManager(addon, import, resolution)
     local D = MUI:GetModule("Data")
@@ -16,12 +17,12 @@ function SE.BetterCooldownManager(addon, import, resolution)
     end
 
     if import then
-        if not BCDMDB then
-            MUI:Print(format("|cff999999BetterCooldownManager data not available for|r |cff4A8FD9%s|r", addon))
+        if not BCDMG then
+            MUI:Print(format("|cff%sBetterCooldownManager API not available|r", C.HEX_DIM))
             return
         end
 
-        BCDMDB:ImportBCDM(D[profile], "MagguuUI")
+        BCDMG:ImportBCDM(D[profile], "MagguuUI")
 
         SE.CompleteSetup(addon)
 
