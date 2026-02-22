@@ -296,75 +296,195 @@ MUI.options = {
             name = format("|cff%sWowUp|r", C.HEX_BLUE),
             order = 3,
             type = "group",
+            childGroups = "tab",
             args = {
-                header = {
-                    name = format("|cff%sWowUp|r |cff%s%s|r", C.HEX_BLUE, C.HEX_SILVER, L["WOWUP_ADDON_IMPORT"]),
+                -- Tab: Required
+                required = {
+                    name = format("|cff%s%s|r", C.HEX_SOFT_RED, L["REQUIRED"]),
                     order = 1,
+                    type = "group",
+                    args = {
+                        howto_header = {
+                            name = format("|cff%s%s|r", C.HEX_BLUE, L["WOWUP_HOW_TO"]),
+                            order = 1,
+                            type = "header"
+                        },
+                        howto = {
+                            name = format("|cff%s", C.HEX_DIM)
+                                .. format("1. Click |cff%s%s|r |cff%sbelow|r\n", C.HEX_SOFT_RED, L["COPY_REQUIRED_ADDONS"], C.HEX_DIM)
+                                .. format("|cff%s2. The string is selected — press|r |cff%sCtrl+C|r |cff%sto copy|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM)
+                                .. format("|cff%s3. Open|r |cff%sWowUp|r |cff%s> More > Import/Export Addons|r\n", C.HEX_DIM, C.HEX_BLUE, C.HEX_DIM)
+                                .. format("|cff%s4. Switch to|r |cff%sImport|r|cff%s, paste, click|r |cff%sInstall|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM, C.HEX_BLUE),
+                            order = 2,
+                            type = "description",
+                            fontSize = "medium"
+                        },
+                        spacer1 = {
+                            name = " ",
+                            order = 3,
+                            type = "description"
+                        },
+                        desc = {
+                            name = format("|cff%s%s|r\n", C.HEX_DIM, L["WOWUP_REQUIRED_DESC"]),
+                            order = 4,
+                            type = "description",
+                            fontSize = "medium"
+                        },
+                        copy = {
+                            name = format("|cff%s%s|r", C.HEX_SOFT_RED, L["COPY_REQUIRED_ADDONS"]),
+                            desc = L["COPY_REQUIRED_DESC"],
+                            order = 5,
+                            type = "execute",
+                            func = function()
+                                local I = MUI:GetModule("Installer")
+                                if I and I.ShowWowUpRequired then
+                                    I:ShowWowUpRequired()
+                                end
+                            end,
+                            width = "full"
+                        },
+                        spacer2 = {
+                            name = "\n",
+                            order = 6,
+                            type = "description"
+                        },
+                        list_header = {
+                            name = format("|cff%s%s|r", C.HEX_SOFT_RED, L["REQUIRED_ADDONS"]),
+                            order = 7,
+                            type = "header"
+                        },
+                        list = {
+                            name = BuildAddonListString(D.WowUpRequiredList, C.HEX_SOFT_RED, ""),
+                            order = 8,
+                            type = "description",
+                            fontSize = "medium"
+                        }
+                    }
+                },
+
+                -- Tab: Optional
+                optional = {
+                    name = L["OPTIONAL"],
+                    order = 2,
+                    type = "group",
+                    args = {
+                        howto_header = {
+                            name = format("|cff%s%s|r", C.HEX_BLUE, L["WOWUP_HOW_TO"]),
+                            order = 1,
+                            type = "header"
+                        },
+                        howto = {
+                            name = format("|cff%s", C.HEX_DIM)
+                                .. format("1. Click |cff%s%s|r |cff%sbelow|r\n", C.HEX_DIM, L["COPY_OPTIONAL_ADDONS"], C.HEX_DIM)
+                                .. format("|cff%s2. The string is selected — press|r |cff%sCtrl+C|r |cff%sto copy|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM)
+                                .. format("|cff%s3. Open|r |cff%sWowUp|r |cff%s> More > Import/Export Addons|r\n", C.HEX_DIM, C.HEX_BLUE, C.HEX_DIM)
+                                .. format("|cff%s4. Switch to|r |cff%sImport|r|cff%s, paste, click|r |cff%sInstall|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM, C.HEX_BLUE),
+                            order = 2,
+                            type = "description",
+                            fontSize = "medium"
+                        },
+                        spacer1 = {
+                            name = " ",
+                            order = 3,
+                            type = "description"
+                        },
+                        desc = {
+                            name = format("|cff%s%s|r\n", C.HEX_DIM, L["WOWUP_OPTIONAL_DESC"]),
+                            order = 4,
+                            type = "description",
+                            fontSize = "medium"
+                        },
+                        copy = {
+                            name = L["COPY_OPTIONAL_ADDONS"],
+                            desc = L["COPY_OPTIONAL_DESC"],
+                            order = 5,
+                            type = "execute",
+                            func = function()
+                                local I = MUI:GetModule("Installer")
+                                if I and I.ShowWowUpOptional then
+                                    I:ShowWowUpOptional()
+                                end
+                            end,
+                            width = "full"
+                        },
+                        spacer2 = {
+                            name = "\n",
+                            order = 6,
+                            type = "description"
+                        },
+                        list_header = {
+                            name = format("|cff%s%s|r", C.HEX_DIM, L["OPTIONAL_ADDONS"]),
+                            order = 7,
+                            type = "header"
+                        },
+                        list = {
+                            name = BuildAddonListString(D.WowUpOptionalList, C.HEX_DIM, ""),
+                            order = 8,
+                            type = "description",
+                            fontSize = "medium"
+                        }
+                    }
+                }
+            }
+        },
+        debugger = {
+            name = format("|cff%s%s|r", C.HEX_SOFT_RED, L["DEBUGGER"]),
+            order = 4,
+            type = "group",
+            args = {
+                desc = {
+                    name = format("|cff%s%s|r\n", C.HEX_DIM, L["DEBUGGER_DESC"]),
+                    order = 1,
+                    type = "description",
+                    fontSize = "medium"
+                },
+                status_header = {
+                    name = format("|cff%s%s|r", C.HEX_BLUE, L["DEBUG_MODE_STATUS"]),
+                    order = 2,
                     type = "header"
                 },
-                info = {
-                    name = format("|cff%s%s|r\n\n", C.HEX_DIM, L["WOWUP_DESC"])
-                        .. format("|cff%s%s|r |cff%s— %s|r\n", C.HEX_SOFT_RED, L["REQUIRED"], C.HEX_DIM, L["WOWUP_REQUIRED_DESC"])
-                        .. format("|cff%s%s — %s|r\n\n", C.HEX_DIM, L["OPTIONAL"], L["WOWUP_OPTIONAL_DESC"])
-                        .. format("|cff%s%s:|r\n", C.HEX_SILVER, L["WOWUP_HOW_TO"])
-                        .. format("|cff%s1.|r |cff%sClick|r |cff%s%s|r |cff%sor|r %s |cff%sbelow|r\n", C.HEX_DIM, C.HEX_DIM, C.HEX_SOFT_RED, L["REQUIRED"], C.HEX_DIM, L["OPTIONAL"], C.HEX_DIM)
-                        .. format("|cff%s2.|r |cff%sThe string is selected — press|r |cff%sCtrl+C|r |cff%sto copy|r\n", C.HEX_DIM, C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM)
-                        .. format("|cff%s3.|r |cff%sOpen|r |cff%sWowUp|r |cff%s> More > Import/Export Addons|r\n", C.HEX_DIM, C.HEX_DIM, C.HEX_BLUE, C.HEX_DIM)
-                        .. format("|cff%s4.|r |cff%sSwitch to|r |cff%sImport|r|cff%s, paste, click|r |cff%sInstall|r", C.HEX_DIM, C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM, C.HEX_BLUE),
-                    order = 2,
+                status = {
+                    name = function()
+                        if MUI:IsDebugModeActive() then
+                            return L["DEBUG_MODE_ACTIVE"]
+                        else
+                            return L["DEBUG_MODE_INACTIVE"]
+                        end
+                    end,
+                    order = 3,
                     type = "description",
                     fontSize = "medium"
                 },
                 spacer1 = {
-                    name = " ",
-                    order = 3,
+                    name = "\n",
+                    order = 4,
                     type = "description"
                 },
-                import_required = {
-                    name = format("|cff%s%s|r", C.HEX_SOFT_RED, L["COPY_REQUIRED_ADDONS"]),
-                    desc = L["COPY_REQUIRED_DESC"],
-                    order = 4,
-                    type = "execute",
-                    func = function()
-                        local I = MUI:GetModule("Installer")
-                        if I and I.ShowWowUpRequired then
-                            I:ShowWowUpRequired()
-                        end
-                    end
-                },
-                import_optional = {
-                    name = L["COPY_OPTIONAL_ADDONS"],
-                    desc = L["COPY_OPTIONAL_DESC"],
+                enable_debug = {
+                    name = format("|cff%s%s|r", C.HEX_SOFT_RED, L["ENABLE_DEBUG_MODE"]),
+                    desc = L["ENABLE_DEBUG_MODE_DESC"],
                     order = 5,
                     type = "execute",
                     func = function()
-                        local I = MUI:GetModule("Installer")
-                        if I and I.ShowWowUpOptional then
-                            I:ShowWowUpOptional()
-                        end
+                        MUI:EnableDebugMode()
+                    end,
+                    width = "full",
+                    hidden = function()
+                        return MUI:IsDebugModeActive()
                     end
                 },
-                spacer2 = {
-                    name = " ",
+                disable_debug = {
+                    name = format("|cff%s%s|r", C.HEX_GREEN, L["DISABLE_DEBUG_MODE"]),
+                    desc = L["DISABLE_DEBUG_MODE_DESC"],
                     order = 6,
-                    type = "description"
-                },
-                required_list = {
-                    name = BuildAddonListString(D.WowUpRequiredList, C.HEX_SOFT_RED, L["REQUIRED_ADDONS"]),
-                    order = 7,
-                    type = "description",
-                    fontSize = "medium"
-                },
-                spacer3 = {
-                    name = " ",
-                    order = 8,
-                    type = "description"
-                },
-                optional_list = {
-                    name = BuildAddonListString(D.WowUpOptionalList, C.HEX_DIM, L["OPTIONAL_ADDONS"]),
-                    order = 9,
-                    type = "description",
-                    fontSize = "medium"
+                    type = "execute",
+                    func = function()
+                        MUI:DisableDebugMode()
+                    end,
+                    width = "full",
+                    hidden = function()
+                        return not MUI:IsDebugModeActive()
+                    end
                 }
             }
         }

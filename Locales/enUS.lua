@@ -173,6 +173,23 @@ L["GOT_IT"] = "Got it!"
 L["GOT_IT_DESC"] = "Mark as read — the changelog popup won't show for this version on next login."
 L["RELEASED"] = "Released"
 
+-- Settings: Debugger
+L["DEBUGGER"] = "Debugger"
+L["DEBUGGER_DESC"] = "Troubleshoot issues by temporarily disabling all addons except ElvUI and MagguuUI."
+L["DEBUG_MODE_STATUS"] = "Debug Mode Status"
+L["DEBUG_MODE_ACTIVE"] = "Debug mode is currently |cff00ff88active|r. Only essential addons are loaded."
+L["DEBUG_MODE_INACTIVE"] = "Debug mode is |cffff4444inactive|r. All addons are loaded normally."
+L["ENABLE_DEBUG_MODE"] = "Enable Debug Mode"
+L["ENABLE_DEBUG_MODE_DESC"] = "Disables all addons except ElvUI + MagguuUI and reloads the UI. Use this to check if a problem is caused by another addon."
+L["DISABLE_DEBUG_MODE"] = "Disable Debug Mode"
+L["DISABLE_DEBUG_MODE_DESC"] = "Re-enables all previously disabled addons and reloads the UI."
+L["DEBUG_ENABLED_COUNT"] = "%d addons disabled. Reloading..."
+L["DEBUG_DISABLED_COUNT"] = "%d addons re-enabled. Reloading..."
+L["DEBUG_ALREADY_ACTIVE"] = "Debug mode is already active."
+L["DEBUG_NOT_ACTIVE"] = "Debug mode is not active."
+L["DEBUG_STARTUP_WARNING"] = "Debug mode is active — only essential addons are loaded. Type |cff4A8FD9/mui debug|r to exit."
+L["CMD_DEBUG"] = "Toggle debug mode"
+
 -- Standalone Settings (Options.lua)
 L["PROFILES"] = "Profiles"
 L["SETTINGS"] = "Settings"

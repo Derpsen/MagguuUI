@@ -457,11 +457,6 @@ I.installer = {
                 PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpRequired() end)
                 PluginInstallFrame.Option2:SetText(format("|cff%s%s|r", C.HEX_SOFT_RED, L["REQUIRED"]))
 
-                PluginInstallFrame.Option3:Show()
-                PluginInstallFrame.Option3:SetScript("OnClick", function() ShowWowUpOptional() end)
-                PluginInstallFrame.Option3:SetText(format("|cff%s%s|r", C.HEX_DIM, L["OPTIONAL"]))
-
-
                 return
             end
 
@@ -476,10 +471,6 @@ I.installer = {
             PluginInstallFrame.Option2:SetScript("OnClick", function() ShowWowUpRequired() end)
             PluginInstallFrame.Option2:SetText(format("|cff%s%s|r", C.HEX_SOFT_RED, L["REQUIRED"]))
             PluginInstallFrame.Option2.tooltipText = nil
-            PluginInstallFrame.Option3:Show()
-            PluginInstallFrame.Option3:SetScript("OnClick", function() ShowWowUpOptional() end)
-            PluginInstallFrame.Option3:SetText(format("|cff%s%s|r", C.HEX_DIM, L["OPTIONAL"]))
-            PluginInstallFrame.Option3.tooltipText = nil
         end,
         [2] = function()
 

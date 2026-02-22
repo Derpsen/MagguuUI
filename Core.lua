@@ -4,6 +4,9 @@ local ipairs, unpack = ipairs, unpack
 local format = format
 
 local DisableAddOn = C_AddOns.DisableAddOn
+local EnableAddOn = C_AddOns.EnableAddOn
+local GetNumAddOns = C_AddOns.GetNumAddOns
+local GetAddOnInfo = C_AddOns.GetAddOnInfo
 
 MUI.title = "|cff4A8FD9Magguu|r|cffC0C8D4UI|r"
 MUI.version = C_AddOns.GetAddOnMetadata("MagguuUI", "Version")
@@ -61,6 +64,22 @@ MUI.ADDON_DEPENDENCY_MAP = {
 MUI.SYSTEM_ADDONS = {"ElvUI", "ElvUI_WindTools", "ElvUI_Anchor", "BetterCooldownManager", "BigWigs", "Details", "Plater"}
 
 -- ============================================================
+-- Debug Mode: Whitelist of addons that stay enabled
+-- ============================================================
+MUI.DEBUG_WHITELIST = {
+    ["ElvUI"] = true,
+    ["ElvUI_Options"] = true,
+    ["ElvUI_Libraries"] = true,
+    ["MagguuUI"] = true,
+    ["!BugGrabber"] = true,
+    ["BugSack"] = true,
+}
+
+function MUI:IsDebugModeActive()
+    return self.db and self.db.global and self.db.global.debugDisabledAddons and next(self.db.global.debugDisabledAddons) ~= nil
+end
+
+-- ============================================================
 -- Database Migration (runs once per version update)
 -- ============================================================
 function MUI:DBConvert()
@@ -102,6 +121,66 @@ local function CreatePopup(specific)
     for k, v in pairs(POPUP_DEFAULTS) do popup[k] = v end
     for k, v in pairs(specific) do popup[k] = v end
     return popup
+end
+
+-- ============================================================
+-- Debug Mode: Enable / Disable / Toggle
+-- ============================================================
+function MUI:EnableDebugMode()
+    if self:IsDebugModeActive() then
+        self:Print(format("|cff%s%s|r", C.HEX_DIM, L["DEBUG_ALREADY_ACTIVE"]))
+        return
+    end
+
+    local charName = self.myname
+    local disabled = {}
+    local count = 0
+
+    for i = 1, GetNumAddOns() do
+        local name = GetAddOnInfo(i)
+
+        if name and not self.DEBUG_WHITELIST[name] and self:IsAddOnEnabled(name) then
+            DisableAddOn(name, charName)
+            disabled[name] = true
+            count = count + 1
+        end
+    end
+
+    if count == 0 then return end
+
+    if not self.db.global then return end
+    self.db.global.debugDisabledAddons = disabled
+
+    self:Print(format("|cff%s%s|r", C.HEX_YELLOW, format(L["DEBUG_ENABLED_COUNT"], count)))
+    C_UI.Reload()
+end
+
+function MUI:DisableDebugMode()
+    if not self:IsDebugModeActive() then
+        self:Print(format("|cff%s%s|r", C.HEX_DIM, L["DEBUG_NOT_ACTIVE"]))
+        return
+    end
+
+    local charName = self.myname
+    local count = 0
+
+    for name in pairs(self.db.global.debugDisabledAddons) do
+        EnableAddOn(name, charName)
+        count = count + 1
+    end
+
+    self.db.global.debugDisabledAddons = nil
+
+    self:Print(format("|cff%s%s|r", C.HEX_GREEN, format(L["DEBUG_DISABLED_COUNT"], count)))
+    C_UI.Reload()
+end
+
+function MUI:ToggleDebugMode()
+    if self:IsDebugModeActive() then
+        self:DisableDebugMode()
+    else
+        self:EnableDebugMode()
+    end
 end
 
 -- ============================================================
@@ -274,5 +353,12 @@ function MUI:Initialize()
         if self:IsAddOnEnabled(v) then
             DisableAddOn(v)
         end
+    end
+
+    -- Debug mode startup warning
+    if self:IsDebugModeActive() then
+        C_Timer.After(MUI.Constants.FIRST_RUN_DELAY, function()
+            MUI:Print(format("|cff%s%s|r", C.HEX_YELLOW, L["DEBUG_STARTUP_WARNING"]))
+        end)
     end
 end

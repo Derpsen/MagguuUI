@@ -174,6 +174,23 @@ L["GOT_IT"] = "Entendido!"
 L["GOT_IT_DESC"] = "Marcar como leido -- el popup del registro de cambios no se mostrara para esta version en el proximo inicio de sesion."
 L["RELEASED"] = "Publicado"
 
+-- Settings: Debugger
+L["DEBUGGER"] = "Depurador"
+L["DEBUGGER_DESC"] = "Soluciona problemas desactivando temporalmente todos los addons excepto ElvUI y MagguuUI."
+L["DEBUG_MODE_STATUS"] = "Estado del modo de depuracion"
+L["DEBUG_MODE_ACTIVE"] = "El modo de depuracion esta |cff00ff88activo|r. Solo los addons esenciales estan cargados."
+L["DEBUG_MODE_INACTIVE"] = "El modo de depuracion esta |cffff4444inactivo|r. Todos los addons estan cargados normalmente."
+L["ENABLE_DEBUG_MODE"] = "Activar modo de depuracion"
+L["ENABLE_DEBUG_MODE_DESC"] = "Desactiva todos los addons excepto ElvUI + MagguuUI y recarga la UI. Usa esto para comprobar si un problema es causado por otro addon."
+L["DISABLE_DEBUG_MODE"] = "Desactivar modo de depuracion"
+L["DISABLE_DEBUG_MODE_DESC"] = "Reactiva todos los addons previamente desactivados y recarga la UI."
+L["DEBUG_ENABLED_COUNT"] = "%d addons desactivados. Recargando..."
+L["DEBUG_DISABLED_COUNT"] = "%d addons reactivados. Recargando..."
+L["DEBUG_ALREADY_ACTIVE"] = "El modo de depuracion ya esta activo."
+L["DEBUG_NOT_ACTIVE"] = "El modo de depuracion no esta activo."
+L["DEBUG_STARTUP_WARNING"] = "El modo de depuracion esta activo — solo los addons esenciales estan cargados. Escribe |cff4A8FD9/mui debug|r para salir."
+L["CMD_DEBUG"] = "Cambiar modo de depuracion"
+
 -- Standalone Settings (Options.lua)
 L["PROFILES"] = "Perfiles"
 L["SETTINGS"] = "Ajustes"

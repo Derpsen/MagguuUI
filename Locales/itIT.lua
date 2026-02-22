@@ -174,6 +174,23 @@ L["GOT_IT"] = "Capito!"
 L["GOT_IT_DESC"] = "Segna come letto -- il popup del changelog non verra mostrato per questa versione al prossimo accesso."
 L["RELEASED"] = "Rilasciato"
 
+-- Settings: Debugger
+L["DEBUGGER"] = "Debugger"
+L["DEBUGGER_DESC"] = "Risolvi i problemi disattivando temporaneamente tutti gli addon tranne ElvUI e MagguuUI."
+L["DEBUG_MODE_STATUS"] = "Stato modalita debug"
+L["DEBUG_MODE_ACTIVE"] = "La modalita debug e |cff00ff88attiva|r. Solo gli addon essenziali sono caricati."
+L["DEBUG_MODE_INACTIVE"] = "La modalita debug e |cffff4444inattiva|r. Tutti gli addon sono caricati normalmente."
+L["ENABLE_DEBUG_MODE"] = "Attiva modalita debug"
+L["ENABLE_DEBUG_MODE_DESC"] = "Disattiva tutti gli addon tranne ElvUI + MagguuUI e ricarica la UI. Usa questo per verificare se un problema e causato da un altro addon."
+L["DISABLE_DEBUG_MODE"] = "Disattiva modalita debug"
+L["DISABLE_DEBUG_MODE_DESC"] = "Riattiva tutti gli addon precedentemente disattivati e ricarica la UI."
+L["DEBUG_ENABLED_COUNT"] = "%d addon disattivati. Ricaricamento..."
+L["DEBUG_DISABLED_COUNT"] = "%d addon riattivati. Ricaricamento..."
+L["DEBUG_ALREADY_ACTIVE"] = "La modalita debug e gia attiva."
+L["DEBUG_NOT_ACTIVE"] = "La modalita debug non e attiva."
+L["DEBUG_STARTUP_WARNING"] = "La modalita debug e attiva — solo gli addon essenziali sono caricati. Digita |cff4A8FD9/mui debug|r per uscire."
+L["CMD_DEBUG"] = "Attiva/disattiva modalita debug"
+
 -- Standalone Settings (Options.lua)
 L["PROFILES"] = "Profili"
 L["SETTINGS"] = "Impostazioni"

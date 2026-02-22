@@ -174,6 +174,23 @@ L["GOT_IT"] = "Verstanden!"
 L["GOT_IT_DESC"] = "Als gelesen markieren — das Changelog-Popup wird fuer diese Version nicht mehr angezeigt."
 L["RELEASED"] = "Veroeffentlicht"
 
+-- Settings: Debugger
+L["DEBUGGER"] = "Debugger"
+L["DEBUGGER_DESC"] = "Probleme beheben, indem alle Addons ausser ElvUI und MagguuUI voruebergehend deaktiviert werden."
+L["DEBUG_MODE_STATUS"] = "Debug-Modus Status"
+L["DEBUG_MODE_ACTIVE"] = "Debug-Modus ist derzeit |cff00ff88aktiv|r. Nur essentielle Addons sind geladen."
+L["DEBUG_MODE_INACTIVE"] = "Debug-Modus ist |cffff4444inaktiv|r. Alle Addons sind normal geladen."
+L["ENABLE_DEBUG_MODE"] = "Debug-Modus aktivieren"
+L["ENABLE_DEBUG_MODE_DESC"] = "Deaktiviert alle Addons ausser ElvUI + MagguuUI und laedt die UI neu. Nutze dies um zu pruefen, ob ein Problem von einem anderen Addon verursacht wird."
+L["DISABLE_DEBUG_MODE"] = "Debug-Modus deaktivieren"
+L["DISABLE_DEBUG_MODE_DESC"] = "Aktiviert alle zuvor deaktivierten Addons erneut und laedt die UI neu."
+L["DEBUG_ENABLED_COUNT"] = "%d Addons deaktiviert. Neuladen..."
+L["DEBUG_DISABLED_COUNT"] = "%d Addons reaktiviert. Neuladen..."
+L["DEBUG_ALREADY_ACTIVE"] = "Debug-Modus ist bereits aktiv."
+L["DEBUG_NOT_ACTIVE"] = "Debug-Modus ist nicht aktiv."
+L["DEBUG_STARTUP_WARNING"] = "Debug-Modus ist aktiv — nur essentielle Addons sind geladen. Tippe |cff4A8FD9/mui debug|r zum Beenden."
+L["CMD_DEBUG"] = "Debug-Modus umschalten"
+
 -- Standalone Settings (Options.lua)
 L["PROFILES"] = "Profile"
 L["SETTINGS"] = "Einstellungen"

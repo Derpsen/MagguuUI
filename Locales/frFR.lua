@@ -174,6 +174,23 @@ L["GOT_IT"] = "Compris !"
 L["GOT_IT_DESC"] = "Marquer comme lu -- le popup du changelog ne s'affichera plus pour cette version a la prochaine connexion."
 L["RELEASED"] = "Publie le"
 
+-- Settings: Debugger
+L["DEBUGGER"] = "Debogueur"
+L["DEBUGGER_DESC"] = "Resolvez les problemes en desactivant temporairement tous les addons sauf ElvUI et MagguuUI."
+L["DEBUG_MODE_STATUS"] = "Statut du mode debogage"
+L["DEBUG_MODE_ACTIVE"] = "Le mode debogage est |cff00ff88actif|r. Seuls les addons essentiels sont charges."
+L["DEBUG_MODE_INACTIVE"] = "Le mode debogage est |cffff4444inactif|r. Tous les addons sont charges normalement."
+L["ENABLE_DEBUG_MODE"] = "Activer le mode debogage"
+L["ENABLE_DEBUG_MODE_DESC"] = "Desactive tous les addons sauf ElvUI + MagguuUI et recharge l'UI. Utilisez ceci pour verifier si un probleme est cause par un autre addon."
+L["DISABLE_DEBUG_MODE"] = "Desactiver le mode debogage"
+L["DISABLE_DEBUG_MODE_DESC"] = "Reactive tous les addons precedemment desactives et recharge l'UI."
+L["DEBUG_ENABLED_COUNT"] = "%d addons desactives. Rechargement..."
+L["DEBUG_DISABLED_COUNT"] = "%d addons reactives. Rechargement..."
+L["DEBUG_ALREADY_ACTIVE"] = "Le mode debogage est deja actif."
+L["DEBUG_NOT_ACTIVE"] = "Le mode debogage n'est pas actif."
+L["DEBUG_STARTUP_WARNING"] = "Le mode debogage est actif — seuls les addons essentiels sont charges. Tapez |cff4A8FD9/mui debug|r pour quitter."
+L["CMD_DEBUG"] = "Basculer le mode debogage"
+
 -- Standalone Settings (Options.lua)
 L["PROFILES"] = "Profils"
 L["SETTINGS"] = "Parametres"

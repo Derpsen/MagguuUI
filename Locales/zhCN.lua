@@ -174,6 +174,23 @@ L["GOT_IT"] = "知道了！"
 L["GOT_IT_DESC"] = "标记为已读——下次登录时此版本的更新日志弹窗将不再显示。"
 L["RELEASED"] = "发布日期"
 
+-- Settings: Debugger
+L["DEBUGGER"] = "调试器"
+L["DEBUGGER_DESC"] = "通过临时禁用除ElvUI和MagguuUI以外的所有插件来排查问题。"
+L["DEBUG_MODE_STATUS"] = "调试模式状态"
+L["DEBUG_MODE_ACTIVE"] = "调试模式当前|cff00ff88已启用|r。仅加载了核心插件。"
+L["DEBUG_MODE_INACTIVE"] = "调试模式当前|cffff4444未启用|r。所有插件正常加载。"
+L["ENABLE_DEBUG_MODE"] = "启用调试模式"
+L["ENABLE_DEBUG_MODE_DESC"] = "禁用除ElvUI + MagguuUI以外的所有插件并重新加载界面。用于检查问题是否由其他插件引起。"
+L["DISABLE_DEBUG_MODE"] = "禁用调试模式"
+L["DISABLE_DEBUG_MODE_DESC"] = "重新启用所有之前禁用的插件并重新加载界面。"
+L["DEBUG_ENABLED_COUNT"] = "已禁用%d个插件。正在重新加载..."
+L["DEBUG_DISABLED_COUNT"] = "已重新启用%d个插件。正在重新加载..."
+L["DEBUG_ALREADY_ACTIVE"] = "调试模式已经处于启用状态。"
+L["DEBUG_NOT_ACTIVE"] = "调试模式未启用。"
+L["DEBUG_STARTUP_WARNING"] = "调试模式已启用——仅加载了核心插件。输入|cff4A8FD9/mui debug|r退出。"
+L["CMD_DEBUG"] = "切换调试模式"
+
 -- Standalone Settings (Options.lua)
 L["PROFILES"] = "配置文件"
 L["SETTINGS"] = "设置"

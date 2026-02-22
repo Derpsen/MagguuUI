@@ -174,6 +174,23 @@ L["GOT_IT"] = "확인!"
 L["GOT_IT_DESC"] = "읽음으로 표시 — 다음 로그인 시 이 버전의 변경 내역 팝업이 표시되지 않습니다."
 L["RELEASED"] = "출시일"
 
+-- Settings: Debugger
+L["DEBUGGER"] = "디버거"
+L["DEBUGGER_DESC"] = "ElvUI와 MagguuUI를 제외한 모든 애드온을 일시적으로 비활성화하여 문제를 해결합니다."
+L["DEBUG_MODE_STATUS"] = "디버그 모드 상태"
+L["DEBUG_MODE_ACTIVE"] = "디버그 모드가 |cff00ff88활성화|r되어 있습니다. 필수 애드온만 로드되었습니다."
+L["DEBUG_MODE_INACTIVE"] = "디버그 모드가 |cffff4444비활성화|r되어 있습니다. 모든 애드온이 정상적으로 로드되었습니다."
+L["ENABLE_DEBUG_MODE"] = "디버그 모드 활성화"
+L["ENABLE_DEBUG_MODE_DESC"] = "ElvUI + MagguuUI를 제외한 모든 애드온을 비활성화하고 UI를 새로고침합니다. 문제가 다른 애드온에 의해 발생하는지 확인할 때 사용하세요."
+L["DISABLE_DEBUG_MODE"] = "디버그 모드 비활성화"
+L["DISABLE_DEBUG_MODE_DESC"] = "이전에 비활성화된 모든 애드온을 다시 활성화하고 UI를 새로고침합니다."
+L["DEBUG_ENABLED_COUNT"] = "%d개 애드온이 비활성화되었습니다. 새로고침 중..."
+L["DEBUG_DISABLED_COUNT"] = "%d개 애드온이 다시 활성화되었습니다. 새로고침 중..."
+L["DEBUG_ALREADY_ACTIVE"] = "디버그 모드가 이미 활성화되어 있습니다."
+L["DEBUG_NOT_ACTIVE"] = "디버그 모드가 활성화되어 있지 않습니다."
+L["DEBUG_STARTUP_WARNING"] = "디버그 모드가 활성화되어 있습니다 — 필수 애드온만 로드되었습니다. |cff4A8FD9/mui debug|r를 입력하여 종료하세요."
+L["CMD_DEBUG"] = "디버그 모드 전환"
+
 -- Standalone Settings (Options.lua)
 L["PROFILES"] = "프로필"
 L["SETTINGS"] = "설정"

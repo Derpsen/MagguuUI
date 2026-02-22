@@ -174,6 +174,23 @@ L["GOT_IT"] = "了解！"
 L["GOT_IT_DESC"] = "標記為已讀——下次登入時此版本的更新日誌彈窗將不再顯示。"
 L["RELEASED"] = "發布日期"
 
+-- Settings: Debugger
+L["DEBUGGER"] = "除錯器"
+L["DEBUGGER_DESC"] = "透過暫時停用除ElvUI和MagguuUI以外的所有插件來排解問題。"
+L["DEBUG_MODE_STATUS"] = "除錯模式狀態"
+L["DEBUG_MODE_ACTIVE"] = "除錯模式目前|cff00ff88已啟用|r。僅載入了核心插件。"
+L["DEBUG_MODE_INACTIVE"] = "除錯模式目前|cffff4444未啟用|r。所有插件正常載入。"
+L["ENABLE_DEBUG_MODE"] = "啟用除錯模式"
+L["ENABLE_DEBUG_MODE_DESC"] = "停用除ElvUI + MagguuUI以外的所有插件並重新載入介面。用於檢查問題是否由其他插件引起。"
+L["DISABLE_DEBUG_MODE"] = "停用除錯模式"
+L["DISABLE_DEBUG_MODE_DESC"] = "重新啟用所有先前停用的插件並重新載入介面。"
+L["DEBUG_ENABLED_COUNT"] = "已停用%d個插件。正在重新載入..."
+L["DEBUG_DISABLED_COUNT"] = "已重新啟用%d個插件。正在重新載入..."
+L["DEBUG_ALREADY_ACTIVE"] = "除錯模式已經處於啟用狀態。"
+L["DEBUG_NOT_ACTIVE"] = "除錯模式未啟用。"
+L["DEBUG_STARTUP_WARNING"] = "除錯模式已啟用——僅載入了核心插件。輸入|cff4A8FD9/mui debug|r退出。"
+L["CMD_DEBUG"] = "切換除錯模式"
+
 -- Standalone Settings (Options.lua)
 L["PROFILES"] = "設定檔"
 L["SETTINGS"] = "設定"

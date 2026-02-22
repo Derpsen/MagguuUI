@@ -327,96 +327,96 @@ local function InsertMagguuUIOptions()
             },
 
             -- ========================================
-            -- 2. Settings (Tree Entry with Sub-Tabs)
+            -- 2. Settings (Tree Entry)
             -- ========================================
             settings = {
                 order = 2,
                 type = "group",
-                childGroups = "tab",
                 name = GradientText("Settings", C.HEX_BLUE, C.HEX_SILVER),
                 icon = ICONS.settings,
                 args = {
-                    -- Tab: General
-                    general = {
+                    minimap_toggle = {
+                        order = 1,
+                        type = "toggle",
+                        name = ML["SHOW_MINIMAP_BUTTON"],
+                        desc = ML["SHOW_MINIMAP_BUTTON_DESC"],
+                        get = function()
+                            return not (MUI.db.global.minimap and MUI.db.global.minimap.hide)
+                        end,
+                        set = function()
+                            MUI:ToggleMinimapButton()
+                        end,
+                        width = "full",
+                    },
+                    spacer1 = {
+                        order = 2,
+                        type = "description",
+                        name = "\n",
+                    },
+                    changelog_popup = {
+                        order = 3,
+                        type = "toggle",
+                        name = ML["SHOW_CHANGELOG_ON_UPDATE"],
+                        desc = ML["SHOW_CHANGELOG_ON_UPDATE_DESC"],
+                        get = function()
+                            if not MUI.db or not MUI.db.global then return true end
+                            return MUI.db.global.changelogDismissed ~= MUI.version
+                        end,
+                        set = function(_, val)
+                            if not MUI.db or not MUI.db.global then return end
+                            if val then
+                                MUI.db.global.changelogDismissed = nil
+                            else
+                                MUI.db.global.changelogDismissed = MUI.version
+                            end
+                        end,
+                        width = "full",
+                    },
+                },
+            },
+
+            -- ========================================
+            -- 3. WowUp (Tree Entry)
+            -- ========================================
+            wowup = {
+                order = 3,
+                type = "group",
+                childGroups = "tab",
+                name = GradientText("WowUp", C.HEX_BLUE, C.HEX_SILVER),
+                args = {
+                    -- Tab: Required
+                    required = {
                         order = 1,
                         type = "group",
-                        name = "General",
+                        name = format("|cff%s%s|r", C.HEX_SOFT_RED, ML["REQUIRED"]),
                         args = {
-                            minimap_toggle = {
-                                order = 1,
-                                type = "toggle",
-                                name = ML["SHOW_MINIMAP_BUTTON"],
-                                desc = ML["SHOW_MINIMAP_BUTTON_DESC"],
-                                get = function()
-                                    return not (MUI.db.global.minimap and MUI.db.global.minimap.hide)
-                                end,
-                                set = function()
-                                    MUI:ToggleMinimapButton()
-                                end,
-                                width = "full",
-                            },
-                            spacer1 = {
-                                order = 2,
-                                type = "description",
-                                name = "\n",
-                            },
-                            changelog_popup = {
-                                order = 3,
-                                type = "toggle",
-                                name = ML["SHOW_CHANGELOG_ON_UPDATE"],
-                                desc = ML["SHOW_CHANGELOG_ON_UPDATE_DESC"],
-                                get = function()
-                                    if not MUI.db or not MUI.db.global then return true end
-                                    return MUI.db.global.changelogDismissed ~= MUI.version
-                                end,
-                                set = function(_, val)
-                                    if not MUI.db or not MUI.db.global then return end
-                                    if val then
-                                        MUI.db.global.changelogDismissed = nil
-                                    else
-                                        MUI.db.global.changelogDismissed = MUI.version
-                                    end
-                                end,
-                                width = "full",
-                            },
-                        },
-                    },
-
-                    -- Tab: WowUp Import
-                    wowup = {
-                        order = 2,
-                        type = "group",
-                        name = format("|cff%sWowUp|r %s", C.HEX_BLUE, ML["WOWUP_ADDON_IMPORT"]),
-                        args = {
-                            desc = {
-                                order = 1,
-                                type = "description",
-                                name = format("|cff%s%s|r\n\n", C.HEX_DIM, ML["WOWUP_DESC"])
-                                    .. format("|cff%s%s|r |cff%s— %s|r\n", C.HEX_SOFT_RED, ML["REQUIRED"], C.HEX_DIM, ML["WOWUP_REQUIRED_DESC"])
-                                    .. format("|cff%s%s — %s|r\n", C.HEX_DIM, ML["OPTIONAL"], ML["WOWUP_OPTIONAL_DESC"]),
-                                fontSize = "medium",
-                            },
                             howto_header = {
-                                order = 2,
+                                order = 1,
                                 type = "header",
                                 name = format("|cff%s%s|r", C.HEX_BLUE, ML["WOWUP_HOW_TO"]),
                             },
                             howto = {
-                                order = 3,
+                                order = 2,
                                 type = "description",
                                 name = format("|cff%s", C.HEX_DIM)
-                                    .. format("1. Click|r |cff%sRequired|r |cff%sor|r Optional |cff%sbelow|r\n", C.HEX_SOFT_RED, C.HEX_DIM, C.HEX_DIM)
+                                    .. format("1. Click |cff%s%s|r |cff%sbelow|r\n", C.HEX_SOFT_RED, ML["COPY_REQUIRED_ADDONS"], C.HEX_DIM)
                                     .. format("|cff%s2. The string is selected — press|r |cff%sCtrl+C|r |cff%sto copy|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM)
                                     .. format("|cff%s3. Open|r |cff%sWowUp|r |cff%s> More > Import/Export Addons|r\n", C.HEX_DIM, C.HEX_BLUE, C.HEX_DIM)
                                     .. format("|cff%s4. Switch to|r |cff%sImport|r|cff%s, paste, click|r |cff%sInstall|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM, C.HEX_BLUE),
                                 fontSize = "medium",
                             },
                             spacer1 = {
-                                order = 4,
+                                order = 3,
                                 type = "description",
                                 name = " ",
                             },
-                            copy_required = {
+                            desc = {
+                                order = 4,
+                                type = "description",
+                                name = format("|cff%s%s|r\n", C.HEX_DIM, ML["WOWUP_REQUIRED_DESC"]),
+                                fontSize = "medium",
+                            },
+                            copy = {
                                 order = 5,
                                 type = "execute",
                                 name = format("|cff%s%s|r", C.HEX_SOFT_RED, ML["COPY_REQUIRED_ADDONS"]),
@@ -427,33 +427,20 @@ local function InsertMagguuUIOptions()
                                         I:ShowWowUpRequired()
                                     end
                                 end,
-                                width = 1.5,
-                            },
-                            copy_optional = {
-                                order = 6,
-                                type = "execute",
-                                name = ML["COPY_OPTIONAL_ADDONS"],
-                                desc = ML["COPY_OPTIONAL_DESC"],
-                                func = function()
-                                    local I = MUI:GetModule("Installer")
-                                    if I and I.ShowWowUpOptional then
-                                        I:ShowWowUpOptional()
-                                    end
-                                end,
-                                width = 1.5,
+                                width = "full",
                             },
                             spacer2 = {
-                                order = 7,
+                                order = 6,
                                 type = "description",
                                 name = "\n",
                             },
-                            required_header = {
-                                order = 8,
+                            list_header = {
+                                order = 7,
                                 type = "header",
                                 name = format("|cff%s%s|r", C.HEX_SOFT_RED, ML["REQUIRED_ADDONS"]),
                             },
-                            required_list = {
-                                order = 9,
+                            list = {
+                                order = 8,
                                 type = "description",
                                 name = function()
                                     local D = MUI:GetModule("Data")
@@ -468,18 +455,66 @@ local function InsertMagguuUIOptions()
                                 end,
                                 fontSize = "medium",
                             },
-                            spacer3 = {
-                                order = 10,
+                        },
+                    },
+
+                    -- Tab: Optional
+                    optional = {
+                        order = 2,
+                        type = "group",
+                        name = ML["OPTIONAL"],
+                        args = {
+                            howto_header = {
+                                order = 1,
+                                type = "header",
+                                name = format("|cff%s%s|r", C.HEX_BLUE, ML["WOWUP_HOW_TO"]),
+                            },
+                            howto = {
+                                order = 2,
+                                type = "description",
+                                name = format("|cff%s", C.HEX_DIM)
+                                    .. format("1. Click |cff%s%s|r |cff%sbelow|r\n", C.HEX_DIM, ML["COPY_OPTIONAL_ADDONS"], C.HEX_DIM)
+                                    .. format("|cff%s2. The string is selected — press|r |cff%sCtrl+C|r |cff%sto copy|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM)
+                                    .. format("|cff%s3. Open|r |cff%sWowUp|r |cff%s> More > Import/Export Addons|r\n", C.HEX_DIM, C.HEX_BLUE, C.HEX_DIM)
+                                    .. format("|cff%s4. Switch to|r |cff%sImport|r|cff%s, paste, click|r |cff%sInstall|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM, C.HEX_BLUE),
+                                fontSize = "medium",
+                            },
+                            spacer1 = {
+                                order = 3,
                                 type = "description",
                                 name = " ",
                             },
-                            optional_header = {
-                                order = 11,
+                            desc = {
+                                order = 4,
+                                type = "description",
+                                name = format("|cff%s%s|r\n", C.HEX_DIM, ML["WOWUP_OPTIONAL_DESC"]),
+                                fontSize = "medium",
+                            },
+                            copy = {
+                                order = 5,
+                                type = "execute",
+                                name = ML["COPY_OPTIONAL_ADDONS"],
+                                desc = ML["COPY_OPTIONAL_DESC"],
+                                func = function()
+                                    local I = MUI:GetModule("Installer")
+                                    if I and I.ShowWowUpOptional then
+                                        I:ShowWowUpOptional()
+                                    end
+                                end,
+                                width = "full",
+                            },
+                            spacer2 = {
+                                order = 6,
+                                type = "description",
+                                name = "\n",
+                            },
+                            list_header = {
+                                order = 7,
                                 type = "header",
                                 name = format("|cff%s%s|r", C.HEX_DIM, ML["OPTIONAL_ADDONS"]),
                             },
-                            optional_list = {
-                                order = 12,
+                            list = {
+                                order = 8,
                                 type = "description",
                                 name = function()
                                     local D = MUI:GetModule("Data")
@@ -500,11 +535,11 @@ local function InsertMagguuUIOptions()
             },
 
             -- ========================================
-            -- 3. Information (Tree Entry with Sub-Tabs)
-            --    Tabs: About, Changelog, System
+            -- 4. Information (Tree Entry with Sub-Tabs)
+            --    Tabs: About, Changelog, System, Debugger
             -- ========================================
             information = {
-                order = 3,
+                order = 4,
                 type = "group",
                 childGroups = "tab",
                 name = GradientText("Information", C.HEX_BLUE, C.HEX_SILVER),
@@ -670,6 +705,102 @@ local function InsertMagguuUIOptions()
                                     return table.concat(lines, "\n")
                                 end,
                                 fontSize = "medium",
+                            },
+                        },
+                    },
+
+                    -- Tab: Debugger
+                    debugger = {
+                        order = 4,
+                        type = "group",
+                        name = format("|cff%s%s|r", C.HEX_SOFT_RED, ML["DEBUGGER"]),
+                        args = {
+                            desc = {
+                                order = 1,
+                                type = "description",
+                                name = format("|cff%s%s|r\n", C.HEX_DIM, ML["DEBUGGER_DESC"]),
+                                fontSize = "medium",
+                            },
+                            status_header = {
+                                order = 2,
+                                type = "header",
+                                name = format("|cff%s%s|r", C.HEX_BLUE, ML["DEBUG_MODE_STATUS"]),
+                            },
+                            status = {
+                                order = 3,
+                                type = "description",
+                                name = function()
+                                    if MUI:IsDebugModeActive() then
+                                        return ML["DEBUG_MODE_ACTIVE"]
+                                    else
+                                        return ML["DEBUG_MODE_INACTIVE"]
+                                    end
+                                end,
+                                fontSize = "medium",
+                            },
+                            spacer1 = {
+                                order = 4,
+                                type = "description",
+                                name = "\n",
+                            },
+                            enable_debug = {
+                                order = 5,
+                                type = "execute",
+                                name = format("|cff%s%s|r", C.HEX_SOFT_RED, ML["ENABLE_DEBUG_MODE"]),
+                                desc = ML["ENABLE_DEBUG_MODE_DESC"],
+                                func = function()
+                                    MUI:EnableDebugMode()
+                                end,
+                                width = "full",
+                                hidden = function()
+                                    return MUI:IsDebugModeActive()
+                                end,
+                            },
+                            disable_debug = {
+                                order = 6,
+                                type = "execute",
+                                name = format("|cff%s%s|r", C.HEX_GREEN, ML["DISABLE_DEBUG_MODE"]),
+                                desc = ML["DISABLE_DEBUG_MODE_DESC"],
+                                func = function()
+                                    MUI:DisableDebugMode()
+                                end,
+                                width = "full",
+                                hidden = function()
+                                    return not MUI:IsDebugModeActive()
+                                end,
+                            },
+                            spacer2 = {
+                                order = 7,
+                                type = "description",
+                                name = "\n",
+                                hidden = function()
+                                    return not MUI:IsDebugModeActive()
+                                end,
+                            },
+                            disabled_header = {
+                                order = 8,
+                                type = "header",
+                                name = format("|cff%s%s|r", C.HEX_SOFT_RED, ML["DEBUGGER"]),
+                                hidden = function()
+                                    return not MUI:IsDebugModeActive()
+                                end,
+                            },
+                            disabled_list = {
+                                order = 9,
+                                type = "description",
+                                name = function()
+                                    if not MUI:IsDebugModeActive() then return "" end
+                                    local lines = {}
+                                    for name in pairs(MUI.db.global.debugDisabledAddons) do
+                                        tinsert(lines, format("  |cff%s%s|r", C.HEX_DIM, name))
+                                    end
+                                    table.sort(lines)
+                                    return table.concat(lines, "\n")
+                                end,
+                                fontSize = "medium",
+                                hidden = function()
+                                    return not MUI:IsDebugModeActive()
+                                end,
                             },
                         },
                     },
