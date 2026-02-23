@@ -13,7 +13,7 @@
 ## X-License: GNU General Public License v3.0
 ## X-Category: UI Compilations
 ## X-Curse-Project-ID: 1457810
-## X-Wago-ID:
+## X-Wago-ID: 5NR84pK3
 ## X-WoWI-ID:
 ## Category-enUS: User Interface
 ## Category-deDE: Benutzerinterface
