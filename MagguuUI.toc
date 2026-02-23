@@ -32,16 +32,16 @@ embeds.xml
 
 Locales\!load.xml
 
-init.lua
-Core.lua
-Functions.lua
+Core\init.lua
+Core\Core.lua
+Core\Functions.lua
 
 Data\!load.xml
 
 Setup\Setup.lua
 Setup\AddOns\!load.xml
 
-Installer.lua
+Installer\Installer.lua
 
 Config\Options.lua
 Config\Changelog.lua
