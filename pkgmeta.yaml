@@ -46,7 +46,6 @@ externals:
 
 optional-dependencies:
   - bettercooldownmanager
-  - big-wigs
   - details
   - elvui-anchor
   - elvui-windtools
