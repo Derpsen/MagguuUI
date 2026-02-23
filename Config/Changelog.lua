@@ -11,6 +11,22 @@ local tinsert = tinsert
 -- ============================================================
 MUI.Changelog = {}
 
+MUI.Changelog[120009] = {
+    RELEASE_DATE = "2026/02/23",
+    NEW = {
+        "Debug mode: disables all non-essential addons for troubleshooting ([/mui debug])",
+    },
+    IMPROVEMENT = {
+        "Debugger moved into [Information] tab (alongside About, Changelog, System)",
+        "WowUp tab restructured with [Required] and [Optional] subtabs and HowTo section",
+        "Class layout reinstall properly reindexes layout IDs after removal (no gaps)",
+        "Core files reorganized into [Core/] and [Installer/] subfolders",
+    },
+    BUGFIX = {
+        "SaveLayouts error on class layout reinstall now handled safely",
+    },
+}
+
 MUI.Changelog[120008] = {
     RELEASE_DATE = "2026/02/19",
     NEW = {
