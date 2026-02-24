@@ -18,4 +18,5 @@ All notable changes to MagguuUI will be documented in this file.
 ### 🛠️ Fixed
 
 - 🐛 SaveLayouts error on class layout reinstall now handled safely
+- 🐛 Updated ElvUI Anchor profile (addon was reset by author — reinstall required)
 

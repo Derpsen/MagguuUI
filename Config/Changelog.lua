@@ -24,6 +24,7 @@ MUI.Changelog[120009] = {
     },
     BUGFIX = {
         "SaveLayouts error on class layout reinstall now handled safely",
+        "Updated ElvUI Anchor profile (addon was reset by author — reinstall required)",
     },
 }
 
