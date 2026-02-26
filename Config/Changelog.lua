@@ -11,6 +11,32 @@ local tinsert = tinsert
 -- ============================================================
 MUI.Changelog = {}
 
+MUI.Changelog[120010] = {
+    RELEASE_DATE = "2026/02/26",
+    NEW = {
+        "Tiered logging system with 4 levels ([/mui log] to cycle)",
+        "Diagnostic report generator ([/mui report] — copyable system info for support)",
+        "[/mui load] command to load profiles on alt characters anytime",
+        "ElvUI version check — warns if ElvUI is too old for current profiles",
+        "Combat queue: profile installs during combat are queued and replayed automatically",
+        "WindTools settings applied automatically during ElvUI profile import",
+    },
+    IMPROVEMENT = {
+        "All setup handlers protected with [pcall] — one failed addon won't crash the queue",
+        "LibDualSpec disabled before ElvUI profile switch (prevents profile conflicts)",
+        "ElvUI installer auto-skipped when MagguuUI is installed (no double installer)",
+        "Database migrations now version-gated (each migration runs exactly once)",
+        "Nil guards after DecompressData in Details and Plater handlers",
+        "Centralized helpers: [CreateBasePopup], [DBSet], [VersionStringToCode]",
+        "Named constants for all magic numbers ([MUI.Constants])",
+        "[IMPORTANT] changelog category added (red highlighting)",
+    },
+    BUGFIX = {
+        "EditMode [ConvertStringToLayoutInfo] and [SaveLayouts] wrapped in pcall",
+        "BCM import wrapped in pcall — corrupt profile data no longer causes UI errors",
+    },
+}
+
 MUI.Changelog[120009] = {
     RELEASE_DATE = "2026/02/23",
     NEW = {

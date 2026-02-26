@@ -144,6 +144,7 @@ function MUI:HandleChatCommand(input)
         print(format("  |cff%s/mui|r |cff%sversion|r    |cff%s- %s|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM, L["CMD_VERSION"]))
         print(format("  |cff%s/mui|r |cff%sstatus|r     |cff%s- %s|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM, L["CMD_STATUS"]))
         print(format("  |cff%s/mui|r |cff%schangelog|r  |cff%s- %s|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM, L["CMD_CHANGELOG"]))
+        print(format("  |cff%s/mui|r |cff%sload|r       |cff%s- %s|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM, L["CMD_LOAD"]))
         print(format("  |cff%s/mui|r |cff%sdebug|r      |cff%s- %s|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM, L["CMD_DEBUG"]))
         print(format("  |cff%s/mui|r |cff%slog|r        |cff%s- Cycle log level (off > error > warning > info > debug)|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM))
         print(format("  |cff%s/mui|r |cff%sreport|r     |cff%s- Generate copyable diagnostic report|r", C.HEX_BLUE, C.HEX_SILVER, C.HEX_DIM))
@@ -221,6 +222,10 @@ end
 
 function chatCommands.minimap()
     MUI:ToggleMinimapButton()
+end
+
+function chatCommands.load()
+    MUI:LoadProfiles()
 end
 
 function chatCommands.debug()

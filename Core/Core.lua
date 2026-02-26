@@ -411,13 +411,26 @@ function MUI:Initialize()
     if self:IsAddOnEnabled("ElvUI") then
         E = unpack(ElvUI)
 
-        if E.InstallFrame and E.InstallFrame:IsShown() then
-            E.InstallFrame:Hide()
+        -- Skip ElvUI's own installer — MagguuUI handles profile setup
+        if E.private.install_complete == nil then
+            if E.InstallFrame and E.InstallFrame:IsShown() then
+                E.InstallFrame:Hide()
+            end
 
             E.private.install_complete = E.version
         end
 
         E.global.ignoreIncompatible = true
+
+        -- Warn if ElvUI is too old for our profiles
+        local requiredElvUI = tonumber(C_AddOns.GetAddOnMetadata("MagguuUI", "X-Required-ElvUI"))
+
+        if requiredElvUI and tonumber(E.version) and tonumber(E.version) < requiredElvUI then
+            C_Timer.After(MUI.Constants.FIRST_RUN_DELAY, function()
+                MUI:Print(format("|cff%sElvUI v%s|r |cff%sis outdated.|r |cff%sMagguuUI requires|r |cff%sv%.2f+|r",
+                    C.HEX_SOFT_RED, tostring(E.version), C.HEX_DIM, C.HEX_DIM, C.HEX_BLUE, requiredElvUI))
+            end)
+        end
     end
 
     -- Auto-open installer if no profiles installed (re-opens every login until installed)

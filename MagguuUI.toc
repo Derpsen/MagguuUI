@@ -9,6 +9,7 @@
 ## RequiredDeps: ElvUI
 ## IconTexture: Interface\AddOns\MagguuUI\Media\Textures\LogoAddon
 ## AddonCompartmentFunc: MagguuUI_AddonCompartmentFunc
+## X-Required-ElvUI: 14.00
 ## X-Website: https://ui.magguu.xyz
 ## X-License: GNU General Public License v3.0
 ## X-Category: UI Compilations

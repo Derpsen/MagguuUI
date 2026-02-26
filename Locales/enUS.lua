@@ -188,6 +188,7 @@ L["DEBUG_DISABLED_COUNT"] = "%d addons re-enabled. Reloading..."
 L["DEBUG_ALREADY_ACTIVE"] = "Debug mode is already active."
 L["DEBUG_NOT_ACTIVE"] = "Debug mode is not active."
 L["DEBUG_STARTUP_WARNING"] = "Debug mode is active — only essential addons are loaded. Type |cff4A8FD9/mui debug|r to exit."
+L["CMD_LOAD"] = "Load profiles on this character"
 L["CMD_DEBUG"] = "Toggle debug mode"
 
 -- Standalone Settings (Options.lua)
