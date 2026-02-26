@@ -9,8 +9,6 @@ local InCombatLockdown = InCombatLockdown
 
 -- Use centralized colors
 local C = MUI.Colors
-local POPUP_BG = C.POPUP_BG
-local POPUP_BORDER = C.POPUP_BORDER
 local L = LibStub("AceLocale-3.0"):GetLocale("MagguuUI")
 
 -- ============================================================
@@ -37,29 +35,7 @@ end
 local function GetOrCreateURLPopup()
     if MUI.URLPopup then return MUI.URLPopup end
 
-    local popup = CreateFrame("Frame", "MagguuUIURLPopup", UIParent, "BackdropTemplate")
-    popup:SetSize(380, 130)
-    popup:SetPoint("CENTER")
-    popup:SetFrameStrata("TOOLTIP")
-    popup:SetFrameLevel(500)
-    popup:SetMovable(true)
-    popup:EnableMouse(true)
-    popup:RegisterForDrag("LeftButton")
-    popup:SetScript("OnDragStart", popup.StartMoving)
-    popup:SetScript("OnDragStop", popup.StopMovingOrSizing)
-
-    -- ElvUI Transparent template (matches Installer)
-    if popup.SetTemplate then
-        popup:SetTemplate("Transparent")
-    else
-        popup:SetBackdrop({
-            bgFile = "Interface\\Buttons\\WHITE8X8",
-            edgeFile = "Interface\\Buttons\\WHITE8X8",
-            edgeSize = 1,
-        })
-        popup:SetBackdropColor(POPUP_BG[1], POPUP_BG[2], POPUP_BG[3], 0.95)
-        popup:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
-    end
+    local popup = MUI:CreateBasePopup("MagguuUIURLPopup", 380, 130)
 
     -- Header: MagguuUI
     local header = popup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
@@ -106,7 +82,7 @@ local function GetOrCreateURLPopup()
     editBox:SetScript("OnKeyDown", function(self, key)
         if key == "C" and IsControlKeyDown() then
             desc:SetText(format("|cff%s%s|r", C.HEX_GREEN, L["COPIED"]))
-            C_Timer.After(0.5, function()
+            C_Timer.After(MUI.Constants.URL_FEEDBACK_DELAY, function()
                 popup:Hide()
                 desc:SetText(format("|cff%s%s|r", C.HEX_DIM, L["PRESS_CTRL_C"]))
             end)
@@ -122,10 +98,6 @@ local function GetOrCreateURLPopup()
     closeBtn:SetText(L["CLOSE"])
     closeBtn:SetScript("OnClick", function() popup:Hide() end)
 
-    -- ESC to close
-    tinsert(UISpecialFrames, "MagguuUIURLPopup")
-
-    popup:Hide()
     MUI.URLPopup = popup
 
     return popup
@@ -310,11 +282,7 @@ MUI.options = {
                             type = "header"
                         },
                         howto = {
-                            name = format("|cff%s", C.HEX_DIM)
-                                .. format("1. Click |cff%s%s|r |cff%sbelow|r\n", C.HEX_SOFT_RED, L["COPY_REQUIRED_ADDONS"], C.HEX_DIM)
-                                .. format("|cff%s2. The string is selected — press|r |cff%sCtrl+C|r |cff%sto copy|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM)
-                                .. format("|cff%s3. Open|r |cff%sWowUp|r |cff%s> More > Import/Export Addons|r\n", C.HEX_DIM, C.HEX_BLUE, C.HEX_DIM)
-                                .. format("|cff%s4. Switch to|r |cff%sImport|r|cff%s, paste, click|r |cff%sInstall|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM, C.HEX_BLUE),
+                            name = MUI:BuildWowUpHowToText(L["COPY_REQUIRED_ADDONS"], C.HEX_SOFT_RED),
                             order = 2,
                             type = "description",
                             fontSize = "medium"
@@ -374,11 +342,7 @@ MUI.options = {
                             type = "header"
                         },
                         howto = {
-                            name = format("|cff%s", C.HEX_DIM)
-                                .. format("1. Click |cff%s%s|r |cff%sbelow|r\n", C.HEX_DIM, L["COPY_OPTIONAL_ADDONS"], C.HEX_DIM)
-                                .. format("|cff%s2. The string is selected — press|r |cff%sCtrl+C|r |cff%sto copy|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM)
-                                .. format("|cff%s3. Open|r |cff%sWowUp|r |cff%s> More > Import/Export Addons|r\n", C.HEX_DIM, C.HEX_BLUE, C.HEX_DIM)
-                                .. format("|cff%s4. Switch to|r |cff%sImport|r|cff%s, paste, click|r |cff%sInstall|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM, C.HEX_BLUE),
+                            name = MUI:BuildWowUpHowToText(L["COPY_OPTIONAL_ADDONS"], C.HEX_DIM),
                             order = 2,
                             type = "description",
                             fontSize = "medium"

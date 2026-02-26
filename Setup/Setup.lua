@@ -2,8 +2,14 @@ local MUI = unpack(MagguuUI)
 local SE = MUI:GetModule("Setup")
 
 local format = format
+local xpcall = xpcall
+local C_EditMode, Enum = C_EditMode, Enum
+local InCombatLockdown = InCombatLockdown
 local C = MUI.Colors
 local L = LibStub("AceLocale-3.0"):GetLocale("MagguuUI")
+
+-- Combat queue: stores setup calls made during combat, replayed on PLAYER_REGEN_ENABLED
+SE.combatQueue = {}
 
 StaticPopupDialogs["MAGGUUI_OVERWRITE_PROFILE"] = {
     text = format(L["OVERWRITE_TEXT"], "%s"),
@@ -28,7 +34,27 @@ function SE:Setup(addon, ...)
         return
     end
 
-    return setup(addon, ...)
+    -- Queue setup calls made during combat (replayed on PLAYER_REGEN_ENABLED)
+    if InCombatLockdown() then
+        tinsert(SE.combatQueue, {addon, ...})
+        MUI:LogWarning(format("Setup '%s' queued — in combat", addon))
+        MUI:Print(format("|cff%s%s|r |cff%s%s|r |cff%s— queued until combat ends|r", C.HEX_BLUE, addon, C.HEX_DIM, L["COMBAT_ERROR"], C.HEX_DIM))
+        return
+    end
+
+    MUI:LogDebug(format("Setup '%s' starting", addon))
+
+    -- Protected call: a failed handler does not crash the profile queue
+    local ok, err = xpcall(setup, function(e) return e end, addon, ...)
+
+    if not ok then
+        MUI:LogError(format("Setup '%s' failed: %s", addon, tostring(err)))
+        MUI:Print(format("|cff%sSetup error|r |cff%s%s|r|cff%s:|r |cff%s%s|r", C.HEX_SOFT_RED, C.HEX_BLUE, tostring(addon), C.HEX_DIM, C.HEX_DIM, tostring(err)))
+    else
+        MUI:LogDebug(format("Setup '%s' completed", addon))
+    end
+
+    return ok
 end
 
 function SE:SetupWithConfirmation(addon, ...)
@@ -61,15 +87,7 @@ function SE:ProfileExistsForAddon(addon)
             return Details:GetProfile("MagguuUI") ~= nil
         end
     elseif addon == "Blizzard_EditMode" then
-        if C_EditMode then
-            local layouts = C_EditMode.GetLayouts()
-
-            for _, v in ipairs(layouts.layouts) do
-                if v.layoutName == "MagguuUI" then
-                    return true
-                end
-            end
-        end
+        return SE.FindEditModeLayout() ~= nil
     elseif addon == "BetterCooldownManager" then
         return MUI:IsAddOnEnabled("BetterCooldownManager") and BCDMDB and self.IsProfileExisting(BCDMDB)
     elseif addon == "ClassCooldowns" then
@@ -149,4 +167,39 @@ function SE.RemoveFromDatabase(addon)
         wipe(MUI.db.char)
         MUI.db.global.profiles = nil
     end
+end
+
+-- ============================================================
+-- Combat Queue Replay (PLAYER_REGEN_ENABLED)
+-- Replays setup calls that were queued during combat
+-- ============================================================
+function SE:ReplayCombatQueue()
+    if #SE.combatQueue == 0 then return end
+
+    MUI:Print(format("|cff%sReplaying %d queued setup(s)...|r", C.HEX_DIM, #SE.combatQueue))
+
+    for _, entry in ipairs(SE.combatQueue) do
+        local addon = entry[1]
+        SE:Setup(addon, select(2, unpack(entry)))
+    end
+
+    wipe(SE.combatQueue)
+end
+
+-- ============================================================
+-- Shared EditMode Layout Finder (used by Blizzard_EditMode + ClassLayouts)
+-- Returns layout index or nil
+-- ============================================================
+function SE.FindEditModeLayout()
+    if not C_EditMode then return nil end
+
+    local layouts = C_EditMode.GetLayouts()
+
+    for i, v in ipairs(layouts.layouts) do
+        if v.layoutName == "MagguuUI" then
+            return Enum.EditModePresetLayoutsMeta.NumValues + i
+        end
+    end
+
+    return nil
 end

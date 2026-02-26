@@ -12,8 +12,6 @@ local DARK_BG = C.DARK_BG
 local HOVER_BG = C.HOVER_BG
 local ACTIVE_BG = C.ACTIVE_BG
 local DIM = C.DIM
-local POPUP_BG = C.POPUP_BG
-local POPUP_BORDER = C.POPUP_BORDER
 
 -- ============================================================
 -- Install All Profiles (fresh install, sequential)
@@ -30,29 +28,7 @@ end
 local function GetOrCreateWowUpPopup()
     if MUI.WowUpPopup then return MUI.WowUpPopup end
 
-    local popup = CreateFrame("Frame", "MagguuUIWowUpPopup", UIParent, "BackdropTemplate")
-    popup:SetSize(520, 280)
-    popup:SetPoint("CENTER")
-    popup:SetFrameStrata("TOOLTIP")
-    popup:SetFrameLevel(500)
-    popup:SetMovable(true)
-    popup:EnableMouse(true)
-    popup:RegisterForDrag("LeftButton")
-    popup:SetScript("OnDragStart", popup.StartMoving)
-    popup:SetScript("OnDragStop", popup.StopMovingOrSizing)
-
-    -- ElvUI Transparent template (matches Installer)
-    if popup.SetTemplate then
-        popup:SetTemplate("Transparent")
-    else
-        popup:SetBackdrop({
-            bgFile = "Interface\\Buttons\\WHITE8X8",
-            edgeFile = "Interface\\Buttons\\WHITE8X8",
-            edgeSize = 1,
-        })
-        popup:SetBackdropColor(POPUP_BG[1], POPUP_BG[2], POPUP_BG[3], 0.95)
-        popup:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
-    end
+    local popup = MUI:CreateBasePopup("MagguuUIWowUpPopup", 520, 280)
 
     -- Header: MagguuUI
     local header = popup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
@@ -77,23 +53,7 @@ local function GetOrCreateWowUpPopup()
     scrollFrame:SetPoint("TOPLEFT", desc, "BOTTOMLEFT", 0, -20)
     scrollFrame:SetPoint("BOTTOMRIGHT", popup, "BOTTOMRIGHT", -32, 50)
 
-    -- Scroll background (transparent)
-    local sfBg = CreateFrame("Frame", nil, popup, "BackdropTemplate")
-    sfBg:SetPoint("TOPLEFT", scrollFrame, "TOPLEFT", -4, 4)
-    sfBg:SetPoint("BOTTOMRIGHT", scrollFrame, "BOTTOMRIGHT", 20, -4)
-    if sfBg.SetTemplate then
-        sfBg:SetTemplate("Transparent")
-    else
-        sfBg:SetBackdrop({
-            bgFile = "Interface\\Buttons\\WHITE8X8",
-            edgeFile = "Interface\\Buttons\\WHITE8X8",
-            edgeSize = 1,
-        })
-        sfBg:SetBackdropColor(0.02, 0.02, 0.02, 0.6)
-        sfBg:SetBackdropBorderColor(POPUP_BORDER[1], POPUP_BORDER[2], POPUP_BORDER[3], 1)
-    end
-    sfBg:SetFrameLevel(popup:GetFrameLevel() + 1)
-    scrollFrame:SetFrameLevel(sfBg:GetFrameLevel() + 1)
+    MUI:CreatePopupScrollBackground(popup, scrollFrame)
 
     local editBox = CreateFrame("EditBox", nil, scrollFrame)
     editBox:SetMultiLine(true)
@@ -121,7 +81,7 @@ local function GetOrCreateWowUpPopup()
     editBox:SetScript("OnKeyDown", function(self, key)
         if key == "C" and IsControlKeyDown() then
             desc:SetText(format("|cff%s%s|r", C.HEX_GREEN, L["COPIED"]))
-            C_Timer.After(0.6, function()
+            C_Timer.After(MUI.Constants.COPY_FEEDBACK_DELAY, function()
                 popup:Hide()
                 desc:SetText(format("|cff%s%s|r", C.HEX_DIM, L["COPY_HINT"]))
             end)
@@ -138,10 +98,6 @@ local function GetOrCreateWowUpPopup()
     closeBtn:SetText(L["CLOSE"])
     closeBtn:SetScript("OnClick", function() popup:Hide() end)
 
-    -- ESC to close
-    tinsert(UISpecialFrames, "MagguuUIWowUpPopup")
-
-    popup:Hide()
     MUI.WowUpPopup = popup
 
     return popup
@@ -348,7 +304,7 @@ function I:HookInstaller()
 
     PluginInstallFrame:HookScript("OnShow", function()
         PluginInstallFrame:SetFrameStrata("FULLSCREEN_DIALOG")
-        C_Timer.After(0.05, function()
+        C_Timer.After(MUI.Constants.UI_SETTLE_DELAY, function()
             EnlargeInstaller()
             StyleStepButtons()
             ClearOptionTooltips()
@@ -362,7 +318,7 @@ function I:HookInstaller()
 
     if PluginInstallFrame.Next then
         PluginInstallFrame.Next:HookScript("OnClick", function()
-            C_Timer.After(0.05, function()
+            C_Timer.After(MUI.Constants.UI_SETTLE_DELAY, function()
                 ClearOptionTooltips()
                 if PluginInstallFrame.CurrentPage then
                     UpdateStepHighlight(PluginInstallFrame.CurrentPage)
@@ -373,7 +329,7 @@ function I:HookInstaller()
 
     if PluginInstallFrame.Prev then
         PluginInstallFrame.Prev:HookScript("OnClick", function()
-            C_Timer.After(0.05, function()
+            C_Timer.After(MUI.Constants.UI_SETTLE_DELAY, function()
                 ClearOptionTooltips()
                 if PluginInstallFrame.CurrentPage then
                     UpdateStepHighlight(PluginInstallFrame.CurrentPage)
@@ -387,7 +343,7 @@ function I:HookInstaller()
         local btn = PluginInstallFrame["StepButton" .. i]
         if not btn then break end
         btn:HookScript("OnClick", function()
-            C_Timer.After(0.05, function()
+            C_Timer.After(MUI.Constants.UI_SETTLE_DELAY, function()
                 ClearOptionTooltips()
                 if PluginInstallFrame.CurrentPage then
                     UpdateStepHighlight(PluginInstallFrame.CurrentPage)

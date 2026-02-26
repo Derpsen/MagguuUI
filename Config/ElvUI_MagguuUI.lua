@@ -67,11 +67,7 @@ local function BuildChangelogOptions()
     local changelogArgs = {}
 
     for version, data in pairs(MUI.Changelog) do
-        local versionString = format("%d.%d.%d",
-            math.floor(version / 10000),
-            math.floor((version % 10000) / 100),
-            version % 100
-        )
+        local versionString = MUI:VersionCodeToString(version)
         local changelogVer = version
         local dateString = data.RELEASE_DATE or ""
 
@@ -398,11 +394,7 @@ local function InsertMagguuUIOptions()
                             howto = {
                                 order = 2,
                                 type = "description",
-                                name = format("|cff%s", C.HEX_DIM)
-                                    .. format("1. Click |cff%s%s|r |cff%sbelow|r\n", C.HEX_SOFT_RED, ML["COPY_REQUIRED_ADDONS"], C.HEX_DIM)
-                                    .. format("|cff%s2. The string is selected — press|r |cff%sCtrl+C|r |cff%sto copy|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM)
-                                    .. format("|cff%s3. Open|r |cff%sWowUp|r |cff%s> More > Import/Export Addons|r\n", C.HEX_DIM, C.HEX_BLUE, C.HEX_DIM)
-                                    .. format("|cff%s4. Switch to|r |cff%sImport|r|cff%s, paste, click|r |cff%sInstall|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM, C.HEX_BLUE),
+                                name = MUI:BuildWowUpHowToText(ML["COPY_REQUIRED_ADDONS"], C.HEX_SOFT_RED),
                                 fontSize = "medium",
                             },
                             spacer1 = {
@@ -472,11 +464,7 @@ local function InsertMagguuUIOptions()
                             howto = {
                                 order = 2,
                                 type = "description",
-                                name = format("|cff%s", C.HEX_DIM)
-                                    .. format("1. Click |cff%s%s|r |cff%sbelow|r\n", C.HEX_DIM, ML["COPY_OPTIONAL_ADDONS"], C.HEX_DIM)
-                                    .. format("|cff%s2. The string is selected — press|r |cff%sCtrl+C|r |cff%sto copy|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM)
-                                    .. format("|cff%s3. Open|r |cff%sWowUp|r |cff%s> More > Import/Export Addons|r\n", C.HEX_DIM, C.HEX_BLUE, C.HEX_DIM)
-                                    .. format("|cff%s4. Switch to|r |cff%sImport|r|cff%s, paste, click|r |cff%sInstall|r\n", C.HEX_DIM, C.HEX_SILVER, C.HEX_DIM, C.HEX_BLUE),
+                                name = MUI:BuildWowUpHowToText(ML["COPY_OPTIONAL_ADDONS"], C.HEX_DIM),
                                 fontSize = "medium",
                             },
                             spacer1 = {

@@ -1,7 +1,8 @@
 local MUI = unpack(MagguuUI)
 local SE = MUI:GetModule("Setup")
 
-local C_EditMode, Enum = C_EditMode, Enum
+local format = format
+local C = MUI.Colors
 
 local function GetClassKey()
     local _, class = UnitClass("player")
@@ -16,17 +17,6 @@ local function GetSpecName()
         local _, specName = GetSpecializationInfo(specIndex)
 
         return specName
-    end
-end
-
-local function IsEditModeLayoutExisting()
-    local layouts = C_EditMode.GetLayouts()
-
-    for i, v in ipairs(layouts.layouts) do
-        if v.layoutName == "MagguuUI" then
-
-            return Enum.EditModePresetLayoutsMeta.NumValues + i
-        end
     end
 end
 
@@ -105,16 +95,36 @@ end
 local function ImportClassCooldowns()
     local D = MUI:GetModule("Data")
 
-    if InCombatLockdown() then return false end
-    if not CooldownViewerSettings then return false end
+    if InCombatLockdown() then
+        MUI:LogWarning("ClassCooldowns import blocked — in combat")
+        return false
+    end
 
-    local classData = D[GetClassKey()]
-    if not classData then return false end
+    if not CooldownViewerSettings then
+        MUI:LogWarning("CooldownViewerSettings not available — BCM not loaded")
+        return false
+    end
+
+    local classKey = GetClassKey()
+    local classData = D[classKey]
+
+    if not classData then
+        MUI:LogWarning(format("No class layout data for '%s'", classKey or "nil"))
+        return false
+    end
 
     local layoutManager = CooldownViewerSettings:GetLayoutManager()
-    if not layoutManager then return false end
+    if not layoutManager then
+        MUI:LogError("CooldownViewerSettings:GetLayoutManager() returned nil")
+        return false
+    end
 
-    RemoveExistingClassLayouts()
+    MUI:LogInfo(format("Importing class layouts for %s...", classKey))
+
+    local removed = RemoveExistingClassLayouts()
+    if removed > 0 then
+        MUI:LogDebug(format("Removed %d existing class layout(s)", removed))
+    end
 
     -- Import new layouts
     local specName = GetSpecName()
@@ -129,6 +139,9 @@ local function ImportClassCooldowns()
                     for _, id in ipairs(layoutIDs) do
                         tinsert(allLayoutIDs, id)
                     end
+                elseif not ok then
+                    MUI:LogError(format("Class layout import error: %s", tostring(layoutIDs)))
+                    MUI:Print(format("|cff%sClass layout import error:|r |cff%s%s|r", C.HEX_DIM, C.HEX_SOFT_RED, tostring(layoutIDs)))
                 end
             end
         end
@@ -139,10 +152,16 @@ local function ImportClassCooldowns()
 
         if ok and layoutIDs then
             allLayoutIDs = layoutIDs
+        elseif not ok then
+            MUI:LogError(format("Class layout import error: %s", tostring(layoutIDs)))
+            MUI:Print(format("|cff%sClass layout import error:|r |cff%s%s|r", C.HEX_DIM, C.HEX_SOFT_RED, tostring(layoutIDs)))
         end
     end
 
-    if #allLayoutIDs == 0 then return false end
+    if #allLayoutIDs == 0 then
+        MUI:LogWarning("No class layouts were imported (0 layout IDs)")
+        return false
+    end
 
     local activeLayoutID = allLayoutIDs[1]
 
@@ -160,6 +179,8 @@ local function ImportClassCooldowns()
     layoutManager:SetActiveLayoutByID(activeLayoutID)
     layoutManager:SaveLayouts()
 
+    MUI:LogInfo(format("%d class layout(s) imported, active: %d", #allLayoutIDs, activeLayoutID))
+
     if StaticPopup1 and StaticPopup1:IsShown() and StaticPopup1Button2 then
         StaticPopup1Button2:Click()
     end
@@ -172,12 +193,14 @@ function SE.ClassCooldowns(addon)
         SE.CompleteSetup(addon)
     end
 
-    local layout = IsEditModeLayoutExisting()
+    local layout = SE.FindEditModeLayout()
 
     if not layout then
+        MUI:LogDebug("EditMode layout not found for ClassCooldowns")
         return
     end
 
+    MUI:LogDebug(format("Activating EditMode layout %d for ClassCooldowns", layout))
     C_EditMode.SetActiveLayout(layout)
 end
 

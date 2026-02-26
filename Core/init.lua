@@ -12,7 +12,7 @@ _G.MagguuUI = Engine
 
 MUI.Data = MUI:NewModule("Data")
 MUI.Installer = MUI:NewModule("Installer")
-MUI.Setup = MUI:NewModule("Setup", "AceHook-3.0")
+MUI.Setup = MUI:NewModule("Setup", "AceHook-3.0", "AceEvent-3.0")
 
 MUI.Retail = true
 

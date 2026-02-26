@@ -2,6 +2,8 @@ local MUI = unpack(MagguuUI)
 
 local ipairs, unpack = ipairs, unpack
 local format = format
+local strjoin = strjoin
+local tostringall = tostringall
 
 local DisableAddOn = C_AddOns.DisableAddOn
 local EnableAddOn = C_AddOns.EnableAddOn
@@ -49,7 +51,73 @@ MUI.Constants = {
     PROFILE_QUEUE_DELAY = 0.3,
     FIRST_RUN_DELAY = 2,
     UI_SETTLE_DELAY = 0.05,
+    POPUP_FRAME_LEVEL = 500,
+    COPY_FEEDBACK_DELAY = 0.6,
+    URL_FEEDBACK_DELAY = 0.5,
+    PLATER_RELOAD_DELAY = 0.5,
+    INSTALLER_HOOK_DELAY = 0.1,
+    CHANGELOG_RESIZE_DELAY = 0.01,
 }
+
+-- ============================================================
+-- Tiered Logging (inspired by WindTools)
+-- Levels: 0 = off, 1 = errors only, 2 = warnings, 3 = info, 4 = debug
+-- Controlled via self.db.global.logLevel (default 0)
+-- ============================================================
+MUI.LogLevel = {
+    ERROR   = 1,
+    WARNING = 2,
+    INFO    = 3,
+    DEBUG   = 4,
+}
+
+function MUI:GetLogLevel()
+    return self.db and self.db.global and self.db.global.logLevel or 0
+end
+
+function MUI:SetLogLevel(level)
+    if self.db and self.db.global then
+        self.db.global.logLevel = level
+    end
+end
+
+function MUI:LogError(...)
+    if self:GetLogLevel() < self.LogLevel.ERROR then return end
+    self:Print(format("|cffFF4444[ERROR]|r %s", strjoin(" ", tostringall(...))))
+end
+
+function MUI:LogWarning(...)
+    if self:GetLogLevel() < self.LogLevel.WARNING then return end
+    self:Print(format("|cffFFCC00[WARNING]|r %s", strjoin(" ", tostringall(...))))
+end
+
+function MUI:LogInfo(...)
+    if self:GetLogLevel() < self.LogLevel.INFO then return end
+    self:Print(format("|cff4A8FD9[INFO]|r %s", strjoin(" ", tostringall(...))))
+end
+
+function MUI:LogDebug(...)
+    if self:GetLogLevel() < self.LogLevel.DEBUG then return end
+    self:Print(format("|cff00D3BC[DEBUG]|r %s", strjoin(" ", tostringall(...))))
+end
+
+-- ============================================================
+-- Version Code Helpers
+-- ============================================================
+function MUI:VersionCodeToString(code)
+    local major = math.floor(code / 10000)
+    local minor = math.floor((code % 10000) / 100)
+    local patch = code % 100
+    return format("%d.%d.%d", major, minor, patch)
+end
+
+function MUI:VersionStringToCode(str)
+    if not str then return 0 end
+    local clean = tostring(str):gsub("^v", "")
+    local major, minor, patch = clean:match("^(%d+)%.(%d+)%.(%d+)$")
+    if not major then return 0 end
+    return tonumber(major) * 10000 + tonumber(minor) * 100 + tonumber(patch)
+end
 
 -- ============================================================
 -- Centralized Addon Lists (single source of truth)
@@ -80,26 +148,45 @@ function MUI:IsDebugModeActive()
 end
 
 -- ============================================================
--- Database Migration (runs once per version update)
+-- Database Migration (version-gated, runs once per version)
+-- Each block runs only if upgrading from below that version code.
+-- Pattern: if lastCode < 120005 then ... end
 -- ============================================================
 function MUI:DBConvert()
     local db = self.db.global
-    local lastConversion = db.lastDBConversion or "0"
-    local currentVersion = self.version or "0"
 
-    if lastConversion == currentVersion then return end
+    -- Backward compat: convert old string-based lastDBConversion to version code
+    local lastCode = db.lastDBConversionCode or 0
 
-    -- === Migrationen hier einfuegen ===
-
-    -- Migrate old minimap format (minimapButton/minimapAngle) to LibDBIcon format (minimap.hide)
-    if db.minimapButton ~= nil or db.minimapAngle ~= nil then
-        local wasHidden = db.minimapButton == false
-        db.minimap = { hide = wasHidden }
-        db.minimapButton = nil
-        db.minimapAngle = nil
+    if lastCode == 0 and db.lastDBConversion and db.lastDBConversion ~= "0" then
+        lastCode = self:VersionStringToCode(db.lastDBConversion)
     end
 
-    db.lastDBConversion = currentVersion
+    local currentCode = self:VersionStringToCode(self.version)
+
+    if currentCode == 0 or lastCode >= currentCode then return end
+
+    -- === v12.0.2: Migrate old minimap format to LibDBIcon ===
+    if lastCode < 120002 then
+        if db.minimapButton ~= nil or db.minimapAngle ~= nil then
+            local wasHidden = db.minimapButton == false
+            db.minimap = { hide = wasHidden }
+            db.minimapButton = nil
+            db.minimapAngle = nil
+        end
+    end
+
+    -- === v12.0.9: Clean up old string-based lastDBConversion key ===
+    if lastCode < 120009 then
+        db.lastDBConversion = nil
+    end
+
+    -- === Future migrations go here: ===
+    -- if lastCode < 120010 then
+    --     -- migration code
+    -- end
+
+    db.lastDBConversionCode = currentCode
 end
 
 -- ============================================================
@@ -361,4 +448,8 @@ function MUI:Initialize()
             MUI:Print(format("|cff%s%s|r", C.HEX_YELLOW, L["DEBUG_STARTUP_WARNING"]))
         end)
     end
+
+    -- Register combat queue replay: run queued setup calls when combat ends
+    local SE = self:GetModule("Setup")
+    SE:RegisterEvent("PLAYER_REGEN_ENABLED", "ReplayCombatQueue")
 end
