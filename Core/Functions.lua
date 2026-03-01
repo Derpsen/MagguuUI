@@ -179,7 +179,7 @@ function MUI:CreateMinimapButton()
     local dataObj = LDB:NewDataObject("MagguuUI", {
         type = "launcher",
         text = "MagguuUI",
-        icon = "Interface\\AddOns\\MagguuUI\\Media\\Textures\\MinimapButton",
+        icon = MUI.Media.Textures.MinimapButton,
         OnClick = function(_, button)
             if button == "LeftButton" then
                 MUI:ToggleInstaller()

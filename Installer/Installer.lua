@@ -384,7 +384,7 @@ end
 I.installer = {
     Title = format("%s |cff%s%s|r", MUI.title, C.HEX_DIM, L["INSTALLATION"]),
     Name = MUI.title,
-    tutorialImage = "Interface\\AddOns\\MagguuUI\\Media\\Textures\\LogoTop.tga",
+    tutorialImage = MUI.Media.Textures.LogoTop,
     Pages = {
         [1] = function()
             if PluginInstallFrame.tutorialImage2 then PluginInstallFrame.tutorialImage2:Hide() end

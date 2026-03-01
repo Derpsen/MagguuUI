@@ -197,7 +197,7 @@ local function InsertMagguuUIOptions()
                 order = 0,
                 type = "description",
                 name = "",
-                image = "Interface\\AddOns\\MagguuUI\\Media\\Textures\\LogoTop",
+                image = MUI.Media.Textures.LogoTop,
                 imageWidth = 256,
                 imageHeight = 128,
             },

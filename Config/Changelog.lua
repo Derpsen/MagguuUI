@@ -262,7 +262,7 @@ local function GetOrCreateChangelogPopup()
     local logo = popup:CreateTexture(nil, "ARTWORK")
     logo:SetSize(200, 100)
     logo:SetPoint("TOP", popup, "TOP", 0, -10)
-    logo:SetTexture("Interface\\AddOns\\MagguuUI\\Media\\Textures\\LogoTop.tga")
+    logo:SetTexture(MUI.Media.Textures.LogoTop)
 
     -- Title (below logo)
     local title = popup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")

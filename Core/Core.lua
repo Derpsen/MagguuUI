@@ -45,6 +45,24 @@ function MUI:ColorText(text, hexColor)
 end
 
 -- ============================================================
+-- Centralized Media Paths (single source of truth)
+-- ============================================================
+local MEDIA_PATH = "Interface\\AddOns\\MagguuUI\\Media\\"
+
+MUI.Media = {
+    Textures = {
+        LogoAddon    = MEDIA_PATH .. "Textures\\LogoAddon",
+        LogoTop      = MEDIA_PATH .. "Textures\\LogoTop",
+        MinimapButton = MEDIA_PATH .. "Textures\\MinimapButton",
+        Gradient     = MEDIA_PATH .. "Textures\\Gradient.png",
+    },
+}
+
+-- Register custom media with LibSharedMedia (available globally in ElvUI, Details, etc.)
+local LSM = LibStub("LibSharedMedia-3.0")
+LSM:Register(LSM.MediaType.STATUSBAR, "MagguuUI", MUI.Media.Textures.Gradient)
+
+-- ============================================================
 -- Named Constants (replace magic numbers)
 -- ============================================================
 MUI.Constants = {
